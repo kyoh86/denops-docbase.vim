@@ -1,9 +1,12 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
 const GroupSummaryFields = {
   id: is.Number,
   name: is.String,
 };
-export const GroupSummaryPredicate = is.ObjectOf(GroupSummaryFields);
-
-export type GroupSummary = ObjectOf<typeof GroupSummaryFields>;
+export interface GroupSummary extends O<typeof GroupSummaryFields> {}
+export const isGroupSummary: P<GroupSummary> = is.ObjectOf(GroupSummaryFields);
