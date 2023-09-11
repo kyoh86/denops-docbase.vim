@@ -1,3 +1,7 @@
+import {
+  ensure,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Response, ResponseWithBody } from "./types.ts";
 
 const API_URL = "https://api.docbase.io";
@@ -18,7 +22,7 @@ export class Fetcher {
   private async core<T>(
     method: "POST" | "PATCH" | "PUT" | "DELETE" | "GET",
     path: string,
-    getBody: false,
+    asBody: undefined,
     params?: {
       query?: Record<string, string>;
       body?: unknown;
@@ -28,7 +32,7 @@ export class Fetcher {
   private async core<T>(
     method: "POST" | "PATCH" | "PUT" | "DELETE" | "GET",
     path: string,
-    getBody: true,
+    asBody: P<T>,
     params?: {
       query?: Record<string, string>;
       body?: unknown;
@@ -38,7 +42,7 @@ export class Fetcher {
   private async core<T>(
     method: "POST" | "PATCH" | "PUT" | "DELETE" | "GET",
     path: string,
-    getBody: boolean,
+    asBody?: P<T>,
     params?: {
       query?: Record<string, string>;
       body?: unknown;
@@ -66,19 +70,20 @@ export class Fetcher {
       statusText: raw.statusText,
       type: raw.type,
       url: raw.url,
-      body: getBody ? (await raw.json()) as T : undefined, // TODO: use unknownutil
+      body: asBody ? ensure(await raw.json(), asBody) : undefined, // TODO: use unknownutil
     };
   }
 
   request<T>(
     method: "POST" | "PATCH" | "PUT" | "DELETE" | "GET",
     path: string,
+    asBody: P<T>,
     params?: {
       query?: Record<string, string>;
       body?: unknown;
     },
   ) {
-    return this.core<T>(method, path, true, params);
+    return this.core<T>(method, path, asBody, params);
   }
 
   call<T>(
@@ -89,6 +94,6 @@ export class Fetcher {
       body?: unknown;
     },
   ) {
-    return this.core<T>(method, path, false, params);
+    return this.core<T>(method, path, undefined, params);
   }
 }

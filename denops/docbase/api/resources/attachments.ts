@@ -1,18 +1,18 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 
 const UploadAttachmentParamsFields = {
   name: is.String,
   content: is.String,
 };
-
-export const UploadAttachmentParamsPredicate = is.ObjectOf(
+export type UploadAttachmentParams = O<typeof UploadAttachmentParamsFields>;
+export const isUploadAttachmentParams: P<UploadAttachmentParams> = is.ObjectOf(
   UploadAttachmentParamsFields,
 );
-
-export type UploadAttachmentParams = ObjectOf<
-  typeof UploadAttachmentParamsFields
->;
 
 const AttachmentFields = {
   id: is.String,
@@ -23,17 +23,19 @@ const AttachmentFields = {
   created_at: is.String,
 };
 
-export const AttachmentPredicate = is.ObjectOf(AttachmentFields);
-
-export type Attachment = ObjectOf<typeof AttachmentFields>;
+export interface Attachment extends O<typeof AttachmentFields> {
+  _?: unknown;
+}
+export const isAttachment: P<Attachment> = is.ObjectOf(AttachmentFields);
 
 export class Attachments {
   constructor(private fetcher: Fetcher) {}
 
-  async create(body: UploadAttachmentParams) {
-    return await this.fetcher.request<Attachment>(
+  async create(body: UploadAttachmentParams[]) {
+    return await this.fetcher.request(
       "POST",
       `/attachments`,
+      is.ArrayOf(isAttachment),
       { body },
     );
   }

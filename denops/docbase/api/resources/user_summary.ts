@@ -1,10 +1,15 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+
 const UserSummaryFields = {
   id: is.Number,
   name: is.String,
   profile_image_url: is.String,
 };
-
-export const UserSummaryPredicate = is.ObjectOf(UserSummaryFields);
-
-export type UserSummary = ObjectOf<typeof UserSummaryFields>;
+export interface UserSummary extends O<typeof UserSummaryFields> {
+  _?: unknown;
+}
+export const isUserSummary: P<UserSummary> = is.ObjectOf(UserSummaryFields);

@@ -1,5 +1,18 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
+
+const CreateCommentParamsFields = {
+  body: is.String,
+  notice: is.OptionalOf(is.Boolean),
+};
+export type CreateCommentParams = O<typeof CreateCommentParamsFields>;
+export const isCreateCommentParams: P<CreateCommentParams> = is.ObjectOf(
+  CreateCommentParamsFields,
+);
 
 const CommentFields = {
   id: is.Number,
@@ -9,18 +22,19 @@ const CommentFields = {
   published_at: is.String,
   memo_id: is.Number,
 };
-
-export const CommentPredicate = is.ObjectOf(CommentFields);
-
-export type Comment = ObjectOf<typeof CommentFields>;
+export interface Comment extends O<typeof CommentFields> {
+  _?: unknown;
+}
+export const isComment: P<Comment> = is.ObjectOf(CommentFields);
 
 export class Comments {
   constructor(private fetcher: Fetcher, private memoId: number) {}
 
-  create(comment: Comment) {
-    return this.fetcher.request<Comment>(
+  create(comment: CreateCommentParams) {
+    return this.fetcher.request(
       "POST",
       `/posts/${this.memoId}/comments`,
+      isComment,
       comment,
     );
   }

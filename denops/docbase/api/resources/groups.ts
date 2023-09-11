@@ -1,40 +1,41 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
-import { UserSummaryPredicate } from "./user_summary.ts";
-import { GroupSummary } from "./group_summary.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import { isUserSummary } from "./user_summary.ts";
+import { isGroupSummary } from "./group_summary.ts";
 import { Fetcher } from "../fetcher.ts";
 
 const CreateGroupParamsFields = {
   name: is.String,
   description: is.OptionalOf(is.String),
 };
-
-export const CreateGroupParamsPredicate = is.ObjectOf(CreateGroupParamsFields);
-
-export type CreateGroupParams = ObjectOf<typeof CreateGroupParamsFields>;
+export type CreateGroupParams = O<typeof CreateGroupParamsFields>;
+export const isCreateGroupParams: P<CreateGroupParams> = is.ObjectOf(
+  CreateGroupParamsFields,
+);
 
 const SearchGroupsParamsFields = {
   name: is.OptionalOf(is.String),
   page: is.OptionalOf(is.Number),
   per_page: is.OptionalOf(is.Number),
 };
-
-export const SearchGroupsParamsPredicate = is.ObjectOf(
+export type SearchGroupsParams = O<typeof SearchGroupsParamsFields>;
+export const isSearchGroupsParams: P<SearchGroupsParams> = is.ObjectOf(
   SearchGroupsParamsFields,
 );
-
-export type SearchGroupsParams = ObjectOf<typeof SearchGroupsParamsFields>;
 
 const JoinGroupParamsFields = {
   user_ids: is.ArrayOf(is.Number),
 };
-
-export const JoinGroupParamsPredicate = is.ObjectOf(JoinGroupParamsFields);
-
-export type JoinGroupParams = ObjectOf<typeof JoinGroupParamsFields>;
-
-export const KickGroupParamsPredicate = JoinGroupParamsPredicate;
+export type JoinGroupParams = O<typeof JoinGroupParamsFields>;
+export const isJoinGroupParams: P<JoinGroupParams> = is.ObjectOf(
+  JoinGroupParamsFields,
+);
 
 export type KickGroupParams = JoinGroupParams;
+export const isKickGroupParams: P<KickGroupParams> = isJoinGroupParams;
 
 const GroupFields = {
   id: is.Number,
@@ -43,17 +44,18 @@ const GroupFields = {
   posts_count: is.Number,
   last_activity_at: is.String,
   created_at: is.String,
-  users: is.ArrayOf(UserSummaryPredicate),
+  users: is.ArrayOf(isUserSummary),
 };
-export const GroupPredicate = is.ObjectOf(GroupFields);
-
-export type Group = ObjectOf<typeof GroupFields>;
+export interface Group extends O<typeof GroupFields> {
+  _?: unknown;
+}
+export const isGroup: P<Group> = is.ObjectOf(GroupFields);
 
 export class Groups {
   constructor(private fetcher: Fetcher) {}
 
   create(body: CreateGroupParams) {
-    return this.fetcher.request<Group>("POST", `/groups`, { body });
+    return this.fetcher.request("POST", `/groups`, isGroup, { body });
   }
 
   search(params: SearchGroupsParams) {
@@ -62,13 +64,16 @@ export class Groups {
     for (const key in parameters) {
       query[key] = parameters[key].toString();
     }
-    return this.fetcher.request<GroupSummary[]>("GET", `/groups`, {
-      query,
-    });
+    return this.fetcher.request(
+      "GET",
+      `/groups`,
+      is.ArrayOf(isGroupSummary),
+      { query },
+    );
   }
 
   get(id: string) {
-    return this.fetcher.request<Group>("GET", `/groups/${id}`);
+    return this.fetcher.request("GET", `/groups/${id}`, isGroup);
   }
 
   join(id: string, body: JoinGroupParams) {

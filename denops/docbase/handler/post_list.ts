@@ -10,7 +10,7 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Handler } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
-import { PostPredicate } from "../api/validation.ts";
+import { isPost } from "../api/validation.ts";
 import { Filetype } from "./filetype.ts";
 
 function ensureProps(props: unknown) {
@@ -99,7 +99,7 @@ export const PostList: Handler = {
           denops,
           "docbase_post_list_items",
         ),
-        is.ArrayOf(PostPredicate),
+        is.ArrayOf(isPost),
       );
       await denops.dispatch(
         denops.name,

@@ -1,6 +1,10 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
-import { GroupSummaryPredicate } from "./group_summary.ts";
+import { isGroupSummary } from "./group_summary.ts";
 
 const SearchUsersParamsFields = {
   q: is.OptionalOf(is.String),
@@ -8,10 +12,10 @@ const SearchUsersParamsFields = {
   per_page: is.OptionalOf(is.Number),
   include_user_groups: is.OptionalOf(is.Boolean),
 };
-
-export const SearchUsersParamsPredicate = is.ObjectOf(SearchUsersParamsFields);
-
-export type SearchUsersParams = ObjectOf<typeof SearchUsersParamsFields>;
+export type SearchUsersParams = O<typeof SearchUsersParamsFields>;
+export const isSearchUsersParams: P<SearchUsersParams> = is.ObjectOf(
+  SearchUsersParamsFields,
+);
 
 const UserFields = {
   id: is.Number,
@@ -22,12 +26,13 @@ const UserFields = {
   posts_count: is.Number,
   last_access_time: is.String,
   two_step_authentication: is.Boolean,
-  groups: is.ArrayOf(GroupSummaryPredicate),
+  groups: is.ArrayOf(isGroupSummary),
 };
+export interface User extends O<typeof UserFields> {
+  _?: unknown;
+}
+export const isUser: P<User> = is.ObjectOf(UserFields);
 
-export const UserPredicate = is.ObjectOf(UserFields);
-
-export type User = ObjectOf<typeof UserFields>;
 export class Users {
   constructor(private fetcher: Fetcher) {}
 
@@ -37,6 +42,6 @@ export class Users {
     for (const key in parameters) {
       query[key] = parameters[key].toString();
     }
-    return this.fetcher.request<User[]>("GET", `/users`, { query });
+    return this.fetcher.request("GET", `/users`, is.ArrayOf(isUser), { query });
   }
 }

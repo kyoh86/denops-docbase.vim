@@ -1,30 +1,30 @@
 export {
-  AttachmentPredicate,
-  UploadAttachmentParamsPredicate,
+  isAttachment,
+  isUploadAttachmentParams,
 } from "./resources/attachments.ts";
 
-export { CommentPredicate } from "./resources/comments.ts";
+export { isComment } from "./resources/comments.ts";
 
 export {
-  CreateGroupParamsPredicate,
-  GroupPredicate,
-  JoinGroupParamsPredicate,
-  KickGroupParamsPredicate,
-  SearchGroupsParamsPredicate,
+  isCreateGroupParams,
+  isGroup,
+  isJoinGroupParams,
+  isKickGroupParams,
+  isSearchGroupsParams,
 } from "./resources/groups.ts";
-export { GroupSummaryPredicate } from "./resources/group_summary.ts";
+export { isGroupSummary } from "./resources/group_summary.ts";
 
 export {
-  CreatePostParamsPredicate,
-  PostPredicate,
-  ScopePredicate,
-  SearchPostsParamsPredicate,
-  UpdatePostParamsPredicate,
+  isCreatePostParams,
+  isPost,
+  isScope,
+  isSearchPostsParams,
+  isUpdatePostParams,
 } from "./resources/posts.ts";
 
-export { ProfilePredicate } from "./resources/profiles.ts";
+export { isProfile } from "./resources/profiles.ts";
 
-export { TagPredicate } from "./resources/tags.ts";
+export { isTag } from "./resources/tags.ts";
 
-export { UserPredicate } from "./resources/users.ts";
-export { UserSummaryPredicate } from "./resources/user_summary.ts";
+export { isUser } from "./resources/users.ts";
+export { isUserSummary } from "./resources/user_summary.ts";

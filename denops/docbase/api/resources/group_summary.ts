@@ -8,5 +8,7 @@ const GroupSummaryFields = {
   id: is.Number,
   name: is.String,
 };
-export interface GroupSummary extends O<typeof GroupSummaryFields> {}
+export interface GroupSummary extends O<typeof GroupSummaryFields> {
+  _?: unknown;
+}
 export const isGroupSummary: P<GroupSummary> = is.ObjectOf(GroupSummaryFields);

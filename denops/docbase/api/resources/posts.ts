@@ -1,28 +1,32 @@
-import { is, ObjectOf } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  is,
+  ObjectOf as O,
+  Predicate as P,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 
-import { TagPredicate } from "./tags.ts";
-import { UserSummaryPredicate } from "./user_summary.ts";
-import { CommentPredicate } from "./comments.ts";
-import { GroupSummaryPredicate } from "./group_summary.ts";
-import { AttachmentPredicate } from "./attachments.ts";
-
-export const ScopePredicate = is.LiteralOneOf([
-  "everyone",
-  "group",
-  "primitive",
-]);
+import { isTag } from "./tags.ts";
+import { isUserSummary } from "./user_summary.ts";
+import { isComment } from "./comments.ts";
+import { isGroupSummary } from "./group_summary.ts";
+import { isAttachment } from "./attachments.ts";
 
 export type Scope = "everyone" | "group" | "private";
+export const isScope: P<Scope> = is.OneOf([
+  is.LiteralOf("everyone"),
+  is.LiteralOf("group"),
+  is.LiteralOf("private"),
+]);
+
 const SearchPostsParamsFields = {
   q: is.OptionalOf(is.String),
   page: is.OptionalOf(is.Number),
   per_page: is.OptionalOf(is.Number),
 };
-
-export const SearchPostsParamsPredicate = is.ObjectOf(SearchPostsParamsFields);
-
-export type SearchPostsParams = ObjectOf<typeof SearchPostsParamsFields>;
+export type SearchPostsParams = O<typeof SearchPostsParamsFields>;
+export const isSearchPostsParams: P<SearchPostsParams> = is.ObjectOf(
+  SearchPostsParamsFields,
+);
 
 const createPostParamsFields = {
   title: is.String,
@@ -31,26 +35,22 @@ const createPostParamsFields = {
   notice: is.OptionalOf(is.Boolean),
   tags: is.OptionalOf(is.ArrayOf(is.String)),
 };
-
 const createPostParamsForGroupsFields = {
   ...createPostParamsFields,
   scope: is.LiteralOf("group"),
   groups: is.ArrayOf(is.Number),
 };
-
 const createPostParamsForOthersFields = {
   ...createPostParamsFields,
   scope: is.OneOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
 };
-
-export const CreatePostParamsPredicate = is.OneOf([
+export type CreatePostParams =
+  | O<typeof createPostParamsForGroupsFields>
+  | O<typeof createPostParamsForOthersFields>;
+export const isCreatePostParams: P<CreatePostParams> = is.OneOf([
   is.ObjectOf(createPostParamsForGroupsFields),
   is.ObjectOf(createPostParamsForOthersFields),
 ]);
-
-export type CreatePostParams =
-  | ObjectOf<typeof createPostParamsForGroupsFields>
-  | ObjectOf<typeof createPostParamsForOthersFields>;
 
 const updatePostParamsFields = {
   title: is.OptionalOf(is.String),
@@ -59,26 +59,22 @@ const updatePostParamsFields = {
   notice: is.OptionalOf(is.Boolean),
   tags: is.OptionalOf(is.ArrayOf(is.String)),
 };
-
 const updatePostParamsForGroupsFields = {
   ...updatePostParamsFields,
   scope: is.OptionalOf(is.LiteralOf("group")),
   groups: is.ArrayOf(is.Number),
 };
-
 const updatePostParamsForOthersFields = {
   ...updatePostParamsFields,
   scope: is.OneOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
 };
-
-export const UpdatePostParamsPredicate = is.OneOf([
+export type UpdatePostParams =
+  | O<typeof updatePostParamsForGroupsFields>
+  | O<typeof updatePostParamsForOthersFields>;
+export const isUpdatePostParams: P<UpdatePostParams> = is.OneOf([
   is.ObjectOf(updatePostParamsForGroupsFields),
   is.ObjectOf(updatePostParamsForOthersFields),
 ]);
-
-export type UpdatePostParams =
-  | ObjectOf<typeof updatePostParamsForGroupsFields>
-  | ObjectOf<typeof updatePostParamsForOthersFields>;
 
 const PostFields = {
   id: is.Number,
@@ -89,21 +85,22 @@ const PostFields = {
   url: is.String,
   created_at: is.String,
   updated_at: is.String,
-  tags: is.ArrayOf(TagPredicate),
-  scope: ScopePredicate,
+  tags: is.ArrayOf(isTag),
+  scope: isScope,
   sharing_url: is.String,
   representative_image_url: is.String,
-  user: UserSummaryPredicate,
+  user: isUserSummary,
   stars_count: is.Number,
   good_jobs_count: is.Number,
-  comments: is.ArrayOf(CommentPredicate),
-  groups: is.ArrayOf(GroupSummaryPredicate),
-  attachments: is.ArrayOf(AttachmentPredicate),
+  comments: is.ArrayOf(isComment),
+  groups: is.ArrayOf(isGroupSummary),
+  attachments: is.ArrayOf(isAttachment),
 };
+export interface Post extends O<typeof PostFields> {
+  _?: unknown;
+}
+export const isPost: P<Post> = is.ObjectOf(PostFields);
 
-export const PostPredicate = is.ObjectOf(PostFields);
-
-export type Post = ObjectOf<typeof PostFields>;
 export class Posts {
   constructor(private fetcher: Fetcher) {}
 
@@ -113,21 +110,27 @@ export class Posts {
     for (const key in parameters) {
       query[key] = parameters[key].toString();
     }
-    return this.fetcher.request<
-      { posts: Post[]; meta: Record<string, unknown> }
-    >("GET", `/posts`, query);
+    return this.fetcher.request(
+      "GET",
+      `/posts`,
+      is.ObjectOf({
+        posts: is.ArrayOf(isPost),
+        meta: is.Record,
+      }),
+      query,
+    );
   }
 
   create(post: CreatePostParams) {
-    return this.fetcher.request<Post>("POST", `/posts`, post);
+    return this.fetcher.request("POST", `/posts`, isPost, post);
   }
 
   get(id: string) {
-    return this.fetcher.request<Post>("POST", `/posts/${id}`);
+    return this.fetcher.request("GET", `/posts/${id}`, isPost);
   }
 
   update(id: string, post: UpdatePostParams) {
-    return this.fetcher.request<Post>("POST", `/posts/${id}`, post);
+    return this.fetcher.request("POST", `/posts/${id}`, isPost, post);
   }
 
   archive(id: string) {
