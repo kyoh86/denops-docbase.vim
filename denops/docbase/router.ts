@@ -25,15 +25,15 @@ export interface Handler {
   >;
 }
 
-const router: Record<string, Handler> = {
+const handlers: Record<string, Handler> = {
   "TeamList": TeamList,
   "PostList": PostList,
   "Post": Post,
 };
 
 function routing(bufname: string) {
-  for (const key in router) {
-    const handler = router[key];
+  for (const key in handlers) {
+    const handler = handlers[key];
     const match = handler.accept(bufname);
     if (match && match.protocol.input == "docbase") { // NOTE: protocol matching is not working
       return { match, handler };
@@ -48,7 +48,7 @@ export async function openBuffer(
   props: Record<string, unknown>,
   opener: "edit" | "new" | "vnew" | "tabnew" = "edit",
 ) {
-  const h = router[handler];
+  const h = handlers[handler];
   if (!h) {
     throw new Error(`There's no handler ${handler}`);
   }

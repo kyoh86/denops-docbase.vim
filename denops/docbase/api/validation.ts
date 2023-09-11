@@ -24,7 +24,7 @@ export {
 
 export { isProfile } from "./resources/profiles.ts";
 
-export { isTag } from "./resources/tags.ts";
+export { isTag, isTagSummary } from "./resources/tags.ts";
 
 export { isUser } from "./resources/users.ts";
 export { isUserSummary } from "./resources/user_summary.ts";

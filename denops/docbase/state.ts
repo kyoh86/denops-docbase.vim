@@ -14,7 +14,6 @@ type State = {
 export interface StateMan {
   domains(): Promise<string[]>;
   load(domain: Domain): Promise<State | undefined>;
-
   save(domain: Domain, state: State): Promise<void>;
 }
 

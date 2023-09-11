@@ -70,7 +70,7 @@ export class Fetcher {
       statusText: raw.statusText,
       type: raw.type,
       url: raw.url,
-      body: asBody ? ensure(await raw.json(), asBody) : undefined, // TODO: use unknownutil
+      body: asBody ? ensure(await raw.json(), asBody) : undefined,
     };
   }
 

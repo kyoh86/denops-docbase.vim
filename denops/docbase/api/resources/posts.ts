@@ -69,9 +69,11 @@ const updatePostParamsForOthersFields = {
   scope: is.OneOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
 };
 export type UpdatePostParams =
+  | O<typeof updatePostParamsFields>
   | O<typeof updatePostParamsForGroupsFields>
   | O<typeof updatePostParamsForOthersFields>;
 export const isUpdatePostParams: P<UpdatePostParams> = is.OneOf([
+  is.ObjectOf(updatePostParamsFields),
   is.ObjectOf(updatePostParamsForGroupsFields),
   is.ObjectOf(updatePostParamsForOthersFields),
 ]);
