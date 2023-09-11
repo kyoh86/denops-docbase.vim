@@ -4,6 +4,7 @@ import * as fn from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 import { StateMan } from "./state.ts";
 import { TeamList } from "./handler/team_list.ts";
 import { PostList } from "./handler/post_list.ts";
+import { PostNew } from "./handler/post_new.ts";
 import { Post } from "./handler/post.ts";
 
 export interface Context {
@@ -28,6 +29,7 @@ export interface Handler {
 const handlers: Record<string, Handler> = {
   "TeamList": TeamList,
   "PostList": PostList,
+  "PostNew": PostNew,
   "Post": Post,
 };
 
