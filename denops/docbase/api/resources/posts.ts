@@ -87,7 +87,7 @@ const PostFields = {
   url: is.String,
   created_at: is.String,
   updated_at: is.String,
-  scope: isScope,
+  scope: is.OneOf([isScope, is.Null]),
   tags: is.ArrayOf(isTagSummary),
   sharing_url: is.OneOf([is.String, is.Null]),
   representative_image_url: is.OneOf([is.String, is.Null]),

@@ -5,7 +5,11 @@ import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  ensure,
+  is,
+  maybe,
+} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
 import { Handler } from "../router.ts";
 import type { Context, Params } from "../router.ts";
@@ -32,46 +36,58 @@ export const PostList: Handler = {
   },
   bufname(_props: Record<string, unknown>) {
     const props = ensureProps(_props);
-    return `docbase://teams/${props.domain}/posts`;
+    const page = maybe(_props["page"], is.Number);
+    return `docbase://teams/${props.domain}/posts${
+      (page && (page > 1)) ? `?page=${page}` : ""
+    }`;
   },
 
   async load(denops: Denops, context: Context) {
     await buffer.ensure(denops, context.bufnr, async () => {
       const props = ensureProps(context.match.pathname.groups);
+      const query = new URLSearchParams(context.match.search.input);
+      const page = parseInt(query.get("page") || "1", 10);
 
       await batch(denops, async (denops) => {
         await option.swapfile.setLocal(denops, false);
         await option.modifiable.setLocal(denops, false);
         await option.bufhidden.setLocal(denops, "wipe");
         await option.filetype.setLocal(denops, Filetype.PostList);
+      });
 
-        const state = await context.state.load(props.domain);
-        if (!state) {
-          console.error(
-            `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
-          );
-          return;
-        }
-        const client = new Client(
-          state.token,
-          props.domain,
+      const state = await context.state.load(props.domain);
+      if (!state) {
+        console.error(
+          `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
         );
-        const response = await client.posts().search({ per_page: 1 });
-        if (!response.ok) {
-          console.error(
-            `Failed to load posts from the DocBase API: ${response.statusText}`,
-          );
-          return;
-        }
+        return;
+      }
+      const client = new Client(
+        state.token,
+        props.domain,
+      );
+      const response = await client.posts().search({ page, per_page: 100 });
+      if (!response.ok) {
+        console.error(
+          `Failed to load posts from the DocBase API: ${response.statusText}`,
+        );
+        return;
+      }
+      //TODO: paging
 
+      await batch(denops, async (denops) => {
         const posts = response.body.posts;
+        await variable.b.set(denops, "docbase_post_list_page", page);
         await variable.b.set(denops, "docbase_post_list_domain", props.domain);
-        await variable.b.set(denops, "docbase_post_list_items", posts);
+        await variable.b.set(
+          denops,
+          "docbase_post_list_ids",
+          posts.map((p) => p.id),
+        );
         await buffer.replace(denops, context.bufnr, posts.map((p) => p.title));
 
         await option.modified.setLocal(denops, false);
         await option.readonly.setLocal(denops, false);
-        return Promise.resolve();
       });
     });
   },
@@ -94,7 +110,7 @@ export const PostList: Handler = {
         await variable.b.get(denops, "docbase_post_list_domain"),
         is.String,
       );
-      const posts = ensure(
+      const postIds = ensure(
         await variable.b.get(
           denops,
           "docbase_post_list_items",
@@ -105,8 +121,60 @@ export const PostList: Handler = {
         denops.name,
         "openBuffer",
         "Post",
-        { domain, postId: String(posts[params.lnum - 1].id) },
+        { domain, postId: String(postIds[params.lnum - 1]) },
         params.opener,
+      );
+    },
+    async prev(denops: Denops, context: Context, _params: Params) {
+      const { page, domain } = await buffer.ensure(
+        denops,
+        context.bufnr,
+        async () => {
+          return {
+            page: ensure(
+              await variable.b.get(denops, "docbase_post_list_page", 1),
+              is.Number,
+            ),
+            domain: ensure(
+              await variable.b.get(denops, "docbase_post_list_domain"),
+              is.String,
+            ),
+          };
+        },
+      );
+      if (page > 1) {
+        await denops.dispatch(
+          denops.name,
+          "openBuffer",
+          "PostList",
+          { domain, page: page - 1 },
+          "edit",
+        );
+      }
+    },
+    async next(denops: Denops, context: Context, _params: Params) {
+      const { page, domain } = await buffer.ensure(
+        denops,
+        context.bufnr,
+        async () => {
+          return {
+            page: ensure(
+              await variable.b.get(denops, "docbase_post_list_page", 1),
+              is.Number,
+            ),
+            domain: ensure(
+              await variable.b.get(denops, "docbase_post_list_domain"),
+              is.String,
+            ),
+          };
+        },
+      );
+      await denops.dispatch(
+        denops.name,
+        "openBuffer",
+        "PostList",
+        { domain, page: page + 1 },
+        "edit",
       );
     },
   },

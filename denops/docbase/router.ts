@@ -1,7 +1,7 @@
 import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as fn from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 
-import { StateMan } from "./state.ts";
+import type { StateMan } from "./state.ts";
 import { TeamList } from "./handler/team_list.ts";
 import { PostList } from "./handler/post_list.ts";
 import { PostNew } from "./handler/post_new.ts";
@@ -27,10 +27,10 @@ export interface Handler {
 }
 
 const handlers: Record<string, Handler> = {
-  "TeamList": TeamList,
-  "PostList": PostList,
-  "PostNew": PostNew,
-  "Post": Post,
+  TeamList: TeamList,
+  PostList: PostList,
+  PostNew: PostNew,
+  Post: Post,
 };
 
 function routing(bufname: string) {
@@ -65,12 +65,7 @@ export async function bufferLoaded(
 ) {
   const bufname = await fn.bufname(denops, bufnr);
   const { match, handler } = routing(bufname);
-  await handler.load(denops, {
-    bufnr,
-    bufname,
-    match,
-    state,
-  });
+  await handler.load(denops, { bufnr, bufname, match, state });
 }
 
 export async function bufferAction(
@@ -86,10 +81,5 @@ export async function bufferAction(
   if (!action) {
     throw new Error(`There's no valid action ${actName} for ${bufname}`);
   }
-  await action(denops, {
-    bufnr,
-    bufname,
-    match,
-    state,
-  }, params);
+  await action(denops, { bufnr, bufname, match, state }, params);
 }

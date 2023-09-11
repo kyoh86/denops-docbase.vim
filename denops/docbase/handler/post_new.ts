@@ -22,7 +22,6 @@ function ensureProps(props: unknown) {
     props,
     is.ObjectOf({
       domain: is.String,
-      postId: is.String,
     }),
   );
 }

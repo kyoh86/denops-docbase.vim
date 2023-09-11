@@ -4,6 +4,7 @@ import {
   Predicate as P,
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
+import { isUserSummary } from "./user_summary.ts";
 
 const CreateCommentParamsFields = {
   body: is.String,
@@ -17,10 +18,8 @@ export const isCreateCommentParams: P<CreateCommentParams> = is.ObjectOf(
 const CommentFields = {
   id: is.Number,
   body: is.String,
-  notice: is.Boolean,
-  author_id: is.Number,
-  published_at: is.String,
-  memo_id: is.Number,
+  created_at: is.String,
+  user: isUserSummary,
 };
 export interface Comment extends O<typeof CommentFields> {
   _?: unknown;

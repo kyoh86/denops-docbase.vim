@@ -188,7 +188,7 @@ async function postToBuffer(denops: Denops, bufnr: number, post: PostData) {
   const lines = [
     "---",
     `title: ${post.title}`,
-    `scope: ${post.scope}`,
+    `scope: ${post.scope || "private"}`,
   ];
   if (post.draft) {
     lines.push("draft: true");

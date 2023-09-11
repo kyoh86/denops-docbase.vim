@@ -5,6 +5,7 @@ import {
 } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
+import { Client } from "./api/client.ts";
 import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
 import { XDGStateMan } from "./state.ts";
 
@@ -37,6 +38,33 @@ export function main(denops: Denops) {
       const params = ensure(uParams, is.Record);
       const actName = ensure(uActName, is.String);
       await bufferAction(denops, stateMan, bufnr, actName, params);
+    },
+
+    listDomains() {
+      return stateMan.domains();
+    },
+
+    async listPosts(uDomain: unknown) {
+      const domain = ensure(uDomain, is.String);
+      const state = await stateMan.load(domain);
+      if (!state) {
+        throw new Error(
+          `There's no valid state for domain "${domain}". You can setup with :DocbaseLogin`,
+        );
+      }
+      const client = new Client(
+        state.token,
+        domain,
+      );
+      const response = await client.posts().search({});
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load posts from the DocBase API: ${response.statusText}`,
+        );
+      }
+      //TODO: paging
+
+      return response.body.posts;
     },
 
     async login() {
