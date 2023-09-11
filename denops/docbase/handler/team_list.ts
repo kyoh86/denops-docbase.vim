@@ -7,7 +7,7 @@ import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 
-import { Handler } from "../router.ts";
+import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Filetype } from "./filetype.ts";
 
@@ -64,9 +64,8 @@ export const TeamList: Handler = {
         ),
         is.ArrayOf(is.String),
       );
-      await denops.dispatch(
-        denops.name,
-        "openBuffer",
+      await openBuffer(
+        denops,
         "PostList",
         { domain: domains[params.lnum - 1] },
         params.opener,

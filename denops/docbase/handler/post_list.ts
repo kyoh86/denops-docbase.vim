@@ -11,7 +11,7 @@ import {
   maybe,
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
-import { Handler } from "../router.ts";
+import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
 import { isPost } from "../api/validation.ts";
@@ -117,65 +117,38 @@ export const PostList: Handler = {
         ),
         is.ArrayOf(isPost),
       );
-      await denops.dispatch(
-        denops.name,
-        "openBuffer",
-        "Post",
-        { domain, postId: String(postIds[params.lnum - 1]) },
-        params.opener,
-      );
+      await openBuffer(denops, "Post", {
+        domain,
+        postId: String(postIds[params.lnum - 1]),
+      }, params.opener);
     },
-    async prev(denops: Denops, context: Context, _params: Params) {
-      const { page, domain } = await buffer.ensure(
-        denops,
-        context.bufnr,
-        async () => {
-          return {
-            page: ensure(
-              await variable.b.get(denops, "docbase_post_list_page", 1),
-              is.Number,
-            ),
-            domain: ensure(
-              await variable.b.get(denops, "docbase_post_list_domain"),
-              is.String,
-            ),
-          };
-        },
-      );
-      if (page > 1) {
-        await denops.dispatch(
-          denops.name,
-          "openBuffer",
-          "PostList",
-          { domain, page: page - 1 },
-          "edit",
-        );
-      }
+    prev(denops: Denops, context: Context, _params: Params) {
+      return paging(denops, context, -1);
     },
-    async next(denops: Denops, context: Context, _params: Params) {
-      const { page, domain } = await buffer.ensure(
-        denops,
-        context.bufnr,
-        async () => {
-          return {
-            page: ensure(
-              await variable.b.get(denops, "docbase_post_list_page", 1),
-              is.Number,
-            ),
-            domain: ensure(
-              await variable.b.get(denops, "docbase_post_list_domain"),
-              is.String,
-            ),
-          };
-        },
-      );
-      await denops.dispatch(
-        denops.name,
-        "openBuffer",
-        "PostList",
-        { domain, page: page + 1 },
-        "edit",
-      );
+    next(denops: Denops, context: Context, _params: Params) {
+      return paging(denops, context, 1);
     },
   },
 };
+
+async function paging(denops: Denops, context: Context, shift: 1 | -1) {
+  const { page, domain } = await buffer.ensure(
+    denops,
+    context.bufnr,
+    async () => {
+      return {
+        page: ensure(
+          await variable.b.get(denops, "docbase_post_list_page", 1),
+          is.Number,
+        ),
+        domain: ensure(
+          await variable.b.get(denops, "docbase_post_list_domain"),
+          is.String,
+        ),
+      };
+    },
+  );
+  if (page + shift >= 1) {
+    await openBuffer(denops, "PostList", { domain, page: page + shift });
+  }
+}

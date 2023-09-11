@@ -10,7 +10,7 @@ import * as autocmd from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
-import { Handler } from "../router.ts";
+import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import type { CreatePostParams } from "../api/types.ts";
 import { isGroupSummary } from "../api/validation.ts";
@@ -110,13 +110,10 @@ export const PostNew: Handler = {
       }
       response.body.id;
       context.match.pathname.groups;
-      await denops.dispatch(
-        denops.name,
-        "openBuffer",
-        "Post",
-        { domain: props.domain, postId: response.body.id },
-        "edit",
-      );
+      await openBuffer(denops, "Post", {
+        domain: props.domain,
+        postId: response.body.id,
+      });
     },
   },
 };
