@@ -11,20 +11,20 @@ type State = {
   token: string;
 };
 
-function statePath(...subs: string[]) {
-  return join(xdg.state(), "nvim", "denops-docbase", ...subs);
-}
-
 export interface StateMan {
-  getDomains(): Promise<string[]>;
-  loadState(domain: Domain): Promise<State | undefined>;
+  domains(): Promise<string[]>;
+  load(domain: Domain): Promise<State | undefined>;
 
-  saveState(domain: Domain, state: State): Promise<void>;
+  save(domain: Domain, state: State): Promise<void>;
 }
 
 export class XDGStateMan implements StateMan {
-  async getDomains(): Promise<string[]> {
-    const root = statePath("teams");
+  static statePath(...subs: string[]) {
+    return join(xdg.state(), "nvim", "denops-docbase", ...subs);
+  }
+
+  async domains(): Promise<string[]> {
+    const root = XDGStateMan.statePath("teams");
     const opt = { root, caseInsensitive: true };
     const glob = expandGlob("*.toml", opt);
     const teams: string[] = [];
@@ -34,8 +34,8 @@ export class XDGStateMan implements StateMan {
     return teams;
   }
 
-  async loadState(domain: Domain) {
-    const path = statePath("teams", `${domain}.toml`);
+  async load(domain: Domain) {
+    const path = XDGStateMan.statePath("teams", `${domain}.toml`);
     if (!await exists(path, { isFile: true, isReadable: true })) {
       return;
     }
@@ -45,8 +45,8 @@ export class XDGStateMan implements StateMan {
     );
   }
 
-  async saveState(domain: Domain, state: State) {
-    const path = statePath("teams", `${domain}.toml`);
+  async save(domain: Domain, state: State) {
+    const path = XDGStateMan.statePath("teams", `${domain}.toml`);
     await ensureFile(path);
     return Deno.writeTextFile(path, stringify(state), { create: true });
   }

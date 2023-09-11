@@ -1,39 +1,76 @@
-// Team List View
+// Team List Buffer
 
 import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 
-import { Filetype } from "../filetype.ts";
-import { StateMan } from "../state.ts";
 import { Handler } from "../router.ts";
+import type { Context, Params } from "../router.ts";
+import { Filetype } from "./filetype.ts";
 
-export class TeamList implements Handler {
-  static new(
-    stateMan: StateMan,
-    _: Record<string, string | undefined> | undefined,
-  ) {
-    return new TeamList(stateMan);
-  }
-  constructor(
-    private stateMan: StateMan,
-  ) {}
+const pattern = new URLPattern({
+  hostname: "teams",
+  pathname: "",
+});
 
-  async load(denops: Denops, bufNr: number) {
-    await buffer.ensure(denops, bufNr, async () => {
+export const TeamList: Handler = {
+  accept(bufname: string) {
+    return pattern.exec(bufname);
+  },
+
+  bufname(_props: Record<string, string>) {
+    return "docbase://teams";
+  },
+
+  async load(denops: Denops, context: Context) {
+    await buffer.ensure(denops, context.bufnr, async () => {
       await batch(denops, async (denops) => {
         await option.swapfile.setLocal(denops, false);
         await option.modifiable.setLocal(denops, false);
         await option.bufhidden.setLocal(denops, "wipe");
         await option.filetype.setLocal(denops, Filetype.TeamList);
 
-        await buffer.replace(denops, bufNr, await this.stateMan.getDomains());
+        const domains = await context.state.domains();
+        await variable.b.set(denops, "docbase_team_list_items", domains);
+        await buffer.replace(denops, context.bufnr, domains);
 
         await option.modified.setLocal(denops, false);
         await option.readonly.setLocal(denops, false);
-        return Promise.resolve();
       });
     });
-  }
-}
+  },
+
+  act: {
+    async open(denops: Denops, _context: Context, _params: Params) {
+      const params = ensure(
+        _params,
+        is.ObjectOf({
+          lnum: is.Number,
+          opener: is.OptionalOf(is.OneOf([
+            is.LiteralOf("edit"),
+            is.LiteralOf("new"),
+            is.LiteralOf("vnew"),
+            is.LiteralOf("tabnew"),
+          ])),
+        }),
+      );
+      const domains = ensure(
+        await variable.b.get(
+          denops,
+          "docbase_team_list_items",
+        ),
+        is.ArrayOf(is.String),
+      );
+      await denops.dispatch(
+        denops.name,
+        "openBuffer",
+        "PostList",
+        { domain: domains[params.lnum - 1] },
+        params.opener,
+      );
+    },
+  },
+};

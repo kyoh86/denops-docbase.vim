@@ -1,34 +1,42 @@
 import { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import {
   echo,
   input,
 } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
-import { getHandler } from "./router.ts";
-import { XDGStateMan } from "./state.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+
+import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
+import { XDGStateMan } from "./state.ts";
 
 export function main(denops: Denops) {
   const stateMan = new XDGStateMan();
+
   denops.dispatcher = {
-    async loadBuffer(uBufNr: unknown, uBufName: unknown) {
-      const bufNr = ensure(uBufNr, is.Number);
-      const bufName = ensure(uBufName, is.String);
-      await buffer.ensure(denops, bufNr, async () => {
-        const handler = getHandler(stateMan, bufName);
-        await handler.load(denops, bufNr);
-      });
+    async openBuffer(uHandler: unknown, uProps: unknown, uOpener: unknown) {
+      const handler = ensure(uHandler, is.String);
+      const props = ensure(uProps, is.RecordOf(is.String));
+      const opener = ensure(
+        uOpener,
+        is.OptionalOf(is.OneOf([
+          is.LiteralOf("edit"),
+          is.LiteralOf("new"),
+          is.LiteralOf("vnew"),
+          is.LiteralOf("tabnew"),
+        ])),
+      );
+      await openBuffer(denops, handler, props, opener);
     },
 
-    async saveBuffer(uBufNr: unknown, uBufName: unknown) {
-      const bufNr = ensure(uBufNr, is.Number);
-      const bufName = ensure(uBufName, is.String);
-      await buffer.ensure(denops, bufNr, async () => {
-        const handler = getHandler(stateMan, bufName);
-        if (handler.save) {
-          await handler.save(denops, bufNr);
-        }
-      });
+    async bufferLoaded(uBufnr: unknown) {
+      const bufnr = ensure(uBufnr, is.Number);
+      await bufferLoaded(denops, stateMan, bufnr);
+    },
+
+    async bufferAction(uBufnr: unknown, uActName: unknown, uParams: unknown) {
+      const bufnr = ensure(uBufnr, is.Number);
+      const params = ensure(uParams, is.Record);
+      const actName = ensure(uActName, is.String);
+      await bufferAction(denops, stateMan, bufnr, actName, params);
     },
 
     async login() {
@@ -48,7 +56,7 @@ export function main(denops: Denops) {
         return;
       }
 
-      await stateMan.saveState(domain, { token });
+      await stateMan.save(domain, { token });
       await echo(denops, "Done");
     },
   };
