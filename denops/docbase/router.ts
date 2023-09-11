@@ -1,6 +1,7 @@
 import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as fn from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 
+import type { Opener } from "./types.ts";
 import type { StateMan } from "./state.ts";
 import { TeamList } from "./handler/team_list.ts";
 import { PostList } from "./handler/post_list.ts";
@@ -48,7 +49,7 @@ export async function openBuffer(
   denops: Denops,
   handler: string,
   props: Record<string, unknown>,
-  opener: "edit" | "new" | "vnew" | "tabnew" = "edit",
+  opener: Opener = "edit",
 ) {
   const h = handlers[handler];
   if (!h) {

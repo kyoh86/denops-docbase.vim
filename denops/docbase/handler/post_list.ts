@@ -11,6 +11,7 @@ import {
   maybe,
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
+import { isOpener } from "../types.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
@@ -96,15 +97,7 @@ export const PostList: Handler = {
     async open(denops: Denops, _context: Context, _params: Params) {
       const params = ensure(
         _params,
-        is.ObjectOf({
-          lnum: is.Number,
-          opener: is.OptionalOf(is.OneOf([
-            is.LiteralOf("edit"),
-            is.LiteralOf("new"),
-            is.LiteralOf("vnew"),
-            is.LiteralOf("tabnew"),
-          ])),
-        }),
+        is.ObjectOf({ lnum: is.Number, opener: is.OptionalOf(isOpener) }),
       );
       const domain = ensure(
         await variable.b.get(denops, "docbase_post_list_domain"),

@@ -48,7 +48,7 @@ export const PostNew: Handler = {
       await batch(denops, async (denops) => {
         await option.swapfile.setLocal(denops, false);
         await option.bufhidden.setLocal(denops, "unload");
-        await option.filetype.setLocal(denops, `${Filetype.Post}`);
+        await option.filetype.setLocal(denops, `${Filetype.PostNew}`);
         await option.buftype.setLocal(denops, "acwrite");
 
         await autocmd.group(

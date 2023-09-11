@@ -10,6 +10,7 @@ import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variab
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Filetype } from "./filetype.ts";
+import { isOpener } from "../types.ts";
 
 const pattern = new URLPattern({
   hostname: "teams",
@@ -47,15 +48,7 @@ export const TeamList: Handler = {
     async open(denops: Denops, _context: Context, _params: Params) {
       const params = ensure(
         _params,
-        is.ObjectOf({
-          lnum: is.Number,
-          opener: is.OptionalOf(is.OneOf([
-            is.LiteralOf("edit"),
-            is.LiteralOf("new"),
-            is.LiteralOf("vnew"),
-            is.LiteralOf("tabnew"),
-          ])),
-        }),
+        is.ObjectOf({ lnum: is.Number, opener: is.OptionalOf(isOpener) }),
       );
       const domains = ensure(
         await variable.b.get(

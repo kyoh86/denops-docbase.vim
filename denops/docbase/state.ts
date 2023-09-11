@@ -5,9 +5,9 @@ import { exists, expandGlob } from "https://deno.land/std@0.201.0/fs/mod.ts";
 import { parse, stringify } from "https://deno.land/std@0.201.0/toml/mod.ts";
 import { is, maybe } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
-type Domain = string;
+export type Domain = string;
 
-type State = {
+export type State = {
   token: string;
 };
 
