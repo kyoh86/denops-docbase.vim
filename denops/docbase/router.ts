@@ -16,7 +16,7 @@ export interface Context {
 export type Params = Record<string, unknown>;
 
 export interface Handler {
-  bufname(props: Record<string, string>): string;
+  bufname(props: Record<string, unknown>): string;
   accept(bufname: string): URLPatternResult | null;
   load(denops: Denops, buf: Context): Promise<void>;
   act: Record<
@@ -45,7 +45,7 @@ function routing(bufname: string) {
 export async function openBuffer(
   denops: Denops,
   handler: string,
-  props: Record<string, string>,
+  props: Record<string, unknown>,
   opener: "edit" | "new" | "vnew" | "tabnew" = "edit",
 ) {
   const h = router[handler];

@@ -14,6 +14,14 @@ export interface Tag extends O<typeof TagFields> {
 }
 export const isTag: P<Tag> = is.ObjectOf(TagFields);
 
+const TagSummaryFields = {
+  name: is.String,
+};
+export interface TagSummary extends O<typeof TagSummaryFields> {
+  _?: unknown;
+}
+export const isTagSummary: P<TagSummary> = is.ObjectOf(TagSummaryFields);
+
 export class Tags {
   constructor(private fetcher: Fetcher) {}
 

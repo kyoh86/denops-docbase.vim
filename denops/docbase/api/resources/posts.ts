@@ -5,7 +5,7 @@ import {
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 
-import { isTag } from "./tags.ts";
+import { isTagSummary } from "./tags.ts";
 import { isUserSummary } from "./user_summary.ts";
 import { isComment } from "./comments.ts";
 import { isGroupSummary } from "./group_summary.ts";
@@ -85,10 +85,10 @@ const PostFields = {
   url: is.String,
   created_at: is.String,
   updated_at: is.String,
-  tags: is.ArrayOf(isTag),
   scope: isScope,
-  sharing_url: is.String,
-  representative_image_url: is.String,
+  tags: is.ArrayOf(isTagSummary),
+  sharing_url: is.OneOf([is.String, is.Null]),
+  representative_image_url: is.OneOf([is.String, is.Null]),
   user: isUserSummary,
   stars_count: is.Number,
   good_jobs_count: is.Number,
@@ -117,20 +117,20 @@ export class Posts {
         posts: is.ArrayOf(isPost),
         meta: is.Record,
       }),
-      query,
+      { query },
     );
   }
 
-  create(post: CreatePostParams) {
-    return this.fetcher.request("POST", `/posts`, isPost, post);
+  create(body: CreatePostParams) {
+    return this.fetcher.request("POST", `/posts`, isPost, { body });
   }
 
   get(id: string) {
     return this.fetcher.request("GET", `/posts/${id}`, isPost);
   }
 
-  update(id: string, post: UpdatePostParams) {
-    return this.fetcher.request("POST", `/posts/${id}`, isPost, post);
+  update(id: string, body: UpdatePostParams) {
+    return this.fetcher.request("POST", `/posts/${id}`, isPost, { body });
   }
 
   archive(id: string) {

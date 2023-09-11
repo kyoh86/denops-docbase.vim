@@ -30,7 +30,7 @@ export const PostList: Handler = {
   accept(bufname: string) {
     return pattern.exec(bufname);
   },
-  bufname(_props: Record<string, string>) {
+  bufname(_props: Record<string, unknown>) {
     const props = ensureProps(_props);
     return `docbase://teams/${props.domain}/posts`;
   },
@@ -56,7 +56,7 @@ export const PostList: Handler = {
           state.token,
           props.domain,
         );
-        const response = await client.posts().search({});
+        const response = await client.posts().search({ per_page: 1 });
         if (!response.ok) {
           console.error(
             `Failed to load posts from the DocBase API: ${response.statusText}`,
@@ -105,7 +105,7 @@ export const PostList: Handler = {
         denops.name,
         "openBuffer",
         "Post",
-        { domain, postId: posts[params.lnum - 1].id },
+        { domain, postId: String(posts[params.lnum - 1].id) },
         params.opener,
       );
     },

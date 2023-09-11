@@ -33,7 +33,7 @@ export const Post: Handler = {
     return pattern.exec(bufname);
   },
 
-  bufname(_props: Record<string, string>) {
+  bufname(_props: Record<string, undefined>) {
     const props = ensureProps(_props);
     return `docbase://teams/${props.domain}/posts/${props.postId}`;
   },

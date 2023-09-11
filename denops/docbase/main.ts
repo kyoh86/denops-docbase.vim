@@ -14,7 +14,7 @@ export function main(denops: Denops) {
   denops.dispatcher = {
     async openBuffer(uHandler: unknown, uProps: unknown, uOpener: unknown) {
       const handler = ensure(uHandler, is.String);
-      const props = ensure(uProps, is.RecordOf(is.String));
+      const props = ensure(uProps, is.Record);
       const opener = ensure(
         uOpener,
         is.OptionalOf(is.OneOf([

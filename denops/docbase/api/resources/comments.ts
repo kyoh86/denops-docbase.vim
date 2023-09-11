@@ -30,12 +30,12 @@ export const isComment: P<Comment> = is.ObjectOf(CommentFields);
 export class Comments {
   constructor(private fetcher: Fetcher, private memoId: number) {}
 
-  create(comment: CreateCommentParams) {
+  create(body: CreateCommentParams) {
     return this.fetcher.request(
       "POST",
       `/posts/${this.memoId}/comments`,
       isComment,
-      comment,
+      { body },
     );
   }
 
