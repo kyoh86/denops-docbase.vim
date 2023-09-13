@@ -29,7 +29,7 @@ export const TeamList: Handler = {
       await prepareViewer(denops, Filetype.TeamList);
 
       const domains = await context.state.domains();
-      await variable.b.set(denops, "docbase_team_list_items", domains);
+      await variable.b.set(denops, "docbase_teams_list_items", domains);
 
       await setViewerContent(denops, context.bufnr, domains);
     });
@@ -44,7 +44,7 @@ export const TeamList: Handler = {
       const domains = ensure(
         await variable.b.get(
           denops,
-          "docbase_team_list_items",
+          "docbase_teams_list_items",
         ),
         is.ArrayOf(is.String),
       );

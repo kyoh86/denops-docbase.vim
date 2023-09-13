@@ -71,9 +71,9 @@ export const PostList: Handler = {
       const postTitles = response.body.posts.map((p) => p.title);
 
       await batch(denops, async (denops) => {
-        await variable.b.set(denops, "docbase_post_list_page", page);
-        await variable.b.set(denops, "docbase_post_list_domain", props.domain);
-        await variable.b.set(denops, "docbase_post_list_ids", postIds);
+        await variable.b.set(denops, "docbase_posts_list_page", page);
+        await variable.b.set(denops, "docbase_posts_list_domain", props.domain);
+        await variable.b.set(denops, "docbase_posts_list_ids", postIds);
       });
       await setViewerContent(denops, context.bufnr, postTitles);
     });
@@ -86,13 +86,13 @@ export const PostList: Handler = {
         is.ObjectOf({ lnum: is.Number, opener: is.OptionalOf(isOpener) }),
       );
       const domain = ensure(
-        await variable.b.get(denops, "docbase_post_list_domain"),
+        await variable.b.get(denops, "docbase_posts_list_domain"),
         is.String,
       );
       const postIds = ensure(
         await variable.b.get(
           denops,
-          "docbase_post_list_items",
+          "docbase_posts_list_items",
         ),
         is.ArrayOf(isPost),
       );
@@ -117,11 +117,11 @@ async function paging(denops: Denops, context: Context, shift: 1 | -1) {
     async () => {
       return {
         page: ensure(
-          await variable.b.get(denops, "docbase_post_list_page", 1),
+          await variable.b.get(denops, "docbase_posts_list_page", 1),
           is.Number,
         ),
         domain: ensure(
-          await variable.b.get(denops, "docbase_post_list_domain"),
+          await variable.b.get(denops, "docbase_posts_list_domain"),
           is.String,
         ),
       };

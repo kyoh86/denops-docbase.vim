@@ -25,7 +25,7 @@ const pattern = new URLPattern({
   pathname: "/:domain(\\w+)/posts/new",
 });
 
-export const PostNew: Handler = {
+export const NewPost: Handler = {
   accept(bufname: string) {
     return pattern.exec(bufname);
   },
@@ -38,7 +38,7 @@ export const PostNew: Handler = {
   async load(denops: Denops, context: Context) {
     const props = ensureProps(context.match.pathname.groups);
 
-    await prepareProxy(denops, context.bufnr, Filetype.TeamList);
+    await prepareProxy(denops, context.bufnr, Filetype.NewPost);
 
     const state = await context.state.load(props.domain);
     if (!state) {

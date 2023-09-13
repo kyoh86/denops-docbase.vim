@@ -42,7 +42,7 @@ export const Post: Handler = {
   async load(denops: Denops, context: Context) {
     const props = ensureProps(context.match.pathname.groups);
 
-    await prepareProxy(denops, context.bufnr, Filetype.TeamList);
+    await prepareProxy(denops, context.bufnr, Filetype.Post);
 
     const state = await context.state.load(props.domain);
     if (!state) {

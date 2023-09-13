@@ -5,10 +5,10 @@ import { group } from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 
 export enum Filetype {
-  TeamList = "docbase_team_list",
-  PostList = "docbase_post_list",
+  TeamList = "docbase_teams_list",
+  PostList = "docbase_posts_list",
   Post = "docbase_post.markdown",
-  PostNew = "docbase_post_new.markdown",
+  NewPost = "docbase_new_post.markdown",
 }
 
 export async function prepareViewer(denops: Denops, ft: Filetype) {
