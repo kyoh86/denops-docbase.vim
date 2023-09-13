@@ -66,7 +66,6 @@ export function main(denops: Denops) {
             `There's no valid state for domain "${domain}". You can setup with :DocbaseLogin`,
           );
         }
-        console.log("state");
         const client = new Client(
           state.token,
           domain,
@@ -77,7 +76,6 @@ export function main(denops: Denops) {
             `Failed to load posts from the DocBase API: ${response.statusText}`,
           );
         }
-        console.log("return");
         return response.body;
       } catch (err) {
         console.error(err);
