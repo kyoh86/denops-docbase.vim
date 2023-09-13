@@ -3,7 +3,6 @@
 import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
-import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
 import {
   ensure,
@@ -12,10 +11,10 @@ import {
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
 import { isOpener, isPost } from "../types.ts";
+import { Filetype, prepareViewer, setInitialContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
-import { Filetype } from "./filetype.ts";
 
 function ensureProps(props: unknown) {
   return ensure(
@@ -44,16 +43,11 @@ export const PostList: Handler = {
 
   async load(denops: Denops, context: Context) {
     await buffer.ensure(denops, context.bufnr, async () => {
+      await prepareViewer(denops, Filetype.PostList);
+
       const props = ensureProps(context.match.pathname.groups);
       const query = new URLSearchParams(context.match.search.input);
       const page = parseInt(query.get("page") || "1", 10);
-
-      await batch(denops, async (denops) => {
-        await option.swapfile.setLocal(denops, false);
-        await option.modifiable.setLocal(denops, false);
-        await option.bufhidden.setLocal(denops, "wipe");
-        await option.filetype.setLocal(denops, Filetype.PostList);
-      });
 
       const state = await context.state.load(props.domain);
       if (!state) {
@@ -73,21 +67,15 @@ export const PostList: Handler = {
         );
         return;
       }
+      const postIds = response.body.posts.map((p) => p.id);
+      const postTitles = response.body.posts.map((p) => p.title);
 
       await batch(denops, async (denops) => {
-        const posts = response.body.posts;
         await variable.b.set(denops, "docbase_post_list_page", page);
         await variable.b.set(denops, "docbase_post_list_domain", props.domain);
-        await variable.b.set(
-          denops,
-          "docbase_post_list_ids",
-          posts.map((p) => p.id),
-        );
-        await buffer.replace(denops, context.bufnr, posts.map((p) => p.title));
-
-        await option.modified.setLocal(denops, false);
-        await option.readonly.setLocal(denops, false);
+        await variable.b.set(denops, "docbase_post_list_ids", postIds);
       });
+      await setInitialContent(denops, context.bufnr, postTitles);
     });
   },
 

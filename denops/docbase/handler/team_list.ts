@@ -2,14 +2,12 @@
 
 import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
-import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 
+import { Filetype, prepareViewer, setInitialContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
-import { Filetype } from "./filetype.ts";
 import { isOpener } from "../types.ts";
 
 const pattern = new URLPattern({
@@ -28,19 +26,12 @@ export const TeamList: Handler = {
 
   async load(denops: Denops, context: Context) {
     await buffer.ensure(denops, context.bufnr, async () => {
-      await batch(denops, async (denops) => {
-        await option.swapfile.setLocal(denops, false);
-        await option.modifiable.setLocal(denops, false);
-        await option.bufhidden.setLocal(denops, "wipe");
-        await option.filetype.setLocal(denops, Filetype.TeamList);
+      await prepareViewer(denops, Filetype.TeamList);
 
-        const domains = await context.state.domains();
-        await variable.b.set(denops, "docbase_team_list_items", domains);
-        await buffer.replace(denops, context.bufnr, domains);
+      const domains = await context.state.domains();
+      await variable.b.set(denops, "docbase_team_list_items", domains);
 
-        await option.modified.setLocal(denops, false);
-        await option.readonly.setLocal(denops, false);
-      });
+      await setInitialContent(denops, context.bufnr, domains);
     });
   },
 

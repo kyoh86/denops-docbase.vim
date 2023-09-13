@@ -56,7 +56,6 @@ export function main(denops: Denops) {
           `Failed to load posts from the DocBase API: ${response.statusText}`,
         );
       }
-
       return response.body.posts;
     },
 

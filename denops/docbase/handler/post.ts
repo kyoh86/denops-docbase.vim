@@ -5,20 +5,14 @@ import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.0.1/function/buffer.ts";
-import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
-import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
+import { Filetype, prepareProxy } from "./buffer.ts";
 import { Handler } from "../router.ts";
 import type { Context, Params } from "../router.ts";
-import type {
-  isGroupSummary,
-  Post as PostData,
-  UpdatePostParams,
-} from "../types.ts";
+import type { Post as PostData, UpdatePostParams } from "../types.ts";
+import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
-import { Filetype } from "./filetype.ts";
 
 function ensureProps(props: unknown) {
   return ensure(
@@ -46,57 +40,30 @@ export const Post: Handler = {
   },
 
   async load(denops: Denops, context: Context) {
-    await buffer.ensure(denops, context.bufnr, async () => {
-      const props = ensureProps(context.match.pathname.groups);
+    const props = ensureProps(context.match.pathname.groups);
 
-      await batch(denops, async (denops) => {
-        await option.swapfile.setLocal(denops, false);
-        await option.bufhidden.setLocal(denops, "unload");
-        await option.filetype.setLocal(denops, `${Filetype.Post}`);
-        await option.buftype.setLocal(denops, "acwrite");
+    await prepareProxy(denops, context.bufnr, Filetype.TeamList);
 
-        await autocmd.group(
-          denops,
-          "docbase-writecmd",
-          (helper) => {
-            helper.remove("*", "<buffer>");
-            helper.define(
-              "BufWriteCmd",
-              "<buffer>",
-              `call denops#notify("${denops.name}", "bufferAction", [bufnr(), "save", {}])`,
-            );
-          },
-        );
-      });
-
-      const state = await context.state.load(props.domain);
-      if (!state) {
-        console.error(
-          `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
-        );
-        return;
-      }
-      const client = new Client(state.token, props.domain);
-      const postResponse = await client.posts().get(props.postId);
-      if (!postResponse.ok) {
-        throw new Error(postResponse.statusText, { cause: postResponse });
-      }
-      const groupsResponse = await client.groups().search({ per_page: 1000 });
-      if (!groupsResponse.ok) {
-        throw new Error(groupsResponse.statusText, { cause: groupsResponse });
-      }
-      await batch(
-        denops,
-        async (denops) => {
-          await variable.b.set(
-            denops,
-            "docbase_post_groups",
-            groupsResponse.body,
-          );
-          await postToBuffer(denops, context.bufnr, postResponse.body);
-        },
+    const state = await context.state.load(props.domain);
+    if (!state) {
+      console.error(
+        `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
       );
-    });
+      return;
+    }
+    const client = new Client(state.token, props.domain);
+    await saveGroupsIntoPostBuffer(denops, client, context.bufnr);
+
+    const response = await client.posts().get(props.postId);
+    if (!response.ok) {
+      console.error(
+        `Failed to load a post from the DocBase API: ${response.statusText}`,
+      );
+      return;
+    }
+
+    const lines = postToBuffer(response.body);
+    await buffer.replace(denops, context.bufnr, lines);
   },
 
   act: {
@@ -114,28 +81,64 @@ export const Post: Handler = {
       const client = new Client(state.token, props.domain);
       const response = await client.posts().update(props.postId, post);
       if (!response.ok) {
-        throw new Error(response.statusText, { cause: response });
+        console.error(
+          `Failed to update the post with the DocBase API: ${response.statusText}`,
+        );
+        return;
       }
     },
   },
 };
 
 async function bufferToPost(denops: Denops, bufnr: number) {
-  const groups = await buffer.ensure(denops, bufnr, () => {
-    return ensure(
-      variable.b.get(
-        denops,
-        "docbase_post_groups",
-      ),
-      is.ArrayOf(isGroupSummary),
-    ).reduce<Record<string, number | undefined>>(
-      (map, obj) => {
-        map[obj.name] = obj.id;
-        return map;
-      },
-      {},
-    );
-  });
+  const post = await parsePostBuffer(denops, bufnr);
+  let params: UpdatePostParams = {
+    title: post.attr.title,
+    draft: post.attr.draft,
+    tags: post.attr.tags,
+    body: post.body,
+  };
+  if (post.attr.scope == "group") {
+    params = {
+      ...params,
+      scope: "group",
+      groups: post.groups,
+    };
+  } else {
+    params = {
+      ...params,
+      scope: post.attr.scope,
+    };
+  }
+  return params;
+}
+
+function postToBuffer(post: PostData) {
+  const lines = [
+    "---",
+    `title: ${post.title}`,
+    `scope: ${post.scope || "private"}`,
+  ];
+  if (post.draft) {
+    lines.push("draft: true");
+  }
+  if (post.tags.length > 0) {
+    lines.push("tags:");
+    post.tags.forEach((g) => {
+      lines.push(`  - ${g.name}`);
+    });
+  }
+  if (post.groups.length > 0) {
+    lines.push("groups:");
+    post.groups.forEach((t) => {
+      lines.push(`  - ${t.name}`);
+    });
+  }
+  lines.push("---");
+  return lines.concat(post.body.split(/\r?\n/));
+}
+
+export async function parsePostBuffer(denops: Denops, bufnr: number) {
   const lines = await getbufline(denops, bufnr, 1);
   const attrFields = {
     title: is.String,
@@ -160,54 +163,55 @@ async function bufferToPost(denops: Denops, bufnr: number) {
       }),
     ]),
   );
-  let post: UpdatePostParams = {
-    title: attr.title,
-    draft: attr.draft,
-    tags: attr.tags,
+  const allGroups = await buffer.ensure(denops, bufnr, () => {
+    return ensure(
+      variable.b.get(
+        denops,
+        "docbase_post_groups",
+      ),
+      is.ArrayOf(isGroupSummary),
+    ).reduce<Record<string, number | undefined>>(
+      (map, obj) => {
+        map[obj.name] = obj.id;
+        return map;
+      },
+      {},
+    );
+  });
+  const groups = (attr.scope == "group")
+    ? attr.groups.map((name) => {
+      const id = allGroups[name];
+      if (id !== undefined) {
+        return id;
+      }
+      throw new Error(`Invalid group: ${name}`);
+    }).filter((g) => !!g)
+    : [];
+
+  return {
+    attr,
+    groups,
     body: content.body,
   };
-  if (attr.scope == "group") {
-    post = {
-      ...post,
-      scope: "group",
-      groups: attr.groups.map((name) => {
-        const id = groups[name];
-        if (id !== undefined) {
-          return id;
-        }
-        throw new Error(`Invalid group: ${name}`);
-      }).filter((g) => !!g),
-    };
-  } else {
-    post = {
-      ...post,
-      scope: attr.scope,
-    };
-  }
-  return post;
 }
 
-async function postToBuffer(denops: Denops, bufnr: number, post: PostData) {
-  const lines = [
-    "---",
-    `title: ${post.title}`,
-    `scope: ${post.scope || "private"}`,
-  ];
-  if (post.draft) {
-    lines.push("draft: true");
+export async function saveGroupsIntoPostBuffer(
+  denops: Denops,
+  client: Client,
+  bufnr: number,
+) {
+  const groupsResponse = await client.groups().search({ per_page: 200 });
+  if (!groupsResponse.ok) {
+    console.error(
+      `Failed to load groups from the DocBase API: ${groupsResponse.statusText}`,
+    );
+    return;
   }
-  if (post.tags.length > 0) {
-    lines.push("tags:");
-    post.tags.forEach((g) => {
-      lines.push(`  - ${g.name}`);
-    });
-  }
-  if (post.groups.length > 0) {
-    lines.push("groups:");
-    post.groups.forEach((t) => {
-      lines.push(`  - ${t.name}`);
-    });
-  }
-  lines.push("---");
-  await buffer.replace(denops, bufnr, lines.concat(post.body.split(/\r?\n/)));
+  await buffer.ensure(denops, bufnr, async () => {
+    await variable.b.set(
+      denops,
+      "docbase_post_groups",
+      groupsResponse.body,
+    );
+  });
 }
