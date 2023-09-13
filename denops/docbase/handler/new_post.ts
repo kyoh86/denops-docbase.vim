@@ -84,9 +84,9 @@ export const NewPost: Handler = {
 function initialContent() {
   return [
     "---",
-    "title: ",
+    'title: ""',
     "draft: true",
-    'scope: "private"',
+    "scope: private",
     "tags: []",
     "groups: []",
     "---",

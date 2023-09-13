@@ -6,6 +6,17 @@ import { Response, ResponseWithBody } from "./types.ts";
 
 const API_URL = "https://api.docbase.io";
 
+async function parseJSONResponse(response: globalThis.Response) {
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    console.error("failed to parse response as JSON");
+    console.error(err);
+    console.error(text);
+  }
+}
+
 export class Fetcher {
   constructor(
     private readonly apiToken: string,
@@ -70,7 +81,16 @@ export class Fetcher {
       statusText: raw.statusText,
       type: raw.type,
       url: raw.url,
-      body: asBody ? ensure(await raw.json(), asBody) : undefined,
+      ...((raw.ok)
+        ? {
+          body: asBody
+            ? ensure(await parseJSONResponse(raw), asBody)
+            : undefined,
+        }
+        : {
+          error: await raw.text(),
+          body: {},
+        }),
     };
   }
 

@@ -6,6 +6,7 @@ export type Response = {
   readonly statusText: string;
   readonly type: ResponseType;
   readonly url: string;
+  readonly error?: string;
 };
 
 export type ResponseWithBody<T> = Response & { body: T };

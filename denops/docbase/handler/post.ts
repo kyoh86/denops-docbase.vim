@@ -68,7 +68,7 @@ export const Post: Handler = {
 
   act: {
     async save(denops: Denops, context: Context, _params: Params) {
-      const props = ensureProps(context);
+      const props = ensureProps(context.match.pathname.groups);
       const state = await context.state.load(props.domain);
       if (!state) {
         console.error(
@@ -116,7 +116,7 @@ async function bufferToPost(denops: Denops, bufnr: number) {
 function postToBuffer(post: PostData) {
   const lines = [
     "---",
-    `title: ${post.title}`,
+    `title: "${post.title}"`,
     `scope: ${post.scope || "private"}`,
   ];
   if (post.draft) {
@@ -125,13 +125,13 @@ function postToBuffer(post: PostData) {
   if (post.tags.length > 0) {
     lines.push("tags:");
     post.tags.forEach((g) => {
-      lines.push(`  - ${g.name}`);
+      lines.push(`  - "${g.name}"`);
     });
   }
   if (post.groups.length > 0) {
     lines.push("groups:");
     post.groups.forEach((t) => {
-      lines.push(`  - ${t.name}`);
+      lines.push(`  - "${t.name}"`);
     });
   }
   lines.push("---");
@@ -139,7 +139,7 @@ function postToBuffer(post: PostData) {
 }
 
 export async function parsePostBuffer(denops: Denops, bufnr: number) {
-  const lines = await getbufline(denops, bufnr, 1);
+  const lines = await getbufline(denops, bufnr, 1, "$");
   const attrFields = {
     title: is.String,
     draft: is.OptionalOf(is.Boolean),
@@ -163,9 +163,9 @@ export async function parsePostBuffer(denops: Denops, bufnr: number) {
       }),
     ]),
   );
-  const allGroups = await buffer.ensure(denops, bufnr, () => {
+  const allGroups = await buffer.ensure(denops, bufnr, async () => {
     return ensure(
-      variable.b.get(
+      await variable.b.get(
         denops,
         "docbase_post_groups",
       ),
