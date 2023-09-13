@@ -12,11 +12,11 @@ Contents ~
 
 Install           |docbase-install|
 Setup             |docbase-setup|
-Buffers           |docbase-buffers|
+Special buffers   |docbase-special-buffers|
 Function          |docbase-function|
 Commands          |docbase-commands|
 Keymaps           |docbase-keymaps|
-Denops Commands   |docbase-denops-commands||
+Denops commands   |docbase-denops-commands|
 
 
 ==============================================================================
@@ -36,12 +36,12 @@ You can setup default commands and keymaps by functions below.
 - |docbase#setup#maps()|
 - |docbase#setup#commands()|
 
-If you want to create comamnd or map in your custom, don't call them and make
-your sense.
+If you want to create command or map in your custom, don't call them and
+customize as you see fit.
 
 ==============================================================================
-                                                             *docbase-buffers*
-Buffers ~
+                                                     *docbase-special-buffers*
+Special buffers ~
 
 denops-docbase.vim has some special buffers for each special name.
 
@@ -51,7 +51,6 @@ Teams list view
 
 	Shows your teams (domain) list.
 	You can select a domain and open it with buffer action.
-	(see: )
 
                   *docbase-buffer-teams-list* *docbase://teams/{domain}/posts*
 Posts list view
@@ -59,7 +58,6 @@ Posts list view
 
 	Shows your posts in the team (domain).
 	You can select a post and open it with buffer action.
-	(see: )
 
               *docbase-buffer-post* *docbase://teams/{domain}/posts/{post_id}*
 Post editor
@@ -104,6 +102,7 @@ docbase#open#teams_list([{opener}])
 	{opener} ("edit"|"new"|"vnew"|"tabnew"):
 		A command to open the teams list view.
 
+                                                   *docbase#open#posts_list()*
 docbase#open#posts_list(domain, opener="edit")
 	Open DocBase posts list view for the domain.
 
@@ -114,6 +113,7 @@ docbase#open#posts_list(domain, opener="edit")
 	{opener} ("edit"|"new"|"vnew"|"tabnew"):
 		A command to open the teams list view.
 
+                                                         *docbase#open#post()*
 docbase#open#post(domain, post_id, opener="edit")
 	Open DocBase post editor.
 
@@ -128,6 +128,7 @@ docbase#open#post(domain, post_id, opener="edit")
 	{opener} ("edit"|"new"|"vnew"|"tabnew"):
 		A command to open the teams list view.
 
+                                                     *docbase#open#new_post()*
 docbase#open#new_post(domain, opener="edit")
 
 	{domain} (string):
@@ -137,8 +138,17 @@ docbase#open#new_post(domain, opener="edit")
 	{opener} ("edit"|"new"|"vnew"|"tabnew"):
 		A command to open the teams list view.
 
+                                                      *docbase#list#domains()*
 docbase#list#domains()
+	Get domain list. Returns string[].
+	You can make a finder source with this, for tools like telescope.nvim,
+	ctrlp.vim, fzf.vim, etc.
+
+                                                        *docbase#list#posts()*
 docbase#list#posts(domain)
+	Get post list. Returns Post[].
+	You can make a finder source with this, for tools like telescope.nvim,
+	ctrlp.vim, fzf.vim, etc.
 
                                       *docbase#buffer_action#teams_list#open()*
 docbase#buffer_action#teams_list#open({lnum}[, {opener}])
@@ -181,29 +191,27 @@ docbase#buffer_action#posts_list#next()
                                                             *docbase-commands*
 Commands ~
 
-If you call denops#setup#commands(), it creates defaultu commands below.
+If you call denops#setup#commands(), it creates default commands below.
 
-                                                               *:DocbaseLogin*
-DocbaseLogin
+*:DocbaseLogin*
 	Login to the DocBase. It will request you a domain of your team and a
 	token to access DocBase API.
 
 	- Domain : If you want to access `kyoh86.docbase.io` => `"kyoh86"`
 	- Token for the DocBase. See https://help.docbase.io/posts/45703
 
-                                                *:Docbase* *:DocbaseTeamsList*
-Docbase
-DocbaseTeamsList
+*:Docbase*
+*:DocbaseTeamsList*
 	Open DocBase teams list view.
 
-DocbasePostsList {domain}
+*:DocbasePostsList* {domain}
 	Open DocBase posts list view for the domain.
 
 	{domain} (string):
 		Your team domain in the DocBase.
 		e.g.: `kyoh86.docbase.io` => `"kyoh86"`
 
-DocbasePost {domain} {post_id}
+*:DocbasePost* {domain} {post_id}
 	Open post editor.
 
 	{domain} (string):
@@ -216,34 +224,107 @@ DocbasePost {domain} {post_id}
 
 And in DocBase Teams list view, you can use commands below.
 
-               *:DocbaseOpenTeam* *:DocbaseOpenTeamNew* *:DocbaseOpenTeamVnew*
-                                                     *:DocbaseOpenTeamTabedit*
-DocbaseOpenTeam
-DocbaseOpenTeamNew
-DocbaseOpenTeamVnew
-DocbaseOpenTeamTabedit
+*:DocbaseOpenTeam*
+*:DocbaseOpenTeamNew*
+*:DocbaseOpenTeamVnew*
+*:DocbaseOpenTeamTabedit*
 	Open DocBase posts list view for the domain under the cursor.
 
 And in DocBase posts list view, you can use commands below.
 
-               *:DocbaseOpenPost* *:DocbaseOpenPostNew* *:DocbaseOpenPostVnew*
-                                                     *:DocbaseOpenPostTabedit*
-DocbaseOpenPost
-DocbaseOpenPostNew
-DocbaseOpenPostVnew
-DocbaseOpenPostTabedit
+*:DocbaseOpenPost*
+*:DocbaseOpenPostNew*
+*:DocbaseOpenPostVnew*
+*:DocbaseOpenPostTabedit*
 	Open DocBase post editor for the post under the cursor.
 
-                                                            *:DocbasePrevPage*
-DocbasePrevPage
+*:DocbasePrevPage*
 	Open previous page.
 
-                                                            *:DocbaseNextPage*
-DocbaseNextPage
+*:DocbaseNextPage*
 	Open next page.
 
 ==============================================================================
                                                              *docbase-keymaps*
 Keymaps ~
+
+If you call |docbase#setup#maps()|, you can use keys that described as
+"default:" below.
+
+*<Plug>(docbase-buffer-action-teams-list-open)* default: <CR>
+*<Plug>(docbase-buffer-action-teams-list-open-new)* default: <C-h>
+*<Plug>(docbase-buffer-action-teams-list-open-vnew)* default: <C-v>
+*<Plug>(docbase-buffer-action-teams-list-open-tabedit)* default: <C-t>
+	Open DocBase posts list view for the domain under the cursor.
+
+*<Plug>(docbase-buffer-action-posts-list-open)* default: <CR>
+*<Plug>(docbase-buffer-action-posts-list-open-new)* default: <C-h>
+*<Plug>(docbase-buffer-action-posts-list-open-vnew)* default: <C-v>
+*<Plug>(docbase-buffer-action-posts-list-open-tabedit)* default: <C-t>
+	Open DocBase post editor for the post under the cursor.
+
+*<Plug>(docbase-buffer-action-posts-list-prev)*
+	default: <C-k>
+	Open previous page.
+
+*<Plug>(docbase-buffer-action-posts-list-next)*
+	default: <C-j>
+	Open next page.
+
 ==============================================================================
-"vim:tw=78:ts=8:sw=8:ft=help:norl:noet:fen:
+                                                     *docbase-denops-commands*
+Denops commands ~
+
+You can call some functions from the denops commands.
+
+                                         *docbase-denops-command-openBuffer()*
+openBuffer(
+    handler: string,
+    props: Record<string, unknown>,
+    opener: "edit"|"new"|"vnew"|"tabedit")
+
+	Open new |docbase-special-buffers|.
+	{hanlder} is the name of a special buffer.
+	"TeamList", "PostList", "Post" and "NewPost" is in the handler.
+
+                                       *docbase-denops-command-bufferAction()*
+bufferAction(
+    bufnr: number
+    actName: string
+    params: Record<string, unknown>)
+
+	Notify the action for |docbase-special-buffers|.
+	If the buffer has action for the {actName}, process it with {params}.
+	See autoload functions docbase#buffer_action#* for example.
+
+
+                                              *docbase-denops-command-login()*
+login()
+
+	Login to the DocBase. It will request you a domain of your team and a
+	token to access DocBase API.
+
+	- Domain : If you want to access `kyoh86.docbase.io` => `"kyoh86"`
+	- Token for the DocBase. See https://help.docbase.io/posts/45703
+
+
+                                                      *docbase#list#domains()*
+listDomains()
+	Get domain list. Returns string[].
+	You can make a finder source with this, for tools like telescope.nvim,
+	ctrlp.vim, fzf.vim, etc.
+
+                                                        *docbase#list#posts()*
+searchPosts(
+    domain: string,
+    params?: {
+        q?: string,
+	page?: number,
+	per_page?: number})
+
+	Search posts. Returns Post[].
+	You can make a finder source with this, for tools like telescope.nvim,
+	ctrlp.vim, fzf.vim, etc.
+
+==============================================================================
+" vim:tw=78:ts=8:sw=8:ft=help:norl:noet:fen:
