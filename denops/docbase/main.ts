@@ -5,7 +5,7 @@ import {
 } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
-import { isOpener } from "./types.ts";
+import { isOpener, isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
 import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
 import { XDGStateMan } from "./state.ts";
@@ -37,8 +37,9 @@ export function main(denops: Denops) {
       return stateMan.domains();
     },
 
-    async listPosts(uDomain: unknown) {
+    async searchPosts(uDomain: unknown, uSearchParams: unknown) {
       const domain = ensure(uDomain, is.String);
+      const params = ensure(uSearchParams, is.OptionalOf(isSearchPostsParams));
       const state = await stateMan.load(domain);
       if (!state) {
         throw new Error(
@@ -49,13 +50,12 @@ export function main(denops: Denops) {
         state.token,
         domain,
       );
-      const response = await client.posts().search({});
+      const response = await client.posts().search(params || {});
       if (!response.ok) {
         throw new Error(
           `Failed to load posts from the DocBase API: ${response.statusText}`,
         );
       }
-      //TODO: paging
 
       return response.body.posts;
     },

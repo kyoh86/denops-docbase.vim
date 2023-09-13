@@ -11,11 +11,10 @@ import {
   maybe,
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
-import { isOpener } from "../types.ts";
+import { isOpener, isPost } from "../types.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
-import { isPost } from "../api/validation.ts";
 import { Filetype } from "./filetype.ts";
 
 function ensureProps(props: unknown) {
@@ -74,7 +73,6 @@ export const PostList: Handler = {
         );
         return;
       }
-      //TODO: paging
 
       await batch(denops, async (denops) => {
         const posts = response.body.posts;

@@ -12,8 +12,8 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
-import type { CreatePostParams } from "../api/types.ts";
-import { isGroupSummary } from "../api/validation.ts";
+import type { CreatePostParams } from "../types.ts";
+import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
 import { Filetype } from "./filetype.ts";
 
