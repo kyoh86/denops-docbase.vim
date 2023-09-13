@@ -103,6 +103,16 @@ export interface Post extends O<typeof PostFields> {
 }
 export const isPost: P<Post> = is.ObjectOf(PostFields);
 
+const SearchPostsMetaFields = {
+  previous_page: is.OneOf([is.String, is.Null]),
+  next_page: is.OneOf([is.String, is.Null]),
+  total: is.Number,
+};
+export interface SearchPostsMeta extends O<typeof SearchPostsMetaFields> {
+  _?: unknown;
+}
+export const isSearchPostsMeta = is.ObjectOf(SearchPostsMetaFields);
+
 export class Posts {
   constructor(private fetcher: Fetcher) {}
 
@@ -117,7 +127,7 @@ export class Posts {
       `/posts`,
       is.ObjectOf({
         posts: is.ArrayOf(isPost),
-        meta: is.Record,
+        meta: isSearchPostsMeta,
       }),
       { query },
     );

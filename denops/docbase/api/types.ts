@@ -30,6 +30,7 @@ export type {
   CreatePostParams,
   Post,
   Scope,
+  SearchPostsMeta,
   SearchPostsParams,
   UpdatePostParams,
 } from "./resources/posts.ts";

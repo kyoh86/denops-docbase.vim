@@ -18,6 +18,7 @@ export {
   isCreatePostParams,
   isPost,
   isScope,
+  isSearchPostsMeta,
   isSearchPostsParams,
   isUpdatePostParams,
 } from "./resources/posts.ts";

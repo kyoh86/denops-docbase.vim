@@ -322,7 +322,15 @@ searchPosts(
 	page?: number,
 	per_page?: number})
 
-	Search posts. Returns Post[].
+	Search posts. Returns a document like below.
+	  {
+	    meta: {
+	      previous_page: string | null;
+	      next_page: string | null;
+	      total: number;
+	    };
+	    post: Post[];
+	  }
 	You can make a finder source with this, for tools like telescope.nvim,
 	ctrlp.vim, fzf.vim, etc.
 
