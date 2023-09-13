@@ -120,7 +120,9 @@ export class Posts {
     const query: Record<string, string> = {};
     const parameters = params as Record<string, object>;
     for (const key in parameters) {
-      query[key] = parameters[key].toString();
+      if (parameters[key]) {
+        query[key] = parameters[key].toString();
+      }
     }
     return this.fetcher.request(
       "GET",

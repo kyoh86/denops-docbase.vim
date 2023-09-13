@@ -15,69 +15,98 @@ export function main(denops: Denops) {
 
   denops.dispatcher = {
     async openBuffer(uHandler: unknown, uProps: unknown, uOpener: unknown) {
-      const handler = ensure(uHandler, is.String);
-      const props = ensure(uProps, is.Record);
-      const opener = ensure(uOpener, is.OptionalOf(isOpener));
-      await openBuffer(denops, handler, props, opener);
+      try {
+        const handler = ensure(uHandler, is.String);
+        const props = ensure(uProps, is.Record);
+        const opener = ensure(uOpener, is.OptionalOf(isOpener));
+        await openBuffer(denops, handler, props, opener);
+      } catch (err) {
+        console.error(err);
+      }
     },
 
     async bufferLoaded(uBufnr: unknown) {
-      const bufnr = ensure(uBufnr, is.Number);
-      await bufferLoaded(denops, stateMan, bufnr);
+      try {
+        const bufnr = ensure(uBufnr, is.Number);
+        await bufferLoaded(denops, stateMan, bufnr);
+      } catch (err) {
+        console.error(err);
+      }
     },
 
     async bufferAction(uBufnr: unknown, uActName: unknown, uParams: unknown) {
-      const bufnr = ensure(uBufnr, is.Number);
-      const params = ensure(uParams, is.Record);
-      const actName = ensure(uActName, is.String);
-      await bufferAction(denops, stateMan, bufnr, actName, params);
+      try {
+        const bufnr = ensure(uBufnr, is.Number);
+        const params = ensure(uParams, is.Record);
+        const actName = ensure(uActName, is.String);
+        await bufferAction(denops, stateMan, bufnr, actName, params);
+      } catch (err) {
+        console.error(err);
+      }
     },
 
     listDomains() {
-      return stateMan.domains();
+      try {
+        return stateMan.domains();
+      } catch (err) {
+        console.error(err);
+      }
     },
 
     async searchPosts(uDomain: unknown, uSearchParams: unknown) {
-      const domain = ensure(uDomain, is.String);
-      const params = ensure(uSearchParams, is.OptionalOf(isSearchPostsParams));
-      const state = await stateMan.load(domain);
-      if (!state) {
-        throw new Error(
-          `There's no valid state for domain "${domain}". You can setup with :DocbaseLogin`,
+      try {
+        const domain = ensure(uDomain, is.String);
+        const params = ensure(
+          uSearchParams,
+          is.OptionalOf(isSearchPostsParams),
         );
-      }
-      const client = new Client(
-        state.token,
-        domain,
-      );
-      const response = await client.posts().search(params || {});
-      if (!response.ok) {
-        throw new Error(
-          `Failed to load posts from the DocBase API: ${response.statusText}`,
+        const state = await stateMan.load(domain);
+        if (!state) {
+          throw new Error(
+            `There's no valid state for domain "${domain}". You can setup with :DocbaseLogin`,
+          );
+        }
+        console.log("state");
+        const client = new Client(
+          state.token,
+          domain,
         );
+        const response = await client.posts().search(params || {});
+        if (!response.ok) {
+          throw new Error(
+            `Failed to load posts from the DocBase API: ${response.statusText}`,
+          );
+        }
+        console.log("return");
+        return response.body;
+      } catch (err) {
+        console.error(err);
       }
-      return response.body;
     },
 
     async login() {
-      const domain = await input(denops, {
-        prompt: "Domain: ",
-      });
-      if (!domain) {
-        console.warn("Cancelled");
-        return;
-      }
-      const token = await input(denops, {
-        prompt: "Token: ",
-        inputsave: true,
-      });
-      if (!token) {
-        console.warn("Cancelled");
-        return;
-      }
+      try {
+        const domain = await input(denops, {
+          prompt: "Domain: ",
+        });
+        if (!domain) {
+          console.warn("Cancelled");
+          return;
+        }
+        const token = await input(denops, {
+          prompt: "Token: ",
+          inputsave: true,
+        });
+        if (!token) {
+          console.warn("Cancelled");
+          return;
+        }
 
-      await stateMan.save(domain, { token });
-      await echo(denops, "Done");
+        await stateMan.save(domain, { token });
+        await echo(denops, "Done");
+      } catch (err) {
+        console.error(err);
+      }
     },
   };
 }
