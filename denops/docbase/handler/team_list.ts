@@ -5,7 +5,7 @@ import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 
-import { Filetype, prepareViewer, setInitialContent } from "./buffer.ts";
+import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { isOpener } from "../types.ts";
@@ -31,7 +31,7 @@ export const TeamList: Handler = {
       const domains = await context.state.domains();
       await variable.b.set(denops, "docbase_team_list_items", domains);
 
-      await setInitialContent(denops, context.bufnr, domains);
+      await setViewerContent(denops, context.bufnr, domains);
     });
   },
 

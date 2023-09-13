@@ -11,7 +11,7 @@ import {
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
 import { isOpener, isPost } from "../types.ts";
-import { Filetype, prepareViewer, setInitialContent } from "./buffer.ts";
+import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
@@ -75,7 +75,7 @@ export const PostList: Handler = {
         await variable.b.set(denops, "docbase_post_list_domain", props.domain);
         await variable.b.set(denops, "docbase_post_list_ids", postIds);
       });
-      await setInitialContent(denops, context.bufnr, postTitles);
+      await setViewerContent(denops, context.bufnr, postTitles);
     });
   },
 

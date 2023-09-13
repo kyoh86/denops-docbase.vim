@@ -20,6 +20,20 @@ export async function prepareViewer(denops: Denops, ft: Filetype) {
   });
 }
 
+export async function setViewerContent(
+  denops: Denops,
+  bufnr: number,
+  lines: string[],
+) {
+  await buffer.ensure(denops, bufnr, async () => {
+    await batch(denops, async (denops) => {
+      await buffer.replace(denops, bufnr, lines);
+
+      await option.modified.setLocal(denops, false);
+      await option.readonly.setLocal(denops, true);
+    });
+  });
+}
 export async function prepareProxy(
   denops: Denops,
   bufnr: number,
@@ -40,21 +54,6 @@ export async function prepareProxy(
         "<buffer>",
         `call denops#notify("${denops.name}", "bufferAction", [bufnr(), "save", {}])`,
       );
-    });
-  });
-}
-
-export async function setInitialContent(
-  denops: Denops,
-  bufnr: number,
-  lines: string[],
-) {
-  await buffer.ensure(denops, bufnr, async () => {
-    await batch(denops, async (denops) => {
-      await buffer.replace(denops, bufnr, lines);
-
-      await option.modified.setLocal(denops, false);
-      await option.readonly.setLocal(denops, false);
     });
   });
 }
