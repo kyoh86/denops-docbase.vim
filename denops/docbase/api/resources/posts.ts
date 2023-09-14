@@ -144,7 +144,7 @@ export class Posts {
   }
 
   update(id: string, body: UpdatePostParams) {
-    return this.fetcher.request("POST", `/posts/${id}`, isPost, { body });
+    return this.fetcher.request("PATCH", `/posts/${id}`, isPost, { body });
   }
 
   archive(id: string) {

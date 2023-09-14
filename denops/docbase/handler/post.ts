@@ -3,6 +3,7 @@
 import { extract } from "https://deno.land/std@0.201.0/front_matter/yaml.ts";
 import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.0.1/function/buffer.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
@@ -86,6 +87,9 @@ export const Post: Handler = {
         );
         return;
       }
+      await buffer.ensure(denops, context.bufnr, async () => {
+        await option.modified.setLocal(denops, false);
+      });
     },
   },
 };
