@@ -27,6 +27,7 @@ export class Fetcher {
     return {
       "X-DocBaseToken": this.apiToken,
       "Content-Type": "application/json",
+      "User-Agent": `denops-docbase.vim`,
     };
   }
 
