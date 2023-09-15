@@ -42,7 +42,6 @@ export async function prepareProxy(
   await buffer.ensure(denops, bufnr, async () => {
     await batch(denops, async (denops) => {
       await option.swapfile.setLocal(denops, false);
-      await option.bufhidden.setLocal(denops, "unload");
       await option.buftype.setLocal(denops, "acwrite");
       await option.filetype.setLocal(denops, ft);
     });
