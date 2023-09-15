@@ -5,6 +5,7 @@ import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import * as option from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
+import * as autocmd from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.0.1/function/buffer.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
 
@@ -65,6 +66,7 @@ export const Post: Handler = {
 
     const lines = postToBuffer(response.body);
     await buffer.replace(denops, context.bufnr, lines);
+    await autocmd.emit(denops, "BufReadPost", context.bufname, {});
   },
 
   act: {
