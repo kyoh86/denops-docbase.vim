@@ -19,7 +19,7 @@ export interface StateMan {
 
 export class XDGStateMan implements StateMan {
   static statePath(...subs: string[]) {
-    return join(xdg.state(), "nvim", "denops-docbase", ...subs);
+    return join(xdg.state(), "denops-docbase", ...subs);
   }
 
   async domains(): Promise<string[]> {

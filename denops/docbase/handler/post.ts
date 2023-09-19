@@ -8,6 +8,7 @@ import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variab
 import * as autocmd from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.0.1/function/buffer.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import { getLogger } from "https://deno.land/std@0.200.0/log/mod.ts";
 
 import { Filetype, prepareProxy } from "./buffer.ts";
 import { Handler } from "../router.ts";
@@ -48,7 +49,7 @@ export const Post: Handler = {
 
     const state = await context.state.load(props.domain);
     if (!state) {
-      console.error(
+      getLogger("denops-docbase").error(
         `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
       );
       return;
@@ -58,7 +59,7 @@ export const Post: Handler = {
 
     const response = await client.posts().get(props.postId);
     if (!response.ok) {
-      console.error(
+      getLogger("denops-docbase").error(
         `Failed to load a post from the DocBase API: ${response.statusText}`,
       );
       return;
@@ -74,7 +75,7 @@ export const Post: Handler = {
       const props = ensureProps(context.match.pathname.groups);
       const state = await context.state.load(props.domain);
       if (!state) {
-        console.error(
+        getLogger("denops-docbase").error(
           `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
         );
         return;
@@ -84,7 +85,7 @@ export const Post: Handler = {
       const client = new Client(state.token, props.domain);
       const response = await client.posts().update(props.postId, post);
       if (!response.ok) {
-        console.error(
+        getLogger("denops-docbase").error(
           `Failed to update the post with the DocBase API: ${response.statusText}`,
         );
         return;
@@ -208,7 +209,7 @@ export async function saveGroupsIntoPostBuffer(
 ) {
   const groupsResponse = await client.groups().search({ per_page: 200 });
   if (!groupsResponse.ok) {
-    console.error(
+    getLogger("denops-docbase").error(
       `Failed to load groups from the DocBase API: ${groupsResponse.statusText}`,
     );
     return;

@@ -4,6 +4,7 @@ import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
+import { getLogger } from "https://deno.land/std@0.200.0/log/mod.ts";
 import {
   ensure,
   is,
@@ -51,7 +52,7 @@ export const PostList: Handler = {
 
       const state = await context.state.load(props.domain);
       if (!state) {
-        console.error(
+        getLogger("denops-docbase").error(
           `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
         );
         return;
@@ -62,7 +63,7 @@ export const PostList: Handler = {
       );
       const response = await client.posts().search({ page, per_page: 100 });
       if (!response.ok) {
-        console.error(
+        getLogger("denops-docbase").error(
           `Failed to load posts from the DocBase API: ${response.statusText}`,
         );
         return;

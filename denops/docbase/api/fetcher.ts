@@ -2,6 +2,7 @@ import {
   ensure,
   Predicate as P,
 } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import { getLogger } from "https://deno.land/std@0.200.0/log/mod.ts";
 import { Response, ResponseWithBody } from "./types.ts";
 
 const API_URL = "https://api.docbase.io";
@@ -11,9 +12,11 @@ async function parseJSONResponse(response: globalThis.Response) {
   try {
     return JSON.parse(text);
   } catch (err) {
-    console.error("failed to parse response as JSON");
-    console.error(err);
-    console.error(text);
+    getLogger("denops-docbase").error(
+      "Failed to parse response as JSON. Call :DocbaseLog for details",
+    );
+    getLogger("denops-docbase-verbose").debug(err);
+    getLogger("denops-docbase-verbose").debug(text);
   }
 }
 

@@ -3,15 +3,46 @@ import {
   echo,
   input,
 } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
+import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
+import { join } from "https://deno.land/std@0.201.0/path/mod.ts";
+import { ensureFile } from "https://deno.land/std@0.201.0/fs/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import {
+  getLogger,
+  handlers,
+  setup,
+} from "https://deno.land/std@0.200.0/log/mod.ts";
 
 import { isOpener, isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
 import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
 import { XDGStateMan } from "./state.ts";
 
-export function main(denops: Denops) {
+export async function main(denops: Denops) {
   const stateMan = new XDGStateMan();
+  const cacheFile = join(xdg.cache(), "denops-docbase-vim", "log.txt");
+  await ensureFile(cacheFile);
+
+  setup({
+    handlers: {
+      console: new handlers.ConsoleHandler("DEBUG"),
+      cache: new handlers.RotatingFileHandler("DEBUG", {
+        filename: cacheFile,
+        maxBytes: 1024 * 1024,
+        maxBackupCount: 1,
+      }),
+    },
+    loggers: {
+      "denops-docbase": {
+        level: "INFO",
+        handlers: ["console", "cache"],
+      },
+      "denops-docbase-verbose": {
+        level: "DEBUG",
+        handlers: ["cache"],
+      },
+    },
+  });
 
   denops.dispatcher = {
     async openBuffer(uHandler: unknown, uProps: unknown, uOpener: unknown) {
@@ -21,7 +52,7 @@ export function main(denops: Denops) {
         const opener = ensure(uOpener, is.OptionalOf(isOpener));
         await openBuffer(denops, handler, props, opener);
       } catch (err) {
-        console.error(err);
+        getLogger("denops-docbase").error(err);
       }
     },
 
@@ -30,7 +61,7 @@ export function main(denops: Denops) {
         const bufnr = ensure(uBufnr, is.Number);
         await bufferLoaded(denops, stateMan, bufnr);
       } catch (err) {
-        console.error(err);
+        getLogger("denops-docbase").error(err);
       }
     },
 
@@ -41,7 +72,7 @@ export function main(denops: Denops) {
         const actName = ensure(uActName, is.String);
         await bufferAction(denops, stateMan, bufnr, actName, params);
       } catch (err) {
-        console.error(err);
+        getLogger("denops-docbase").error(err);
       }
     },
 
@@ -49,7 +80,7 @@ export function main(denops: Denops) {
       try {
         return stateMan.domains();
       } catch (err) {
-        console.error(err);
+        getLogger("denops-docbase").error(err);
       }
     },
 
@@ -78,7 +109,7 @@ export function main(denops: Denops) {
         }
         return response.body;
       } catch (err) {
-        console.error(err);
+        getLogger("denops-docbase").error(err);
       }
     },
 
@@ -88,7 +119,7 @@ export function main(denops: Denops) {
           prompt: "Domain: ",
         });
         if (!domain) {
-          console.warn("Cancelled");
+          getLogger("denops-docbase").warning("Cancelled");
           return;
         }
         const token = await input(denops, {
@@ -96,14 +127,14 @@ export function main(denops: Denops) {
           inputsave: true,
         });
         if (!token) {
-          console.warn("Cancelled");
+          getLogger("denops-docbase").warning("Cancelled");
           return;
         }
 
         await stateMan.save(domain, { token });
         await echo(denops, "Done");
       } catch (err) {
-        console.error(err);
+        getLogger("denops-docbase").error(err);
       }
     },
   };
