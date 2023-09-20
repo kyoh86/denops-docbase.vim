@@ -104,7 +104,9 @@ export async function main(denops: Denops) {
         const response = await client.posts().search(params || {});
         if (!response.ok) {
           throw new Error(
-            `Failed to load posts from the DocBase API: ${response.statusText}`,
+            `Failed to load posts from the DocBase API: ${
+              response.error || response.statusText
+            }`,
           );
         }
         return response.body;

@@ -64,7 +64,9 @@ export const PostList: Handler = {
       const response = await client.posts().search({ page, per_page: 100 });
       if (!response.ok) {
         getLogger("denops-docbase").error(
-          `Failed to load posts from the DocBase API: ${response.statusText}`,
+          `Failed to load posts from the DocBase API: ${
+            response.error || response.statusText
+          }`,
         );
         return;
       }

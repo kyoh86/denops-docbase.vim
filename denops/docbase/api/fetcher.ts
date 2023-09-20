@@ -12,12 +12,17 @@ async function parseJSONResponse(response: globalThis.Response) {
   try {
     return JSON.parse(text);
   } catch (err) {
-    getLogger("denops-docbase").error(
-      "Failed to parse response as JSON. Call :DocbaseLog for details",
-    );
+    getLogger("denops-docbase").error("Failed to parse response as JSON");
     getLogger("denops-docbase-verbose").debug(err);
     getLogger("denops-docbase-verbose").debug(text);
   }
+}
+
+async function parseTextResponse(response: globalThis.Response) {
+  if (response.body == null) {
+    return null;
+  }
+  return await response.text();
 }
 
 export class Fetcher {
@@ -92,7 +97,7 @@ export class Fetcher {
             : undefined,
         }
         : {
-          error: await raw.text(),
+          error: await parseTextResponse(raw),
           body: {},
         }),
     };

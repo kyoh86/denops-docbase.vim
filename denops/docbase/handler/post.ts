@@ -60,7 +60,9 @@ export const Post: Handler = {
     const response = await client.posts().get(props.postId);
     if (!response.ok) {
       getLogger("denops-docbase").error(
-        `Failed to load a post from the DocBase API: ${response.statusText}`,
+        `Failed to load a post from the DocBase API: ${
+          response.error || response.statusText
+        }`,
       );
       return;
     }
@@ -86,7 +88,9 @@ export const Post: Handler = {
       const response = await client.posts().update(props.postId, post);
       if (!response.ok) {
         getLogger("denops-docbase").error(
-          `Failed to update the post with the DocBase API: ${response.statusText}`,
+          `Failed to update the post with the DocBase API: ${
+            response.error || response.statusText
+          }`,
         );
         return;
       }
@@ -207,10 +211,12 @@ export async function saveGroupsIntoPostBuffer(
   client: Client,
   bufnr: number,
 ) {
-  const groupsResponse = await client.groups().search({ per_page: 200 });
-  if (!groupsResponse.ok) {
+  const response = await client.groups().search({ per_page: 200 });
+  if (!response.ok) {
     getLogger("denops-docbase").error(
-      `Failed to load groups from the DocBase API: ${groupsResponse.statusText}`,
+      `Failed to load groups from the DocBase API: ${
+        response.error || response.statusText
+      }`,
     );
     return;
   }
@@ -218,7 +224,7 @@ export async function saveGroupsIntoPostBuffer(
     await variable.b.set(
       denops,
       "docbase_post_groups",
-      groupsResponse.body,
+      response.body,
     );
   });
 }
