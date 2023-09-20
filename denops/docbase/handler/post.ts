@@ -69,7 +69,6 @@ export const Post: Handler = {
 
     const lines = postToBuffer(response.body);
     await buffer.replace(denops, context.bufnr, lines);
-    await autocmd.emit(denops, "BufReadPost", context.bufname, {});
   },
 
   act: {
