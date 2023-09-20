@@ -52,7 +52,7 @@ Teams list view
 	Shows your teams (domain) list.
 	You can select a domain and open it with buffer action.
 
-                  *docbase-buffer-teams-list* *docbase://teams/{domain}/posts*
+                  *docbase-buffer-posts-list* *docbase://teams/{domain}/posts*
 Posts list view
 	Buffer name: `docbase://teams/{domain}/posts`
 
@@ -308,13 +308,13 @@ login()
 	- Token for the DocBase. See https://help.docbase.io/posts/45703
 
 
-                                                      *docbase#list#domains()*
+                                        *docbase-denops-command-listDomains()*
 listDomains()
 	Get domain list. Returns string[].
 	You can make a finder source with this, for tools like telescope.nvim,
 	ctrlp.vim, fzf.vim, etc.
 
-                                                        *docbase#list#posts()*
+                                        *docbase-denops-command-searchPosts()*
 searchPosts(
     domain: string,
     params?: {
