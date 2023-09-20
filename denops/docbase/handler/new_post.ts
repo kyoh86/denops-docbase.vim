@@ -57,7 +57,7 @@ export const NewPost: Handler = {
 
   act: {
     async save(denops: Denops, context: Context, _params: Params) {
-      const props = ensureProps(context);
+      const props = ensureProps(context.match.pathname.groups);
       const state = await context.state.load(props.domain);
       if (!state) {
         getLogger("denops-docbase").error(
