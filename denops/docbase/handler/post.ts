@@ -8,7 +8,7 @@ import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variab
 import * as autocmd from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.0.1/function/buffer.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
-import { getLogger } from "https://deno.land/std@0.200.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.201.0/log/mod.ts";
 
 import { Filetype, prepareProxy } from "./buffer.ts";
 import { Handler } from "../router.ts";

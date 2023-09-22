@@ -11,7 +11,7 @@ import {
   getLogger,
   handlers,
   setup,
-} from "https://deno.land/std@0.200.0/log/mod.ts";
+} from "https://deno.land/std@0.201.0/log/mod.ts";
 
 import { isOpener, isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
