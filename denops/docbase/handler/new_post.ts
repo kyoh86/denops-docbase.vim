@@ -1,10 +1,10 @@
 // New Post Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
-import { execute } from "https://deno.land/x/denops_std@v5.0.1/helper/execute.ts";
-import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
-import { getLogger } from "https://deno.land/std@0.201.0/log/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v5.1.0/mod.ts";
+import { execute } from "https://deno.land/x/denops_std@v5.1.0/helper/execute.ts";
+import * as buffer from "https://deno.land/x/denops_std@v5.1.0/buffer/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
+import { getLogger } from "https://deno.land/std@0.208.0/log/mod.ts";
 
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";

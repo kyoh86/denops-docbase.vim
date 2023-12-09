@@ -1,17 +1,17 @@
-import { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
+import { Denops } from "https://deno.land/x/denops_std@v5.1.0/mod.ts";
 import {
   echo,
   input,
-} from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
+} from "https://deno.land/x/denops_std@v5.1.0/helper/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { join } from "https://deno.land/std@0.201.0/path/mod.ts";
-import { ensureFile } from "https://deno.land/std@0.201.0/fs/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+import { join } from "https://deno.land/std@0.208.0/path/mod.ts";
+import { ensureFile } from "https://deno.land/std@0.208.0/fs/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 import {
   getLogger,
   handlers,
   setup,
-} from "https://deno.land/std@0.201.0/log/mod.ts";
+} from "https://deno.land/std@0.208.0/log/mod.ts";
 
 import { isOpener, isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";

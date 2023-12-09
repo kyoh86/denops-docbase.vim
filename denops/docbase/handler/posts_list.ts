@@ -1,15 +1,15 @@
 // Post List Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v5.0.1/buffer/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v5.0.1/variable/variable.ts";
-import { batch } from "https://deno.land/x/denops_std@v5.0.1/batch/mod.ts";
-import { getLogger } from "https://deno.land/std@0.201.0/log/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v5.1.0/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v5.1.0/buffer/mod.ts";
+import * as variable from "https://deno.land/x/denops_std@v5.1.0/variable/variable.ts";
+import { batch } from "https://deno.land/x/denops_std@v5.1.0/batch/mod.ts";
+import { getLogger } from "https://deno.land/std@0.208.0/log/mod.ts";
 import {
   ensure,
   is,
   maybe,
-} from "https://deno.land/x/unknownutil@v3.6.0/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 
 import { isOpener, isPost } from "../types.ts";
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
