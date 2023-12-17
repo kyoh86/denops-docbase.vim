@@ -1,9 +1,9 @@
 // Team List Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v5.1.0/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v5.1.0/buffer/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v5.2.0/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v5.1.0/variable/variable.ts";
+import * as variable from "https://deno.land/x/denops_std@v5.2.0/variable/variable.ts";
 
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";

@@ -1,14 +1,14 @@
 // Single Post Buffer
 
-import { extract } from "https://deno.land/std@0.208.0/front_matter/yaml.ts";
-import type { Denops } from "https://deno.land/x/denops_std@v5.1.0/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v5.1.0/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v5.1.0/option/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v5.1.0/variable/variable.ts";
-import * as autocmd from "https://deno.land/x/denops_std@v5.1.0/autocmd/mod.ts";
-import { getbufline } from "https://deno.land/x/denops_std@v5.1.0/function/buffer.ts";
+import { extract } from "https://deno.land/std@0.209.0/front_matter/yaml.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v5.2.0/buffer/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v5.2.0/option/mod.ts";
+import * as variable from "https://deno.land/x/denops_std@v5.2.0/variable/variable.ts";
+import * as autocmd from "https://deno.land/x/denops_std@v5.2.0/autocmd/mod.ts";
+import { getbufline } from "https://deno.land/x/denops_std@v5.2.0/function/buffer.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
-import { getLogger } from "https://deno.land/std@0.208.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.209.0/log/mod.ts";
 
 import { Filetype, prepareProxy } from "./buffer.ts";
 import { Handler } from "../router.ts";
