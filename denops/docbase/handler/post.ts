@@ -6,7 +6,7 @@ import * as buffer from "https://deno.land/x/denops_std@v5.2.0/buffer/mod.ts";
 import * as option from "https://deno.land/x/denops_std@v5.2.0/option/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.2.0/variable/variable.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.2.0/function/buffer.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
 import { getLogger } from "https://deno.land/std@0.211.0/log/mod.ts";
 
 import { Filetype, prepareProxy } from "./buffer.ts";
