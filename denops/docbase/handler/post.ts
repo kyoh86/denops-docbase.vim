@@ -1,13 +1,13 @@
 // Single Post Buffer
 
-import { extract } from "https://deno.land/std@0.211.0/front_matter/yaml.ts";
+import { extract } from "https://deno.land/std@0.212.0/front_matter/yaml.ts";
 import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.2.0/buffer/mod.ts";
 import * as option from "https://deno.land/x/denops_std@v5.2.0/option/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.2.0/variable/variable.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v5.2.0/function/buffer.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
-import { getLogger } from "https://deno.land/std@0.211.0/log/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+import { getLogger } from "https://deno.land/std@0.212.0/log/mod.ts";
 
 import { Filetype, prepareProxy } from "./buffer.ts";
 import { Handler } from "../router.ts";

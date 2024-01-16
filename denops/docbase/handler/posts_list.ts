@@ -4,12 +4,12 @@ import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.2.0/buffer/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.2.0/variable/variable.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
-import { getLogger } from "https://deno.land/std@0.211.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.212.0/log/mod.ts";
 import {
   ensure,
   is,
   maybe,
-} from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
 
 import { isOpener, isPost } from "../types.ts";
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
