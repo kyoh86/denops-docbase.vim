@@ -1,8 +1,8 @@
-import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
-import { batch } from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v5.2.0/option/mod.ts";
-import { group } from "https://deno.land/x/denops_std@v5.2.0/autocmd/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v5.2.0/buffer/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v5.3.0/mod.ts";
+import { batch } from "https://deno.land/x/denops_std@v5.3.0/batch/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v5.3.0/option/mod.ts";
+import { group } from "https://deno.land/x/denops_std@v5.3.0/autocmd/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v5.3.0/buffer/mod.ts";
 
 export enum Filetype {
   TeamList = "docbase_teams_list",
