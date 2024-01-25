@@ -4,15 +4,15 @@ import {
   input,
 } from "https://deno.land/x/denops_std@v5.3.0/helper/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { join } from "https://deno.land/std@0.212.0/path/mod.ts";
-import { ensureFile } from "https://deno.land/std@0.212.0/fs/mod.ts";
+import { join } from "https://deno.land/std@0.213.0/path/mod.ts";
+import { ensureFile } from "https://deno.land/std@0.213.0/fs/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
 import {
   ConsoleHandler,
   getLogger,
   RotatingFileHandler,
   setup,
-} from "https://deno.land/std@0.212.0/log/mod.ts";
+} from "https://deno.land/std@0.213.0/log/mod.ts";
 
 import { isOpener, isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
