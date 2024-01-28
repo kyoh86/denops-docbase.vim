@@ -20,7 +20,7 @@ async function parseJSONResponse(response: globalThis.Response) {
 
 async function parseTextResponse(response: globalThis.Response) {
   if (response.body == null) {
-    return null;
+    return undefined;
   }
   return await response.text();
 }
@@ -67,7 +67,7 @@ export class Fetcher {
       query?: Record<string, string>;
       body?: unknown;
     },
-  ) {
+  ): Promise<Response | ResponseWithBody<T>> {
     const url = new URL(`${API_URL}/teams/${this.domain}${path}`);
     if (params?.query) {
       for (const key in params.query) {
