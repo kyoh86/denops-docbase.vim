@@ -4,7 +4,7 @@ import type { Denops } from "https://deno.land/x/denops_std@v5.3.0/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v5.3.0/buffer/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v5.3.0/variable/variable.ts";
 import { batch } from "https://deno.land/x/denops_std@v5.3.0/batch/mod.ts";
-import { getLogger } from "https://deno.land/std@0.212.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.213.0/log/mod.ts";
 import {
   ensure,
   is,
