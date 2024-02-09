@@ -2,7 +2,7 @@ import {
   is,
   ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.15.0/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 import { isGroupSummary } from "./group_summary.ts";
 
