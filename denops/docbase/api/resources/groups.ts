@@ -1,9 +1,8 @@
 import {
   is,
-  ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
-import { isUserSummary } from "./user_summary.ts";
+} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
+import { isUserSummary, UserSummary } from "./user_summary.ts";
 import { isGroupSummary } from "./group_summary.ts";
 import { Fetcher } from "../fetcher.ts";
 
@@ -11,7 +10,10 @@ const CreateGroupParamsFields = {
   name: is.String,
   description: is.OptionalOf(is.String),
 };
-export type CreateGroupParams = O<typeof CreateGroupParamsFields>;
+export interface CreateGroupParams {
+  name: string;
+  description?: string | undefined;
+}
 export const isCreateGroupParams: P<CreateGroupParams> = is.ObjectOf(
   CreateGroupParamsFields,
 );
@@ -21,7 +23,11 @@ const SearchGroupsParamsFields = {
   page: is.OptionalOf(is.Number),
   per_page: is.OptionalOf(is.Number),
 };
-export type SearchGroupsParams = O<typeof SearchGroupsParamsFields>;
+export type SearchGroupsParams = {
+  name?: string | undefined;
+  page?: number | undefined;
+  per_page?: number | undefined;
+};
 export const isSearchGroupsParams: P<SearchGroupsParams> = is.ObjectOf(
   SearchGroupsParamsFields,
 );
@@ -29,7 +35,9 @@ export const isSearchGroupsParams: P<SearchGroupsParams> = is.ObjectOf(
 const JoinGroupParamsFields = {
   user_ids: is.ArrayOf(is.Number),
 };
-export type JoinGroupParams = O<typeof JoinGroupParamsFields>;
+export interface JoinGroupParams {
+  user_ids: number[];
+}
 export const isJoinGroupParams: P<JoinGroupParams> = is.ObjectOf(
   JoinGroupParamsFields,
 );
@@ -46,8 +54,14 @@ const GroupFields = {
   created_at: is.String,
   users: is.ArrayOf(isUserSummary),
 };
-export interface Group extends O<typeof GroupFields> {
-  _?: unknown;
+export interface Group {
+  id: number;
+  name: string;
+  description: string;
+  posts_count: number;
+  last_activity_at: string;
+  created_at: string;
+  users: UserSummary[];
 }
 export const isGroup: P<Group> = is.ObjectOf(GroupFields);
 

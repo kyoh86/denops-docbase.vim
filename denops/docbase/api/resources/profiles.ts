@@ -1,10 +1,9 @@
 import {
   is,
-  ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
-import { isGroupSummary } from "./group_summary.ts";
+import { GroupSummary, isGroupSummary } from "./group_summary.ts";
 
 const ProfileFields = {
   id: is.Number,
@@ -19,8 +18,18 @@ const ProfileFields = {
   email: is.String,
   nameid: is.String,
 };
-export interface Profile extends O<typeof ProfileFields> {
-  _?: unknown;
+export interface Profile {
+  id: number;
+  name: string;
+  username: string;
+  profile_image_url: string;
+  role: string;
+  posts_count: number;
+  last_access_time: string;
+  two_step_authentication: boolean;
+  groups: GroupSummary[];
+  email: string;
+  nameid: string;
 }
 export const isProfile: P<Profile> = is.ObjectOf(ProfileFields);
 

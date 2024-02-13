@@ -1,26 +1,28 @@
 import {
   is,
-  ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 
 const TagFields = {
   id: is.Number,
   name: is.String,
 };
-export interface Tag extends O<typeof TagFields> {
-  _?: unknown;
+export interface Tag {
+  id: number;
+  name: string;
 }
 export const isTag: P<Tag> = is.ObjectOf(TagFields);
 
 const TagSummaryFields = {
   name: is.String,
 };
-export interface TagSummary extends O<typeof TagSummaryFields> {
-  _?: unknown;
+export interface TagSummary {
+  name: string;
 }
-export const isTagSummary: P<TagSummary> = is.ObjectOf(TagSummaryFields);
+export const isTagSummary: P<TagSummary> = is.ObjectOf(
+  TagSummaryFields,
+);
 
 export class Tags {
   constructor(private fetcher: Fetcher) {}

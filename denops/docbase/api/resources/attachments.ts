@@ -1,15 +1,17 @@
 import {
   is,
-  ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 
 const UploadAttachmentParamsFields = {
   name: is.String,
   content: is.String,
 };
-export type UploadAttachmentParams = O<typeof UploadAttachmentParamsFields>;
+export interface UploadAttachmentParams {
+  name: string;
+  content: string;
+}
 export const isUploadAttachmentParams: P<UploadAttachmentParams> = is.ObjectOf(
   UploadAttachmentParamsFields,
 );
@@ -23,8 +25,13 @@ const AttachmentFields = {
   created_at: is.String,
 };
 
-export interface Attachment extends O<typeof AttachmentFields> {
-  _?: unknown;
+export interface Attachment {
+  id: string;
+  name: string;
+  size: number;
+  url: string;
+  markdown: string;
+  created_at: string;
 }
 export const isAttachment: P<Attachment> = is.ObjectOf(AttachmentFields);
 

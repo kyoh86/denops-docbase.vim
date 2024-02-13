@@ -1,10 +1,9 @@
 import {
   is,
-  ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
-import { isGroupSummary } from "./group_summary.ts";
+import { GroupSummary, isGroupSummary } from "./group_summary.ts";
 
 const SearchUsersParamsFields = {
   q: is.OptionalOf(is.String),
@@ -12,7 +11,12 @@ const SearchUsersParamsFields = {
   per_page: is.OptionalOf(is.Number),
   include_user_groups: is.OptionalOf(is.Boolean),
 };
-export type SearchUsersParams = O<typeof SearchUsersParamsFields>;
+export type SearchUsersParams = {
+  q?: string | undefined;
+  page?: number | undefined;
+  per_page?: number | undefined;
+  include_user_groups?: boolean | undefined;
+};
 export const isSearchUsersParams: P<SearchUsersParams> = is.ObjectOf(
   SearchUsersParamsFields,
 );
@@ -28,8 +32,16 @@ const UserFields = {
   two_step_authentication: is.Boolean,
   groups: is.ArrayOf(isGroupSummary),
 };
-export interface User extends O<typeof UserFields> {
-  _?: unknown;
+export interface User {
+  id: number;
+  name: string;
+  username: string;
+  profile_image_url: string;
+  role: string;
+  posts_count: number;
+  last_access_time: string;
+  two_step_authentication: boolean;
+  groups: GroupSummary[];
 }
 export const isUser: P<User> = is.ObjectOf(UserFields);
 

@@ -1,19 +1,22 @@
 import {
   is,
-  ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
-import { isUserSummary } from "./user_summary.ts";
+import { isUserSummary, UserSummary } from "./user_summary.ts";
 
 const CreateCommentParamsFields = {
   body: is.String,
   notice: is.OptionalOf(is.Boolean),
 };
-export type CreateCommentParams = O<typeof CreateCommentParamsFields>;
-export const isCreateCommentParams: P<CreateCommentParams> = is.ObjectOf(
-  CreateCommentParamsFields,
-);
+export interface CreateCommentParams {
+  body: string;
+  notice?: boolean | undefined;
+}
+export const isCreateCommentParams: P<CreateCommentParams> = is
+  .ObjectOf(
+    CreateCommentParamsFields,
+  );
 
 const CommentFields = {
   id: is.Number,
@@ -21,8 +24,11 @@ const CommentFields = {
   created_at: is.String,
   user: isUserSummary,
 };
-export interface Comment extends O<typeof CommentFields> {
-  _?: unknown;
+export interface Comment {
+  id: number;
+  body: string;
+  created_at: string;
+  user: UserSummary;
 }
 export const isComment: P<Comment> = is.ObjectOf(CommentFields);
 
