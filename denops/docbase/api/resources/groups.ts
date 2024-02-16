@@ -1,7 +1,7 @@
 import {
   is,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.16.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
 import { isUserSummary, UserSummary } from "./user_summary.ts";
 import { isGroupSummary } from "./group_summary.ts";
 import { Fetcher } from "../fetcher.ts";
