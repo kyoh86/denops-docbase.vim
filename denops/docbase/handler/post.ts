@@ -1,13 +1,13 @@
 // Single Post Buffer
 
-import { extract } from "https://deno.land/std@0.216.0/front_matter/yaml.ts";
-import type { Denops } from "https://deno.land/x/denops_std@v6.0.1/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.0.1/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.0.1/option/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v6.0.1/variable/variable.ts";
-import { getbufline } from "https://deno.land/x/denops_std@v6.0.1/function/buffer.ts";
+import { extract } from "https://deno.land/std@0.217.0/front_matter/yaml.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v6.1.0/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v6.1.0/buffer/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v6.1.0/option/mod.ts";
+import * as variable from "https://deno.land/x/denops_std@v6.1.0/variable/variable.ts";
+import { getbufline } from "https://deno.land/x/denops_std@v6.1.0/function/buffer.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
-import { getLogger } from "https://deno.land/std@0.216.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.217.0/log/mod.ts";
 
 import { Filetype, prepareProxy } from "./buffer.ts";
 import { Handler } from "../router.ts";
