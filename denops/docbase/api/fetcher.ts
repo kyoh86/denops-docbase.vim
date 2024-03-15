@@ -2,7 +2,7 @@ import {
   ensure,
   Predicate as P,
 } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
-import { getLogger } from "https://deno.land/std@0.219.1/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.220.1/log/mod.ts";
 import { Response, ResponseWithBody } from "./types.ts";
 
 const API_URL = "https://api.docbase.io";
