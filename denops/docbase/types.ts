@@ -2,7 +2,7 @@ import {
   is,
   // ObjectOf as O,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.17.2/mod.ts";
 
 export type Opener = "edit" | "new" | "vnew" | "tabnew";
 export const isOpener: P<Opener> = is.OneOf([

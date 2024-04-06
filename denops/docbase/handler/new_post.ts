@@ -3,7 +3,7 @@
 import type { Denops } from "https://deno.land/x/denops_std@v6.4.0/mod.ts";
 import { execute } from "https://deno.land/x/denops_std@v6.4.0/helper/execute.ts";
 import * as buffer from "https://deno.land/x/denops_std@v6.4.0/buffer/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.2/mod.ts";
 import { getLogger } from "https://deno.land/std@0.221.0/log/mod.ts";
 
 import { Handler, openBuffer } from "../router.ts";
