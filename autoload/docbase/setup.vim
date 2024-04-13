@@ -7,15 +7,9 @@ function! docbase#setup#commands()
 
   augroup docbase-setup-commands
     autocmd!
-    autocmd Filetype docbase_teams_list command! <buffer> DocbaseOpenTeam        call docbase#buffer_action#teams_list#open(line("."))
-    autocmd Filetype docbase_teams_list command! <buffer> DocbaseOpenTeamNew     call docbase#buffer_action#teams_list#open(line("."), "new")
-    autocmd Filetype docbase_teams_list command! <buffer> DocbaseOpenTeamVnew    call docbase#buffer_action#teams_list#open(line("."), "vnew")
-    autocmd Filetype docbase_teams_list command! <buffer> DocbaseOpenTeamTabedit call docbase#buffer_action#teams_list#open(line("."), "tabedit")
+    autocmd Filetype docbase_teams_list command! <buffer> DocbaseOpenTeam        call docbase#buffer_action#teams_list#open(line("."), <q-mods>)
 
-    autocmd Filetype docbase_posts_list command! DocbaseOpenPost        call docbase#buffer_action#posts_list#open(line("."))
-    autocmd Filetype docbase_posts_list command! DocbaseOpenPostNew     call docbase#buffer_action#posts_list#open(line("."), "new")
-    autocmd Filetype docbase_posts_list command! DocbaseOpenPostVnew    call docbase#buffer_action#posts_list#open(line("."), "vnew")
-    autocmd Filetype docbase_posts_list command! DocbaseOpenPostTabedit call docbase#buffer_action#posts_list#open(line("."), "tabedit")
+    autocmd Filetype docbase_posts_list command! DocbaseOpenPost        call docbase#buffer_action#posts_list#open(line("."), <q-mods>)
     autocmd Filetype docbase_posts_list command! DocbasePrevPage        call docbase#buffer_action#posts_list#prev()
     autocmd Filetype docbase_posts_list command! DocbaseNextPage        call docbase#buffer_action#posts_list#next()
   augroup END

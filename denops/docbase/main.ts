@@ -14,7 +14,7 @@ import {
   setup,
 } from "https://deno.land/std@0.222.1/log/mod.ts";
 
-import { isOpener, isSearchPostsParams } from "./types.ts";
+import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
 import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
 import { XDGStateMan } from "./state.ts";
@@ -46,12 +46,12 @@ export async function main(denops: Denops) {
   });
 
   denops.dispatcher = {
-    async openBuffer(uHandler: unknown, uProps: unknown, uOpener: unknown) {
+    async openBuffer(uHandler: unknown, uProps: unknown, uMods: unknown) {
       try {
         const handler = ensure(uHandler, is.String);
         const props = ensure(uProps, is.Record);
-        const opener = ensure(uOpener, is.OptionalOf(isOpener));
-        await openBuffer(denops, handler, props, opener);
+        const mods = ensure(uMods, is.OptionalOf(is.String));
+        await openBuffer(denops, handler, props, mods);
       } catch (err) {
         getLogger("denops-docbase").error(err);
       }

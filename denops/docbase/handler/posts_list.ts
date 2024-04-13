@@ -11,7 +11,7 @@ import {
   maybe,
 } from "https://deno.land/x/unknownutil@v3.17.3/mod.ts";
 
-import { isOpener, isPost } from "../types.ts";
+import { isPost } from "../types.ts";
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
@@ -86,7 +86,7 @@ export const PostList: Handler = {
     async open(denops: Denops, _context: Context, _params: Params) {
       const params = ensure(
         _params,
-        is.ObjectOf({ lnum: is.Number, opener: is.OptionalOf(isOpener) }),
+        is.ObjectOf({ lnum: is.Number, mods: is.OptionalOf(is.String) }),
       );
       const domain = ensure(
         await variable.b.get(denops, "docbase_posts_list_domain"),
@@ -102,7 +102,7 @@ export const PostList: Handler = {
       await openBuffer(denops, "Post", {
         domain,
         postId: String(postIds[params.lnum - 1]),
-      }, params.opener);
+      }, params.mods);
     },
     prev(denops: Denops, context: Context, _params: Params) {
       return paging(denops, context, -1);

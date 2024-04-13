@@ -1,7 +1,6 @@
 import type { Denops } from "https://deno.land/x/denops_std@v6.4.0/mod.ts";
 import * as fn from "https://deno.land/x/denops_std@v6.4.0/function/mod.ts";
 
-import type { Opener } from "./types.ts";
 import type { StateMan } from "./state.ts";
 import { TeamList } from "./handler/teams_list.ts";
 import { PostList } from "./handler/posts_list.ts";
@@ -45,18 +44,54 @@ function routing(bufname: string) {
   throw new Error(`There's no valid handler for ${bufname}`);
 }
 
+function modsOpener(mods: string): string {
+  for (const mod of mods.split(/\s+/).reverse()) {
+    switch (mod) {
+      case "vert":
+        return "vnew";
+      case "verti":
+        return "vnew";
+      case "vertic":
+        return "vnew";
+      case "vertica":
+        return "vnew";
+      case "vertical":
+        return "vnew";
+      case "hor":
+        return "new";
+      case "hori":
+        return "new";
+      case "horiz":
+        return "new";
+      case "horizo":
+        return "new";
+      case "horizon":
+        return "new";
+      case "horizont":
+        return "new";
+      case "horizonta":
+        return "new";
+      case "horizontal":
+        return "new";
+      case "tab":
+        return "tabnew";
+    }
+  }
+  return "edit";
+}
 export async function openBuffer(
   denops: Denops,
   handler: string,
   props: Record<string, unknown>,
-  opener: Opener = "edit",
+  mods: string = "",
 ) {
   const h = handlers[handler];
   if (!h) {
     throw new Error(`There's no handler ${handler}`);
   }
   const bufname = h.bufname(props);
-  await denops.cmd(`${opener} ${bufname}`);
+  const opener = modsOpener(mods);
+  await denops.cmd(`${mods} ${opener} ${bufname}`);
 }
 
 export async function bufferLoaded(
