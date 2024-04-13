@@ -2,7 +2,7 @@
 
 import type { Denops } from "https://deno.land/x/denops_std@v6.4.0/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v6.4.0/buffer/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.2/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.3/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v6.4.0/variable/variable.ts";
 
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
