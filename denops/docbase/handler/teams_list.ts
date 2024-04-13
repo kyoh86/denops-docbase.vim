@@ -8,7 +8,6 @@ import * as variable from "https://deno.land/x/denops_std@v6.4.0/variable/variab
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
 import { Handler, openBuffer } from "../router.ts";
 import type { Context, Params } from "../router.ts";
-import { isOpener } from "../types.ts";
 
 const pattern = new URLPattern({
   hostname: "teams",
@@ -39,7 +38,7 @@ export const TeamList: Handler = {
     async open(denops: Denops, _context: Context, _params: Params) {
       const params = ensure(
         _params,
-        is.ObjectOf({ lnum: is.Number, opener: is.OptionalOf(isOpener) }),
+        is.ObjectOf({ lnum: is.Number, mods: is.OptionalOf(is.String) }),
       );
       const domains = ensure(
         await variable.b.get(
@@ -52,7 +51,7 @@ export const TeamList: Handler = {
         denops,
         "PostList",
         { domain: domains[params.lnum - 1] },
-        params.opener,
+        params.mods,
       );
     },
   },

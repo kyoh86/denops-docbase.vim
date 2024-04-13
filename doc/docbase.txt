@@ -96,25 +96,23 @@ docbase#setup#maps()
 
 
                                                     *docbase#open#teams_list()*
-docbase#open#teams_list([{opener}])
+docbase#open#teams_list([{mods}])
 	Open the DocBase teams list view.
 
-	{opener} ("edit"|"new"|"vnew"|"tabnew"):
-		A command to open the teams list view.
+	{mods}  The command modifiers to open new buffer. See |<mods>|.
 
                                                    *docbase#open#posts_list()*
-docbase#open#posts_list(domain, opener="edit")
+docbase#open#posts_list({domain} [, {mods}])
 	Open DocBase posts list view for the domain.
 
 	{domain} (string):
 		Your team domain in the DocBase.
 		e.g.: `kyoh86.docbase.io` => `"kyoh86"`
 
-	{opener} ("edit"|"new"|"vnew"|"tabnew"):
-		A command to open the teams list view.
+	{mods}  The command modifiers to open new buffer. See |<mods>|.
 
                                                          *docbase#open#post()*
-docbase#open#post(domain, post_id, opener="edit")
+docbase#open#post({domain}, {post_id} [, {mods}])
 	Open DocBase post editor.
 
 	{domain} (string):
@@ -125,18 +123,16 @@ docbase#open#post(domain, post_id, opener="edit")
 		An ID for the post.
 		e.g.: `kyoh86.docbase.io/posts/1234` => `1234`
 
-	{opener} ("edit"|"new"|"vnew"|"tabnew"):
-		A command to open the teams list view.
+	{mods}  The command modifiers to open new buffer. See |<mods>|.
 
                                                      *docbase#open#new_post()*
-docbase#open#new_post(domain, opener="edit")
+docbase#open#new_post({domain} [, {mods}])
 
 	{domain} (string):
 		Your team domain in the DocBase.
 		e.g.: `kyoh86.docbase.io` => `"kyoh86"`
 
-	{opener} ("edit"|"new"|"vnew"|"tabnew"):
-		A command to open the teams list view.
+	{mods}  The command modifiers to open new buffer. See |<mods>|.
 
                                                       *docbase#list#domains()*
 docbase#list#domains()
@@ -145,13 +141,13 @@ docbase#list#domains()
 	ctrlp.vim, fzf.vim, etc.
 
                                                         *docbase#list#posts()*
-docbase#list#posts(domain)
+docbase#list#posts({domain})
 	Get post list. Returns Post[].
 	You can make a finder source with this, for tools like telescope.nvim,
 	ctrlp.vim, fzf.vim, etc.
 
                                       *docbase#buffer_action#teams_list#open()*
-docbase#buffer_action#teams_list#open({lnum}[, {opener}])
+docbase#buffer_action#teams_list#open({lnum} [, {mods}])
 	In the DocBase teams list view, it will open the DocBase posts list 
 	view for the domain at the line.
 
@@ -159,13 +155,10 @@ docbase#buffer_action#teams_list#open({lnum}[, {opener}])
 		A line number to open.
 		You can use `line(".")` to specify the cursor line.
 	
-	{opener} ("edit"|"new"|"vnew"|"tabnew"):
-		A command to open the posts list view.
-
-		default: "edit"
+	{mods}  The command modifiers to open new buffer. See |<mods>|.
 
                                       *docbase#buffer_action#posts_list#open()*
-docbase#buffer_action#posts_list#open({lnum}[, {opener}])
+docbase#buffer_action#posts_list#open({lnum} [, {mods}])
 	In the DocBase posts list view, it will open the DocBase post editor
 	for the post at the line.
 
@@ -173,10 +166,7 @@ docbase#buffer_action#posts_list#open({lnum}[, {opener}])
 		A line number to open.
 		You can use `line(".")` to specify the cursor line.
 	
-	{opener} ("edit"|"new"|"vnew"|"tabnew"):
-		A command to open the post buffer.
-
-		default: "edit"
+	{mods}  The command modifiers to open new buffer. See |<mods>|.
 
                                       *docbase#buffer_action#posts_list#prev()*
 docbase#buffer_action#posts_list#prev()
@@ -281,12 +271,13 @@ You can call some functions from the denops commands.
 openBuffer(
     handler: string,
     props: Record<string, unknown>,
-    opener: "edit"|"new"|"vnew"|"tabedit")
+    mods: string)
 
 	Open new |docbase-special-buffers|.
 	{hanlder} is the name of a special buffer.
 	"TeamList", "PostList", "Post" and "NewPost" is in the handler.
-
+	{mods} is the space-separated command modifiers to open new buffer.
+	See |<mods>|.
                                        *docbase-denops-command-bufferAction()*
 bufferAction(
     bufnr: number
