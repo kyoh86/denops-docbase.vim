@@ -44,7 +44,6 @@ export async function prepareProxy(
       await option.swapfile.setLocal(denops, false);
       await option.buftype.setLocal(denops, "acwrite");
       await option.filetype.setLocal(denops, ft);
-      await option.bufhidden.setLocal(denops, "delete");
     });
 
     await group(denops, "docbase-writecmd", (helper) => {
