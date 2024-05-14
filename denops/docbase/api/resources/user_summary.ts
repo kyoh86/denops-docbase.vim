@@ -1,7 +1,7 @@
 import {
   is,
   Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.0/mod.ts";
+} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 
 const UserSummaryFields = {
   id: is.Number,
