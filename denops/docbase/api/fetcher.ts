@@ -44,7 +44,7 @@ export class Fetcher {
     path: string,
     asBody: undefined,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, string>;
       body?: unknown;
     },
   ): Promise<Response>;
@@ -54,7 +54,7 @@ export class Fetcher {
     path: string,
     asBody: P<T>,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, string>;
       body?: unknown;
     },
   ): Promise<ResponseWithBody<T>>;
@@ -64,7 +64,7 @@ export class Fetcher {
     path: string,
     asBody?: P<T>,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, string>;
       body?: unknown;
     },
   ): Promise<Response | ResponseWithBody<T>> {
@@ -108,7 +108,7 @@ export class Fetcher {
     path: string,
     asBody: P<T>,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, string>;
       body?: unknown;
     },
   ) {
@@ -119,7 +119,7 @@ export class Fetcher {
     method: "POST" | "PATCH" | "PUT" | "DELETE",
     path: string,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, string>;
       body?: unknown;
     },
   ) {

@@ -73,8 +73,8 @@ export class Groups {
   }
 
   search(params: SearchGroupsParams) {
-    const query: Record<string, string> = {};
-    const parameters = params as Record<string, string | number>;
+    const query: Map<string, string> = {};
+    const parameters = params as Map<string, string | number>;
     for (const key in parameters) {
       query[key] = parameters[key].toString();
     }

@@ -19,7 +19,7 @@ export const TeamList: Handler = {
     return pattern.exec(bufname);
   },
 
-  bufname(_props: Record<string, unknown>) {
+  bufname(_props: Map<string, unknown>) {
     return "docbase://teams";
   },
 

@@ -94,7 +94,7 @@ interface UpdatePostParamsCommon {
 }
 export type UpdatePostParams =
   & UpdatePostParamsCommon
-  & (Record<never, never> | { scope?: "group"; groups: number[] } | {
+  & (Map<never, never> | { scope?: "group"; groups: number[] } | {
     scope: "everyone" | "private";
   });
 export const isUpdatePostParams: P<UpdatePostParams> = is.UnionOf([
@@ -163,8 +163,8 @@ export class Posts {
   constructor(private fetcher: Fetcher) {}
 
   search(params: SearchPostsParams) {
-    const query: Record<string, string> = {};
-    const parameters = params as Record<string, object>;
+    const query: Map<string, string> = {};
+    const parameters = params as Map<string, object>;
     for (const key in parameters) {
       if (parameters[key]) {
         query[key] = parameters[key].toString();

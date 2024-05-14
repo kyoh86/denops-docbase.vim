@@ -34,7 +34,7 @@ export const PostList: Handler = {
   accept(bufname: string) {
     return pattern.exec(bufname);
   },
-  bufname(_props: Record<string, unknown>) {
+  bufname(_props: Map<string, unknown>) {
     const props = ensureProps(_props);
     const page = maybe(_props["page"], is.Number);
     return `docbase://teams/${props.domain}/posts${

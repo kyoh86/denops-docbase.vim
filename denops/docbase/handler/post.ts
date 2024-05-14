@@ -36,7 +36,7 @@ export const Post: Handler = {
     return pattern.exec(bufname);
   },
 
-  bufname(_props: Record<string, undefined>) {
+  bufname(_props: Map<string, undefined>) {
     const props = ensureProps(_props);
     return `docbase://teams/${props.domain}/posts/${props.postId}`;
   },
@@ -179,7 +179,7 @@ export async function parsePostBuffer(denops: Denops, bufnr: number) {
         "docbase_post_groups",
       ),
       is.ArrayOf(isGroupSummary),
-    ).reduce<Record<string, number | undefined>>(
+    ).reduce<Map<string, number | undefined>>(
       (map, obj) => {
         map[obj.name] = obj.id;
         return map;
