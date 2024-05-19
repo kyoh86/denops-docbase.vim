@@ -9,6 +9,7 @@ import { isUserSummary, UserSummary } from "./user_summary.ts";
 import { Comment, isComment } from "./comments.ts";
 import { GroupSummary, isGroupSummary } from "./group_summary.ts";
 import { Attachment, isAttachment } from "./attachments.ts";
+import { Stringer } from "../types.ts";
 
 export type Scope = "everyone" | "group" | "private";
 export const isScope: P<Scope> = is.UnionOf([
@@ -163,11 +164,11 @@ export class Posts {
   constructor(private fetcher: Fetcher) {}
 
   search(params: SearchPostsParams) {
-    const query: Record<string, string> = {};
+    const query = new Map<string, Stringer | string>();
     const parameters = params as Record<string, object>;
     for (const key in parameters) {
       if (parameters[key]) {
-        query[key] = parameters[key].toString();
+        query.set(key, parameters[key]);
       }
     }
     return this.fetcher.request(

@@ -4,6 +4,7 @@ import {
 } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 import { GroupSummary, isGroupSummary } from "./group_summary.ts";
+import { Stringer } from "../types.ts";
 
 const SearchUsersParamsFields = {
   q: is.OptionalOf(is.String),
@@ -49,10 +50,10 @@ export class Users {
   constructor(private fetcher: Fetcher) {}
 
   search(params: SearchUsersParams) {
-    const query: Record<string, string> = {};
+    const query = new Map<string, Stringer | string>();
     const parameters = params as Record<string, string | number | boolean>;
     for (const key in parameters) {
-      query[key] = parameters[key].toString();
+      query.set(key, parameters[key]);
     }
     return this.fetcher.request("GET", `/users`, is.ArrayOf(isUser), { query });
   }

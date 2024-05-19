@@ -5,6 +5,7 @@ import {
 import { isUserSummary, UserSummary } from "./user_summary.ts";
 import { isGroupSummary } from "./group_summary.ts";
 import { Fetcher } from "../fetcher.ts";
+import { Stringer } from "../types.ts";
 
 const CreateGroupParamsFields = {
   name: is.String,
@@ -73,10 +74,10 @@ export class Groups {
   }
 
   search(params: SearchGroupsParams) {
-    const query: Record<string, string> = {};
+    const query = new Map<string, Stringer | string>();
     const parameters = params as Record<string, string | number>;
     for (const key in parameters) {
-      query[key] = parameters[key].toString();
+      query.set(key, parameters[key]);
     }
     return this.fetcher.request(
       "GET",

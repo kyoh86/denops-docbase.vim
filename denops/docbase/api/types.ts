@@ -11,6 +11,10 @@ export type Response = {
 
 export type ResponseWithBody<T> = Response & { body: T };
 
+export interface Stringer {
+  toString(): string;
+}
+
 export type {
   Attachment,
   UploadAttachmentParams,

@@ -4,6 +4,7 @@ import {
 } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 import { Response, ResponseWithBody } from "./types.ts";
+import { Stringer } from "./types.ts";
 
 const API_URL = "https://api.docbase.io";
 
@@ -44,7 +45,7 @@ export class Fetcher {
     path: string,
     asBody: undefined,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, Stringer | string>;
       body?: unknown;
     },
   ): Promise<Response>;
@@ -54,7 +55,7 @@ export class Fetcher {
     path: string,
     asBody: P<T>,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, Stringer | string>;
       body?: unknown;
     },
   ): Promise<ResponseWithBody<T>>;
@@ -64,14 +65,18 @@ export class Fetcher {
     path: string,
     asBody?: P<T>,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, Stringer | string>;
       body?: unknown;
     },
   ): Promise<Response | ResponseWithBody<T>> {
     const url = new URL(`${API_URL}/teams/${this.domain}${path}`);
     if (params?.query) {
-      for (const key in params.query) {
-        url.searchParams.append(key, params?.query[key]);
+      for (const entry of params.query.entries()) {
+        const key = entry[0];
+        const value = (typeof entry[1] === "string")
+          ? entry[1]
+          : entry[1].toString();
+        url.searchParams.append(key, value);
       }
     }
     const raw = await fetch(
@@ -108,7 +113,7 @@ export class Fetcher {
     path: string,
     asBody: P<T>,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, Stringer | string>;
       body?: unknown;
     },
   ) {
@@ -119,7 +124,7 @@ export class Fetcher {
     method: "POST" | "PATCH" | "PUT" | "DELETE",
     path: string,
     params?: {
-      query?: Record<string, string>;
+      query?: Map<string, Stringer | string>;
       body?: unknown;
     },
   ) {

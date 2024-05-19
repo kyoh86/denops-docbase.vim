@@ -32,8 +32,8 @@ export const NewPost: Handler = {
     return pattern.exec(bufname);
   },
 
-  bufname(_props: Record<string, undefined>) {
-    const props = ensureProps(_props);
+  bufname(rProps: Record<string, undefined>) {
+    const props = ensureProps(rProps);
     return `docbase://teams/${props.domain}/posts/new`;
   },
 

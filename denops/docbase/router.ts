@@ -26,16 +26,15 @@ export interface Handler {
   >;
 }
 
-const handlers: Record<string, Handler> = {
-  TeamList: TeamList,
-  PostList: PostList,
-  NewPost: NewPost,
-  Post: Post,
-};
+const handlers = new Map<string, Handler>([
+  ["TeamList", TeamList],
+  ["PostList", PostList],
+  ["NewPost", NewPost],
+  ["Post", Post],
+]);
 
 function routing(bufname: string) {
-  for (const key in handlers) {
-    const handler = handlers[key];
+  for (const handler of handlers.values()) {
     const match = handler.accept(bufname);
     if (match && match.protocol.input == "docbase") { // NOTE: protocol matching is not working
       return { match, handler };
@@ -85,7 +84,7 @@ export async function openBuffer(
   props: Record<string, unknown>,
   mods: string = "",
 ) {
-  const h = handlers[handler];
+  const h = handlers.get(handler);
   if (!h) {
     throw new Error(`There's no handler ${handler}`);
   }

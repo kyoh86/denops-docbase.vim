@@ -34,9 +34,9 @@ export const PostList: Handler = {
   accept(bufname: string) {
     return pattern.exec(bufname);
   },
-  bufname(_props: Record<string, unknown>) {
-    const props = ensureProps(_props);
-    const page = maybe(_props["page"], is.Number);
+  bufname(rProps: Record<string, unknown>) {
+    const props = ensureProps(rProps);
+    const page = maybe(rProps["page"], is.Number);
     return `docbase://teams/${props.domain}/posts${
       (page && (page > 1)) ? `?page=${page}` : ""
     }`;
