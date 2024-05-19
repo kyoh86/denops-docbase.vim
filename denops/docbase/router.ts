@@ -14,19 +14,19 @@ export interface Context {
   bufname: string;
 }
 
-export type Params = Map<string, unknown>;
+export type Params = Record<string, unknown>;
 
 export interface Handler {
-  bufname(props: Map<string, unknown>): string;
+  bufname(props: Record<string, unknown>): string;
   accept(bufname: string): URLPatternResult | null;
   load(denops: Denops, buf: Context): Promise<void>;
-  act: Map<
+  act: Record<
     string,
     (denops: Denops, buf: Context, params: Params) => Promise<void>
   >;
 }
 
-const handlers: Map<string, Handler> = {
+const handlers: Record<string, Handler> = {
   TeamList: TeamList,
   PostList: PostList,
   NewPost: NewPost,
@@ -82,7 +82,7 @@ function modsOpener(mods: string): string {
 export async function openBuffer(
   denops: Denops,
   handler: string,
-  props: Map<string, unknown>,
+  props: Record<string, unknown>,
   mods: string = "",
 ) {
   const h = handlers[handler];

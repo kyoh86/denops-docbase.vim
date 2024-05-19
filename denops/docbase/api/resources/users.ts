@@ -49,8 +49,8 @@ export class Users {
   constructor(private fetcher: Fetcher) {}
 
   search(params: SearchUsersParams) {
-    const query: Map<string, string> = {};
-    const parameters = params as Map<string, string | number | boolean>;
+    const query: Record<string, string> = {};
+    const parameters = params as Record<string, string | number | boolean>;
     for (const key in parameters) {
       query[key] = parameters[key].toString();
     }
