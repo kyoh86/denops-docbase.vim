@@ -3,14 +3,13 @@ import {
   Predicate as P,
 } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 
-const UserSummaryFields = {
-  id: is.Number,
-  name: is.String,
-  profile_image_url: is.String,
-};
 export interface UserSummary {
   id: number;
   name: string;
   profile_image_url: string;
 }
-export const isUserSummary: P<UserSummary> = is.ObjectOf(UserSummaryFields);
+export const isUserSummary = is.ObjectOf({
+  id: is.Number,
+  name: is.String,
+  profile_image_url: is.String,
+}) satisfies P<UserSummary>;

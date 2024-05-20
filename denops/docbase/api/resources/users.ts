@@ -6,33 +6,19 @@ import { Fetcher } from "../fetcher.ts";
 import { GroupSummary, isGroupSummary } from "./group_summary.ts";
 import { Stringer } from "../types.ts";
 
-const SearchUsersParamsFields = {
-  q: is.OptionalOf(is.String),
-  page: is.OptionalOf(is.Number),
-  per_page: is.OptionalOf(is.Number),
-  include_user_groups: is.OptionalOf(is.Boolean),
-};
 export type SearchUsersParams = {
   q?: string | undefined;
   page?: number | undefined;
   per_page?: number | undefined;
   include_user_groups?: boolean | undefined;
 };
-export const isSearchUsersParams: P<SearchUsersParams> = is.ObjectOf(
-  SearchUsersParamsFields,
-);
+export const isSearchUsersParams = is.ObjectOf({
+  q: is.OptionalOf(is.String),
+  page: is.OptionalOf(is.Number),
+  per_page: is.OptionalOf(is.Number),
+  include_user_groups: is.OptionalOf(is.Boolean),
+}) satisfies P<SearchUsersParams>;
 
-const UserFields = {
-  id: is.Number,
-  name: is.String,
-  username: is.String,
-  profile_image_url: is.String,
-  role: is.String,
-  posts_count: is.Number,
-  last_access_time: is.String,
-  two_step_authentication: is.Boolean,
-  groups: is.ArrayOf(isGroupSummary),
-};
 export interface User {
   id: number;
   name: string;
@@ -44,7 +30,17 @@ export interface User {
   two_step_authentication: boolean;
   groups: GroupSummary[];
 }
-export const isUser: P<User> = is.ObjectOf(UserFields);
+export const isUser = is.ObjectOf({
+  id: is.Number,
+  name: is.String,
+  username: is.String,
+  profile_image_url: is.String,
+  role: is.String,
+  posts_count: is.Number,
+  last_access_time: is.String,
+  two_step_authentication: is.Boolean,
+  groups: is.ArrayOf(isGroupSummary),
+}) satisfies P<User>;
 
 export class Users {
   constructor(private fetcher: Fetcher) {}

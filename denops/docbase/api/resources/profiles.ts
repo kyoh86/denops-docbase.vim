@@ -5,19 +5,6 @@ import {
 import { Fetcher } from "../fetcher.ts";
 import { GroupSummary, isGroupSummary } from "./group_summary.ts";
 
-const ProfileFields = {
-  id: is.Number,
-  name: is.String,
-  username: is.String,
-  profile_image_url: is.String,
-  role: is.String,
-  posts_count: is.Number,
-  last_access_time: is.String,
-  two_step_authentication: is.Boolean,
-  groups: is.ArrayOf(isGroupSummary),
-  email: is.String,
-  nameid: is.String,
-};
 export interface Profile {
   id: number;
   name: string;
@@ -31,7 +18,19 @@ export interface Profile {
   email: string;
   nameid: string;
 }
-export const isProfile: P<Profile> = is.ObjectOf(ProfileFields);
+export const isProfile = is.ObjectOf({
+  id: is.Number,
+  name: is.String,
+  username: is.String,
+  profile_image_url: is.String,
+  role: is.String,
+  posts_count: is.Number,
+  last_access_time: is.String,
+  two_step_authentication: is.Boolean,
+  groups: is.ArrayOf(isGroupSummary),
+  email: is.String,
+  nameid: is.String,
+}) satisfies P<Profile>;
 
 export class Profiles {
   constructor(private fetcher: Fetcher) {}

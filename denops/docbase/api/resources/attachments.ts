@@ -4,26 +4,14 @@ import {
 } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { Fetcher } from "../fetcher.ts";
 
-const UploadAttachmentParamsFields = {
-  name: is.String,
-  content: is.String,
-};
 export interface UploadAttachmentParams {
   name: string;
   content: string;
 }
-export const isUploadAttachmentParams: P<UploadAttachmentParams> = is.ObjectOf(
-  UploadAttachmentParamsFields,
-);
-
-const AttachmentFields = {
-  id: is.String,
+export const isUploadAttachmentParams = is.ObjectOf({
   name: is.String,
-  size: is.Number,
-  url: is.String,
-  markdown: is.String,
-  created_at: is.String,
-};
+  content: is.String,
+}) satisfies P<UploadAttachmentParams>;
 
 export interface Attachment {
   id: string;
@@ -33,7 +21,15 @@ export interface Attachment {
   markdown: string;
   created_at: string;
 }
-export const isAttachment: P<Attachment> = is.ObjectOf(AttachmentFields);
+
+export const isAttachment = is.ObjectOf({
+  id: is.String,
+  name: is.String,
+  size: is.Number,
+  url: is.String,
+  markdown: is.String,
+  created_at: is.String,
+}) satisfies P<Attachment>;
 
 export class Attachments {
   constructor(private fetcher: Fetcher) {}

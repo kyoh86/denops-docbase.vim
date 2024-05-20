@@ -12,25 +12,22 @@ import { Attachment, isAttachment } from "./attachments.ts";
 import { Stringer } from "../types.ts";
 
 export type Scope = "everyone" | "group" | "private";
-export const isScope: P<Scope> = is.UnionOf([
+export const isScope = is.UnionOf([
   is.LiteralOf("everyone"),
   is.LiteralOf("group"),
   is.LiteralOf("private"),
-]);
+]) satisfies P<Scope>;
 
-const SearchPostsParamsFields = {
-  q: is.OptionalOf(is.String),
-  page: is.OptionalOf(is.Number),
-  per_page: is.OptionalOf(is.Number),
-};
 export type SearchPostsParams = {
   q?: string | undefined;
   page?: number | undefined;
   per_page?: number | undefined;
 };
-export const isSearchPostsParams: P<SearchPostsParams> = is.ObjectOf(
-  SearchPostsParamsFields,
-);
+export const isSearchPostsParams = is.ObjectOf({
+  q: is.OptionalOf(is.String),
+  page: is.OptionalOf(is.Number),
+  per_page: is.OptionalOf(is.Number),
+}) satisfies P<SearchPostsParams>;
 
 const createPostParamsFields = {
   title: is.String,
@@ -38,15 +35,6 @@ const createPostParamsFields = {
   draft: is.OptionalOf(is.Boolean),
   notice: is.OptionalOf(is.Boolean),
   tags: is.OptionalOf(is.ArrayOf(is.String)),
-};
-const createPostParamsForGroupsFields = {
-  ...createPostParamsFields,
-  scope: is.LiteralOf("group"),
-  groups: is.ArrayOf(is.Number),
-};
-const createPostParamsForOthersFields = {
-  ...createPostParamsFields,
-  scope: is.UnionOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
 };
 export type CreatePostParams =
   & (
@@ -65,10 +53,17 @@ export type CreatePostParams =
     notice?: boolean | undefined;
     tags?: string[] | undefined;
   };
-export const isCreatePostParams: P<CreatePostParams> = is.UnionOf([
-  is.ObjectOf(createPostParamsForGroupsFields),
-  is.ObjectOf(createPostParamsForOthersFields),
-]);
+export const isCreatePostParams = is.UnionOf([
+  is.ObjectOf({
+    ...createPostParamsFields,
+    scope: is.LiteralOf("group"),
+    groups: is.ArrayOf(is.Number),
+  }),
+  is.ObjectOf({
+    ...createPostParamsFields,
+    scope: is.UnionOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
+  }),
+]) satisfies P<CreatePostParams>;
 
 const updatePostParamsFields = {
   title: is.OptionalOf(is.String),
@@ -76,15 +71,6 @@ const updatePostParamsFields = {
   draft: is.OptionalOf(is.Boolean),
   notice: is.OptionalOf(is.Boolean),
   tags: is.OptionalOf(is.ArrayOf(is.String)),
-};
-const updatePostParamsForGroupsFields = {
-  ...updatePostParamsFields,
-  scope: is.OptionalOf(is.LiteralOf("group")),
-  groups: is.ArrayOf(is.Number),
-};
-const updatePostParamsForOthersFields = {
-  ...updatePostParamsFields,
-  scope: is.UnionOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
 };
 interface UpdatePostParamsCommon {
   title?: string;
@@ -98,32 +84,19 @@ export type UpdatePostParams =
   & (Record<never, never> | { scope?: "group"; groups: number[] } | {
     scope: "everyone" | "private";
   });
-export const isUpdatePostParams: P<UpdatePostParams> = is.UnionOf([
+export const isUpdatePostParams = is.UnionOf([
   is.ObjectOf(updatePostParamsFields),
-  is.ObjectOf(updatePostParamsForGroupsFields),
-  is.ObjectOf(updatePostParamsForOthersFields),
-]);
+  is.ObjectOf({
+    ...updatePostParamsFields,
+    scope: is.OptionalOf(is.LiteralOf("group")),
+    groups: is.ArrayOf(is.Number),
+  }),
+  is.ObjectOf({
+    ...updatePostParamsFields,
+    scope: is.UnionOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
+  }),
+]) satisfies P<UpdatePostParams>;
 
-const PostFields = {
-  id: is.Number,
-  title: is.String,
-  body: is.String,
-  draft: is.Boolean,
-  archived: is.Boolean,
-  url: is.String,
-  created_at: is.String,
-  updated_at: is.String,
-  scope: is.UnionOf([isScope, is.Null]),
-  tags: is.ArrayOf(isTagSummary),
-  sharing_url: is.UnionOf([is.String, is.Null]),
-  representative_image_url: is.UnionOf([is.String, is.Null]),
-  user: isUserSummary,
-  stars_count: is.Number,
-  good_jobs_count: is.Number,
-  comments: is.ArrayOf(isComment),
-  groups: is.ArrayOf(isGroupSummary),
-  attachments: is.ArrayOf(isAttachment),
-};
 export interface Post {
   id: number;
   title: string;
@@ -144,21 +117,37 @@ export interface Post {
   groups: GroupSummary[];
   attachments: Attachment[];
 }
-export const isPost: P<Post> = is.ObjectOf(PostFields);
+export const isPost = is.ObjectOf({
+  id: is.Number,
+  title: is.String,
+  body: is.String,
+  draft: is.Boolean,
+  archived: is.Boolean,
+  url: is.String,
+  created_at: is.String,
+  updated_at: is.String,
+  scope: is.UnionOf([isScope, is.Null]),
+  tags: is.ArrayOf(isTagSummary),
+  sharing_url: is.UnionOf([is.String, is.Null]),
+  representative_image_url: is.UnionOf([is.String, is.Null]),
+  user: isUserSummary,
+  stars_count: is.Number,
+  good_jobs_count: is.Number,
+  comments: is.ArrayOf(isComment),
+  groups: is.ArrayOf(isGroupSummary),
+  attachments: is.ArrayOf(isAttachment),
+}) satisfies P<Post>;
 
-const SearchPostsMetaFields = {
-  previous_page: is.UnionOf([is.String, is.Null]),
-  next_page: is.UnionOf([is.String, is.Null]),
-  total: is.Number,
-};
 export interface SearchPostsMeta {
   previous_page: string | null;
   next_page: string | null;
   total: number;
 }
-export const isSearchPostsMeta: P<SearchPostsMeta> = is.ObjectOf(
-  SearchPostsMetaFields,
-);
+export const isSearchPostsMeta = is.ObjectOf({
+  previous_page: is.UnionOf([is.String, is.Null]),
+  next_page: is.UnionOf([is.String, is.Null]),
+  total: is.Number,
+}) satisfies P<SearchPostsMeta>;
 
 export class Posts {
   constructor(private fetcher: Fetcher) {}

@@ -7,54 +7,36 @@ import { isGroupSummary } from "./group_summary.ts";
 import { Fetcher } from "../fetcher.ts";
 import { Stringer } from "../types.ts";
 
-const CreateGroupParamsFields = {
-  name: is.String,
-  description: is.OptionalOf(is.String),
-};
 export interface CreateGroupParams {
   name: string;
   description?: string | undefined;
 }
-export const isCreateGroupParams: P<CreateGroupParams> = is.ObjectOf(
-  CreateGroupParamsFields,
-);
+export const isCreateGroupParams = is.ObjectOf({
+  name: is.String,
+  description: is.OptionalOf(is.String),
+}) satisfies P<CreateGroupParams>;
 
-const SearchGroupsParamsFields = {
-  name: is.OptionalOf(is.String),
-  page: is.OptionalOf(is.Number),
-  per_page: is.OptionalOf(is.Number),
-};
 export type SearchGroupsParams = {
   name?: string | undefined;
   page?: number | undefined;
   per_page?: number | undefined;
 };
-export const isSearchGroupsParams: P<SearchGroupsParams> = is.ObjectOf(
-  SearchGroupsParamsFields,
-);
+export const isSearchGroupsParams = is.ObjectOf({
+  name: is.OptionalOf(is.String),
+  page: is.OptionalOf(is.Number),
+  per_page: is.OptionalOf(is.Number),
+}) satisfies P<SearchGroupsParams>;
 
-const JoinGroupParamsFields = {
-  user_ids: is.ArrayOf(is.Number),
-};
 export interface JoinGroupParams {
   user_ids: number[];
 }
-export const isJoinGroupParams: P<JoinGroupParams> = is.ObjectOf(
-  JoinGroupParamsFields,
-);
+export const isJoinGroupParams = is.ObjectOf({
+  user_ids: is.ArrayOf(is.Number),
+}) satisfies P<JoinGroupParams>;
 
 export type KickGroupParams = JoinGroupParams;
-export const isKickGroupParams: P<KickGroupParams> = isJoinGroupParams;
+export const isKickGroupParams = isJoinGroupParams satisfies P<KickGroupParams>;
 
-const GroupFields = {
-  id: is.Number,
-  name: is.String,
-  description: is.String,
-  posts_count: is.Number,
-  last_activity_at: is.String,
-  created_at: is.String,
-  users: is.ArrayOf(isUserSummary),
-};
 export interface Group {
   id: number;
   name: string;
@@ -64,7 +46,15 @@ export interface Group {
   created_at: string;
   users: UserSummary[];
 }
-export const isGroup: P<Group> = is.ObjectOf(GroupFields);
+export const isGroup = is.ObjectOf({
+  id: is.Number,
+  name: is.String,
+  description: is.String,
+  posts_count: is.Number,
+  last_activity_at: is.String,
+  created_at: is.String,
+  users: is.ArrayOf(isUserSummary),
+}) satisfies P<Group>;
 
 export class Groups {
   constructor(private fetcher: Fetcher) {}

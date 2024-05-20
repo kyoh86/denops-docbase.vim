@@ -5,32 +5,28 @@ import {
 import { Fetcher } from "../fetcher.ts";
 import { isUserSummary, UserSummary } from "./user_summary.ts";
 
-const CreateCommentParamsFields = {
-  body: is.String,
-  notice: is.OptionalOf(is.Boolean),
-};
 export interface CreateCommentParams {
   body: string;
   notice?: boolean | undefined;
 }
-export const isCreateCommentParams: P<CreateCommentParams> = is
-  .ObjectOf(
-    CreateCommentParamsFields,
-  );
-
-const CommentFields = {
-  id: is.Number,
+export const isCreateCommentParams = is.ObjectOf({
   body: is.String,
-  created_at: is.String,
-  user: isUserSummary,
-};
+  notice: is.OptionalOf(is.Boolean),
+}) satisfies P<CreateCommentParams>;
+
 export interface Comment {
   id: number;
   body: string;
   created_at: string;
   user: UserSummary;
 }
-export const isComment: P<Comment> = is.ObjectOf(CommentFields);
+export const isComment = is.ObjectOf({
+  id: is.Number,
+  body: is.String,
+  created_at: is.String,
+  user: isUserSummary,
+  hoge: is.String,
+}) satisfies P<Comment>;
 
 export class Comments {
   constructor(private fetcher: Fetcher, private memoId: number) {}
