@@ -1,9 +1,9 @@
 // Post List Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v6.4.3/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.4.3/buffer/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v6.4.3/variable/variable.ts";
-import { batch } from "https://deno.land/x/denops_std@v6.4.3/batch/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
+import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variable.ts";
+import { batch } from "https://deno.land/x/denops_std@v6.5.0/batch/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 import {
   ensure,
