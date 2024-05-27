@@ -9,36 +9,38 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 
 import { isPost } from "../types.ts";
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
-import { openBuffer } from "../router.ts";
-import type { Context, Params } from "../router.ts";
 import { Client } from "../api/client.ts";
-import { Buffer } from "../../router/types.ts";
 import { StateMan } from "../state.ts";
-import { Router } from "../../router/router.ts";
+import type { Buffer } from "../../router/types.ts";
+import type { Router } from "../../router/router.ts";
 
-export async function load(denops: Denops, buf: Buffer, stateMan: StateMan) {
+export async function loadPostsList(
+  denops: Denops,
+  stateMan: StateMan,
+  buf: Buffer,
+) {
   await buffer.ensure(denops, buf.bufnr, async () => {
     await prepareViewer(denops, Filetype.PostList);
 
-    const props = ensure(
+    const params = ensure(
       buf.bufname.params,
       is.ObjectOf({
         domain: is.String,
         page: is.OptionalOf(is.Number),
       }),
     );
-    const page = props.page || 1;
+    const page = params.page || 1;
 
-    const state = await stateMan.load(props.domain);
+    const state = await stateMan.load(params.domain);
     if (!state) {
       getLogger("denops-docbase").error(
-        `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
+        `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
       );
       return;
     }
     const client = new Client(
       state.token,
-      props.domain,
+      params.domain,
     );
     const response = await client.posts().search({ page, per_page: 100 });
     if (!response.ok) {
@@ -54,14 +56,18 @@ export async function load(denops: Denops, buf: Buffer, stateMan: StateMan) {
 
     await batch(denops, async (denops) => {
       await variable.b.set(denops, "docbase_posts_list_page", page);
-      await variable.b.set(denops, "docbase_posts_list_domain", props.domain);
+      await variable.b.set(denops, "docbase_posts_list_domain", params.domain);
       await variable.b.set(denops, "docbase_posts_list_ids", postIds);
     });
     await setViewerContent(denops, buf.bufnr, postTitles);
   });
 }
 
-export async function open(denops: Denops, router: Router, uParams: Params) {
+export async function openPost(
+  denops: Denops,
+  router: Router,
+  uParams: Record<string, unknown>,
+) {
   const params = ensure(
     uParams,
     is.ObjectOf({ lnum: is.Number, mods: is.OptionalOf(is.String) }),
@@ -110,7 +116,7 @@ async function paging(
   }
 }
 
-export function prev(
+export function prevPostsList(
   denops: Denops,
   router: Router,
   buf: Buffer,
@@ -118,7 +124,7 @@ export function prev(
   return paging(denops, router, buf, -1);
 }
 
-export function next(
+export function nextPostsList(
   denops: Denops,
   router: Router,
   buf: Buffer,

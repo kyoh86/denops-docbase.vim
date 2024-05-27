@@ -7,11 +7,14 @@ import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variab
 
 import type { Router } from "../../router/router.ts";
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
-import { openBuffer } from "../router.ts";
 import { StateMan } from "../state.ts";
 import { Buffer } from "../../router/types.ts";
 
-export async function load(denops: Denops, buf: Buffer, state: StateMan) {
+export async function loadTeamsList(
+  denops: Denops,
+  state: StateMan,
+  buf: Buffer,
+) {
   await buffer.ensure(denops, buf.bufnr, async () => {
     await prepareViewer(denops, Filetype.TeamList);
 
@@ -22,7 +25,7 @@ export async function load(denops: Denops, buf: Buffer, state: StateMan) {
   });
 }
 
-export async function open(
+export async function openPostsList(
   denops: Denops,
   router: Router,
   uParams: Record<string, unknown>,

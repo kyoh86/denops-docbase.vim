@@ -19,15 +19,13 @@ import { Client } from "./api/client.ts";
 import { Router } from "../router/router.ts";
 import { XDGStateMan } from "./state.ts";
 
+import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";
+import { loadNewPost, saveNewPost } from "./handler/new_post.ts";
 import {
-  load as loadTeamsList,
-  open as openPosts,
-} from "./handler/teams_list.ts";
-import {
-  load as loadPostsList,
-  next as nextPosts,
-  open as openPost,
-  prev as prevPosts,
+  loadPostsList,
+  nextPostsList,
+  openPost,
+  prevPostsList,
 } from "./handler/posts_list.ts";
 
 export async function main(denops: Denops) {
@@ -58,18 +56,25 @@ export async function main(denops: Denops) {
 
   const router = new Router("docbase");
   router.route("teams", {
-    load: (buf) => loadTeamsList(denops, buf, stateMan),
+    load: (buf) => loadTeamsList(denops, stateMan, buf),
     actions: {
-      open: (_, params) => openPosts(denops, router, params),
+      open: (_, params) => openPostsList(denops, router, params),
     },
   });
 
   router.route("posts", {
-    load: (buf) => loadPostsList(denops, buf, stateMan),
+    load: (buf) => loadPostsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPost(denops, router, params),
-      next: (buf, params) => nextPosts(denops, router, buf),
-      prev: (buf, params) => prevPosts(denops, router, buf),
+      next: (buf, _) => nextPostsList(denops, router, buf),
+      prev: (buf, _) => prevPostsList(denops, router, buf),
+    },
+  });
+
+  router.route("new-post", {
+    load: (buf) => loadNewPost(denops, stateMan, buf),
+    actions: {
+      save: (buf, _) => saveNewPost(denops, stateMan, router, buf),
     },
   });
 
