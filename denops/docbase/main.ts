@@ -16,8 +16,18 @@ import {
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
+import { Router } from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
 import { XDGStateMan } from "./state.ts";
+
+import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";
+import { loadPost, savePost } from "./handler/post.ts";
+import { loadNewPost, saveNewPost } from "./handler/new_post.ts";
+import {
+  loadPostsList,
+  nextPostsList,
+  openPost,
+  prevPostsList,
+} from "./handler/posts_list.ts";
 
 export async function main(denops: Denops) {
   const stateMan = new XDGStateMan();
@@ -45,38 +55,34 @@ export async function main(denops: Denops) {
     },
   });
 
-  denops.dispatcher = {
-    async openBuffer(uHandler: unknown, uProps: unknown, uMods: unknown) {
-      try {
-        const handler = ensure(uHandler, is.String);
-        const props = ensure(uProps, is.Record);
-        const mods = ensure(uMods, is.OptionalOf(is.String));
-        await openBuffer(denops, handler, props, mods);
-      } catch (err) {
-        getLogger("denops-docbase").error(err);
-      }
+  const router = new Router("docbase");
+  router.handle("teams-list", {
+    load: (buf) => loadTeamsList(denops, stateMan, buf),
+    actions: {
+      open: (_, params) => openPostsList(denops, router, params),
     },
+  });
 
-    async bufferLoaded(uBufnr: unknown) {
-      try {
-        const bufnr = ensure(uBufnr, is.Number);
-        await bufferLoaded(denops, stateMan, bufnr);
-      } catch (err) {
-        getLogger("denops-docbase").error(err);
-      }
+  router.handle("posts-list", {
+    load: (buf) => loadPostsList(denops, stateMan, buf),
+    actions: {
+      open: (_, params) => openPost(denops, router, params),
+      next: (buf, _) => nextPostsList(denops, router, buf),
+      prev: (buf, _) => prevPostsList(denops, router, buf),
     },
+  });
 
-    async bufferAction(uBufnr: unknown, uActName: unknown, uParams: unknown) {
-      try {
-        const bufnr = ensure(uBufnr, is.Number);
-        const params = ensure(uParams, is.Record);
-        const actName = ensure(uActName, is.String);
-        await bufferAction(denops, stateMan, bufnr, actName, params);
-      } catch (err) {
-        getLogger("denops-docbase").error(err);
-      }
-    },
+  router.handle("post", {
+    load: (buf) => loadPost(denops, stateMan, buf),
+    save: (buf) => savePost(denops, stateMan, buf),
+  });
 
+  router.handle("new-post", {
+    load: (buf) => loadNewPost(denops, stateMan, buf),
+    save: (buf) => saveNewPost(denops, stateMan, router, buf),
+  });
+
+  denops.dispatcher = await router.dispatch(denops, {
     listDomains() {
       try {
         return stateMan.domains();
@@ -85,24 +91,26 @@ export async function main(denops: Denops) {
       }
     },
 
-    async searchPosts(uDomain: unknown, uSearchParams: unknown) {
+    async searchPosts(uSearchParams: unknown) {
       try {
-        const domain = ensure(uDomain, is.String);
         const params = ensure(
           uSearchParams,
-          is.OptionalOf(isSearchPostsParams),
+          is.IntersectionOf([
+            is.ObjectOf({ domain: is.String }),
+            isSearchPostsParams,
+          ]),
         );
-        const state = await stateMan.load(domain);
+        const state = await stateMan.load(params.domain);
         if (!state) {
           throw new Error(
-            `There's no valid state for domain "${domain}". You can setup with :DocbaseLogin`,
+            `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
           );
         }
         const client = new Client(
           state.token,
-          domain,
+          params.domain,
         );
-        const response = await client.posts().search(params || {});
+        const response = await client.posts().search(params);
         if (!response.ok) {
           throw new Error(
             `Failed to load posts from the DocBase API: ${
@@ -140,5 +148,5 @@ export async function main(denops: Denops) {
         getLogger("denops-docbase").error(err);
       }
     },
-  };
+  });
 }

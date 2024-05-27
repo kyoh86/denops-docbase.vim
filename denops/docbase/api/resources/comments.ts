@@ -25,7 +25,6 @@ export const isComment = is.ObjectOf({
   body: is.String,
   created_at: is.String,
   user: isUserSummary,
-  hoge: is.String,
 }) satisfies P<Comment>;
 
 export class Comments {
