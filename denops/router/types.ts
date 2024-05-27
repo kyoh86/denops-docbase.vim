@@ -1,12 +1,12 @@
 import type { Bufname } from "https://deno.land/x/denops_std@v6.5.0/bufname/mod.ts";
 
-export interface Location {
+export interface Buffer {
   bufnr: number;
   bufname: Bufname;
 }
 
 export type Action = (
-  buf: Location,
+  buf: Buffer,
   params: Record<string, unknown>,
 ) => Promise<void>;
 
@@ -24,12 +24,12 @@ export interface Handler {
    * Read the buffer content and set it into the buffer.
    * @param buf Buffer to load.
    */
-  load(buf: Location): Promise<void>;
+  load(buf: Buffer): Promise<void>;
   /**
    * Write the buffer content to.
    * @param buf Buffer to save.
    */
-  save?(buf: Location): Promise<void>;
+  save?(buf: Buffer): Promise<void>;
   /**
    * Actions to be performed on the buffer.
    */
