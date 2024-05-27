@@ -5,54 +5,40 @@ import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variable.ts";
 
+import type { Router } from "../../router/router.ts";
 import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
-import { Handler, openBuffer } from "../router.ts";
-import type { Context, Params } from "../router.ts";
+import { openBuffer } from "../router.ts";
+import { StateMan } from "../state.ts";
+import { Buffer } from "../../router/types.ts";
 
-const pattern = new URLPattern({
-  hostname: "teams",
-  pathname: "",
-});
+export async function load(denops: Denops, buf: Buffer, state: StateMan) {
+  await buffer.ensure(denops, buf.bufnr, async () => {
+    await prepareViewer(denops, Filetype.TeamList);
 
-export const TeamList: Handler = {
-  accept(bufname: string) {
-    return pattern.exec(bufname);
-  },
+    const domains = await state.domains();
+    await variable.b.set(denops, "docbase_teams_list_items", domains);
 
-  bufname(_: Record<string, unknown>) {
-    return "docbase://teams";
-  },
+    await setViewerContent(denops, buf.bufnr, domains);
+  });
+}
 
-  async load(denops: Denops, context: Context) {
-    await buffer.ensure(denops, context.bufnr, async () => {
-      await prepareViewer(denops, Filetype.TeamList);
-
-      const domains = await context.state.domains();
-      await variable.b.set(denops, "docbase_teams_list_items", domains);
-
-      await setViewerContent(denops, context.bufnr, domains);
-    });
-  },
-
-  act: {
-    async open(denops: Denops, _context: Context, _params: Params) {
-      const params = ensure(
-        _params,
-        is.ObjectOf({ lnum: is.Number, mods: is.OptionalOf(is.String) }),
-      );
-      const domains = ensure(
-        await variable.b.get(
-          denops,
-          "docbase_teams_list_items",
-        ),
-        is.ArrayOf(is.String),
-      );
-      await openBuffer(
-        denops,
-        "PostList",
-        { domain: domains[params.lnum - 1] },
-        params.mods,
-      );
-    },
-  },
-};
+export async function open(
+  denops: Denops,
+  router: Router,
+  uParams: Record<string, unknown>,
+) {
+  const params = ensure(
+    uParams,
+    is.ObjectOf({ lnum: is.Number, mods: is.OptionalOf(is.String) }),
+  );
+  const domains = ensure(
+    await variable.b.get(
+      denops,
+      "docbase_teams_list_items",
+    ),
+    is.ArrayOf(is.String),
+  );
+  await router.open(denops, "posts", params.mods, {
+    domain: domains[params.lnum - 1],
+  });
+}

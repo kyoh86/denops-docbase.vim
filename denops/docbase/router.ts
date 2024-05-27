@@ -2,8 +2,6 @@ import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
 import * as fn from "https://deno.land/x/denops_std@v6.5.0/function/mod.ts";
 
 import type { StateMan } from "./state.ts";
-import { TeamList } from "./handler/teams_list.ts";
-import { PostList } from "./handler/posts_list.ts";
 import { NewPost } from "./handler/new_post.ts";
 import { Post } from "./handler/post.ts";
 
@@ -27,8 +25,6 @@ export interface Handler {
 }
 
 const handlers = new Map<string, Handler>([
-  ["TeamList", TeamList],
-  ["PostList", PostList],
   ["NewPost", NewPost],
   ["Post", Post],
 ]);

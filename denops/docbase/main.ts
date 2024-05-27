@@ -16,8 +16,19 @@ import {
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { bufferAction, bufferLoaded, openBuffer } from "./router.ts";
+import { Router } from "../router/router.ts";
 import { XDGStateMan } from "./state.ts";
+
+import {
+  load as loadTeamsList,
+  open as openPosts,
+} from "./handler/teams_list.ts";
+import {
+  load as loadPostsList,
+  next as nextPosts,
+  open as openPost,
+  prev as prevPosts,
+} from "./handler/posts_list.ts";
 
 export async function main(denops: Denops) {
   const stateMan = new XDGStateMan();
@@ -45,38 +56,24 @@ export async function main(denops: Denops) {
     },
   });
 
-  denops.dispatcher = {
-    async openBuffer(uHandler: unknown, uProps: unknown, uMods: unknown) {
-      try {
-        const handler = ensure(uHandler, is.String);
-        const props = ensure(uProps, is.Record);
-        const mods = ensure(uMods, is.OptionalOf(is.String));
-        await openBuffer(denops, handler, props, mods);
-      } catch (err) {
-        getLogger("denops-docbase").error(err);
-      }
+  const router = new Router("docbase");
+  router.route("teams", {
+    load: (buf) => loadTeamsList(denops, buf, stateMan),
+    actions: {
+      open: (_, params) => openPosts(denops, router, params),
     },
+  });
 
-    async bufferLoaded(uBufnr: unknown) {
-      try {
-        const bufnr = ensure(uBufnr, is.Number);
-        await bufferLoaded(denops, stateMan, bufnr);
-      } catch (err) {
-        getLogger("denops-docbase").error(err);
-      }
+  router.route("posts", {
+    load: (buf) => loadPostsList(denops, buf, stateMan),
+    actions: {
+      open: (_, params) => openPost(denops, router, params),
+      next: (buf, params) => nextPosts(denops, router, buf),
+      prev: (buf, params) => prevPosts(denops, router, buf),
     },
+  });
 
-    async bufferAction(uBufnr: unknown, uActName: unknown, uParams: unknown) {
-      try {
-        const bufnr = ensure(uBufnr, is.Number);
-        const params = ensure(uParams, is.Record);
-        const actName = ensure(uActName, is.String);
-        await bufferAction(denops, stateMan, bufnr, actName, params);
-      } catch (err) {
-        getLogger("denops-docbase").error(err);
-      }
-    },
-
+  denops.dispatcher = await router.dispatch(denops, {
     listDomains() {
       try {
         return stateMan.domains();
@@ -140,5 +137,5 @@ export async function main(denops: Denops) {
         getLogger("denops-docbase").error(err);
       }
     },
-  };
+  });
 }
