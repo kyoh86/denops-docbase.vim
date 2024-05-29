@@ -6,7 +6,7 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variable.ts";
 
 import type { Router } from "../../router/router.ts";
-import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
+import { Filetype, setViewerContent } from "./buffer.ts";
 import { StateMan } from "../state.ts";
 import { Buffer } from "../../router/types.ts";
 
@@ -16,12 +16,10 @@ export async function loadTeamsList(
   buf: Buffer,
 ) {
   await buffer.ensure(denops, buf.bufnr, async () => {
-    await prepareViewer(denops, Filetype.TeamList);
-
     const domains = await state.domains();
     await variable.b.set(denops, "docbase_teams_list_items", domains);
 
-    await setViewerContent(denops, buf.bufnr, domains);
+    await setViewerContent(denops, buf.bufnr, Filetype.TeamList, domains);
   });
 }
 

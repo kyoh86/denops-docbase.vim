@@ -8,7 +8,7 @@ import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 
 import { isPost } from "../types.ts";
-import { Filetype, prepareViewer, setViewerContent } from "./buffer.ts";
+import { Filetype, setViewerContent } from "./buffer.ts";
 import { Client } from "../api/client.ts";
 import { StateMan } from "../state.ts";
 import type { Buffer } from "../../router/types.ts";
@@ -20,8 +20,6 @@ export async function loadPostsList(
   buf: Buffer,
 ) {
   await buffer.ensure(denops, buf.bufnr, async () => {
-    await prepareViewer(denops, Filetype.PostList);
-
     const params = ensure(
       buf.bufname.params,
       is.ObjectOf({
@@ -59,7 +57,7 @@ export async function loadPostsList(
       await variable.b.set(denops, "docbase_posts_list_domain", params.domain);
       await variable.b.set(denops, "docbase_posts_list_ids", postIds);
     });
-    await setViewerContent(denops, buf.bufnr, postTitles);
+    await setViewerContent(denops, buf.bufnr, Filetype.PostList, postTitles);
   });
 }
 

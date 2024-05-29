@@ -2,40 +2,42 @@
 
 import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
 import { execute } from "https://deno.land/x/denops_std@v6.5.0/helper/execute.ts";
+import * as option from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
 import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
-import { Filetype, prepareProxy } from "./buffer.ts";
+import { Filetype } from "./buffer.ts";
 import { parsePostBuffer, saveGroupsIntoPostBuffer } from "./post.ts";
 import type { Buffer } from "../../router/types.ts";
 import type { Router } from "../../router/router.ts";
 import type { StateMan } from "../state.ts";
+
+const isNewPostParams = is.ObjectOf({
+  domain: is.String,
+});
 
 export async function loadNewPost(
   denops: Denops,
   stateMan: StateMan,
   buf: Buffer,
 ) {
-  const props = ensure(
-    buf.bufname.params,
-    is.ObjectOf({
-      domain: is.String,
-    }),
-  );
+  const params = ensure(buf.bufname.params, isNewPostParams);
 
-  await prepareProxy(denops, buf.bufnr, Filetype.NewPost);
+  buffer.ensure(denops, buf.bufnr, async () => {
+    await option.filetype.setLocal(denops, Filetype.NewPost);
+  });
 
-  const state = await stateMan.load(props.domain);
+  const state = await stateMan.load(params.domain);
   if (!state) {
     getLogger("denops-docbase").error(
-      `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
+      `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
     );
     return;
   }
-  const client = new Client(state.token, props.domain);
+  const client = new Client(state.token, params.domain);
   await saveGroupsIntoPostBuffer(denops, client, buf.bufnr);
   const lines = initialContent();
   await buffer.replace(denops, buf.bufnr, lines);
@@ -47,22 +49,17 @@ export async function saveNewPost(
   router: Router,
   buf: Buffer,
 ) {
-  const props = ensure(
-    buf.bufname.params,
-    is.ObjectOf({
-      domain: is.String,
-    }),
-  );
-  const state = await stateMan.load(props.domain);
+  const params = ensure(buf.bufname.params, isNewPostParams);
+  const state = await stateMan.load(params.domain);
   if (!state) {
     getLogger("denops-docbase").error(
-      `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
+      `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
     );
     return;
   }
 
   const post = await bufferToPost(denops, buf.bufnr);
-  const client = new Client(state.token, props.domain);
+  const client = new Client(state.token, params.domain);
   const response = await client.posts().create(post);
   if (!response.ok) {
     getLogger("denops-docbase").error(
@@ -73,7 +70,7 @@ export async function saveNewPost(
     return;
   }
   await router.open(denops, "post", "", {
-    domain: props.domain,
+    domain: params.domain,
     postId: `${response.body.id}`,
   });
   await execute(denops, `${buf.bufnr}bdelete!`);
