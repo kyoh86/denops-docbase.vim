@@ -5,10 +5,10 @@ import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variable.ts";
 
-import type { Router } from "../../router/router.ts";
+import type { Router } from "https://denopkg.com/kyoh86/denops-router/mod.ts";
 import { Filetype, setViewerContent } from "./buffer.ts";
 import { StateMan } from "../state.ts";
-import { Buffer } from "../../router/types.ts";
+import { Buffer } from "https://denopkg.com/kyoh86/denops-router/types.ts";
 
 export async function loadTeamsList(
   denops: Denops,

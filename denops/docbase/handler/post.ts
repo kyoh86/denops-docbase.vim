@@ -13,7 +13,7 @@ import { Filetype } from "./buffer.ts";
 import type { Post as PostData, UpdatePostParams } from "../types.ts";
 import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
-import type { Buffer } from "../../router/types.ts";
+import type { Buffer } from "https://denopkg.com/kyoh86/denops-router/types.ts";
 import type { StateMan } from "../state.ts";
 
 const isPostParams = is.ObjectOf({
