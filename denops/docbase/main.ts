@@ -20,6 +20,7 @@ import { Router } from "https://denopkg.com/kyoh86/denops-router/mod.ts";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";
+import { loadPost, savePost } from "./handler/post.ts";
 import { loadNewPost, saveNewPost } from "./handler/new_post.ts";
 import {
   loadPostsList,
@@ -55,14 +56,14 @@ export async function main(denops: Denops) {
   });
 
   const router = new Router("docbase");
-  router.handle("teams", {
+  router.handle("teams-list", {
     load: (buf) => loadTeamsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPostsList(denops, router, params),
     },
   });
 
-  router.handle("posts", {
+  router.handle("posts-list", {
     load: (buf) => loadPostsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPost(denops, router, params),
@@ -71,11 +72,14 @@ export async function main(denops: Denops) {
     },
   });
 
+  router.handle("post", {
+    load: (buf) => loadPost(denops, stateMan, buf),
+    save: (buf) => savePost(denops, stateMan, buf),
+  });
+
   router.handle("new-post", {
     load: (buf) => loadNewPost(denops, stateMan, buf),
-    actions: {
-      save: (buf, _) => saveNewPost(denops, stateMan, router, buf),
-    },
+    save: (buf) => saveNewPost(denops, stateMan, router, buf),
   });
 
   denops.dispatcher = await router.dispatch(denops, {
