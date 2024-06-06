@@ -55,14 +55,14 @@ export async function main(denops: Denops) {
   });
 
   const router = new Router("docbase");
-  router.route("teams", {
+  router.handle("teams", {
     load: (buf) => loadTeamsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPostsList(denops, router, params),
     },
   });
 
-  router.route("posts", {
+  router.handle("posts", {
     load: (buf) => loadPostsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPost(denops, router, params),
@@ -71,7 +71,7 @@ export async function main(denops: Denops) {
     },
   });
 
-  router.route("new-post", {
+  router.handle("new-post", {
     load: (buf) => loadNewPost(denops, stateMan, buf),
     actions: {
       save: (buf, _) => saveNewPost(denops, stateMan, router, buf),
