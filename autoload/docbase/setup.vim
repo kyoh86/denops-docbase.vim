@@ -14,12 +14,12 @@ function! docbase#setup#maps()
     autocmd Filetype docbase_teams_list nnoremap <buffer> <c-h> <plug>(docbase-buffer-action-teams-list-open-new) 
     autocmd Filetype docbase_teams_list nnoremap <buffer> <c-v> <plug>(docbase-buffer-action-teams-list-open-vnew) 
     autocmd Filetype docbase_teams_list nnoremap <buffer> <c-t> <plug>(docbase-buffer-action-teams-list-open-tabedit) 
-    
+
     autocmd Filetype docbase_posts_list nnoremap <buffer> <cr>  <plug>(docbase-buffer-action-posts-list-open) 
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-h> <plug>(docbase-buffer-action-posts-list-open-new) 
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-v> <plug>(docbase-buffer-action-posts-list-open-vnew) 
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-t> <plug>(docbase-buffer-action-posts-list-open-tabedit) 
-    
+
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-k> <plug>(docbase-buffer-action-posts-list-prev) 
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-j> <plug>(docbase-buffer-action-posts-list-next) 
   augroup END

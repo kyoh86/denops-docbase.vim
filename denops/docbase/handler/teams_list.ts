@@ -45,7 +45,7 @@ export async function openPostsList(
     ),
     is.ArrayOf(is.String),
   );
-  await router.open(denops, "posts", params.mods, {
+  await router.open(denops, "posts-list", params.mods, {
     domain: domains[params.lnum - 1],
   });
 }
