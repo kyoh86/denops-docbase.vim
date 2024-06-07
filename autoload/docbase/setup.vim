@@ -5,15 +5,6 @@ function! docbase#setup#commands()
   call denops#request('docbase', 'router:setup:command', ['post'])
   call denops#request('docbase', 'router:setup:command', ['new-post'])
   command! DocbaseLogin call docbase#login()
-
-  augroup docbase-setup-commands
-    autocmd!
-    autocmd Filetype docbase_teams_list command! <buffer> DocbaseOpenTeam  call docbase#buffer_action#teams_list#open(line("."), <q-mods>)
-
-    autocmd Filetype docbase_posts_list command! DocbaseOpenPost           call docbase#buffer_action#posts_list#open(line("."), <q-mods>)
-    autocmd Filetype docbase_posts_list command! DocbasePrevPage           call docbase#buffer_action#posts_list#prev()
-    autocmd Filetype docbase_posts_list command! DocbaseNextPage           call docbase#buffer_action#posts_list#next()
-  augroup END
 endfunction
 
 function! docbase#setup#maps()

@@ -9,10 +9,10 @@ import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
 import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
-import { Filetype } from "./buffer.ts";
+import { Filetype } from "./filetype.ts";
 import { parsePostBuffer, saveGroupsIntoPostBuffer } from "./post.ts";
-import type { Buffer } from "https://denopkg.com/kyoh86/denops-router/types.ts";
-import type { Router } from "https://denopkg.com/kyoh86/denops-router/mod.ts";
+import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/types.ts";
+import type { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import type { StateMan } from "../state.ts";
 
 const isNewPostParams = is.ObjectOf({

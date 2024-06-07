@@ -16,7 +16,7 @@ import {
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { Router } from "https://denopkg.com/kyoh86/denops-router/mod.ts";
+import { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";
@@ -91,24 +91,26 @@ export async function main(denops: Denops) {
       }
     },
 
-    async searchPosts(uDomain: unknown, uSearchParams: unknown) {
+    async searchPosts(uSearchParams: unknown) {
       try {
-        const domain = ensure(uDomain, is.String);
         const params = ensure(
           uSearchParams,
-          is.OptionalOf(isSearchPostsParams),
+          is.IntersectionOf([
+            is.ObjectOf({ domain: is.String }),
+            isSearchPostsParams,
+          ]),
         );
-        const state = await stateMan.load(domain);
+        const state = await stateMan.load(params.domain);
         if (!state) {
           throw new Error(
-            `There's no valid state for domain "${domain}". You can setup with :DocbaseLogin`,
+            `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
           );
         }
         const client = new Client(
           state.token,
-          domain,
+          params.domain,
         );
-        const response = await client.posts().search(params || {});
+        const response = await client.posts().search(params);
         if (!response.ok) {
           throw new Error(
             `Failed to load posts from the DocBase API: ${

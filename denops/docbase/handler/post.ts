@@ -9,11 +9,11 @@ import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/buffe
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
-import { Filetype } from "./buffer.ts";
+import { Filetype } from "./filetype.ts";
 import type { Post as PostData, UpdatePostParams } from "../types.ts";
 import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
-import type { Buffer } from "https://denopkg.com/kyoh86/denops-router/types.ts";
+import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/types.ts";
 import type { StateMan } from "../state.ts";
 
 const isPostParams = is.ObjectOf({
