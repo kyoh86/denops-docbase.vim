@@ -11,8 +11,10 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { Filetype } from "./filetype.ts";
 import { Client } from "../api/client.ts";
 import { StateMan } from "../state.ts";
-import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/types.ts";
-import type { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import type {
+  Buffer,
+  Router,
+} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
 
 export async function loadPostsList(
   denops: Denops,

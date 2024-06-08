@@ -11,8 +11,10 @@ import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
 import { Filetype } from "./filetype.ts";
 import { parsePostBuffer, saveGroupsIntoPostBuffer } from "./post.ts";
-import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/types.ts";
-import type { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import type {
+  Buffer,
+  Router,
+} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
 import type { StateMan } from "../state.ts";
 
 const isNewPostParams = is.ObjectOf({

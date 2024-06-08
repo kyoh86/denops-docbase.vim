@@ -7,10 +7,12 @@ import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variab
 import * as option from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
 
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import type { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import type {
+  Buffer,
+  Router,
+} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
 import { Filetype } from "./filetype.ts";
 import { StateMan } from "../state.ts";
-import { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/types.ts";
 
 export async function loadTeamsList(
   denops: Denops,
