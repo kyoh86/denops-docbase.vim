@@ -10,12 +10,13 @@ import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
 import { Filetype } from "./filetype.ts";
-import { parsePostBuffer, saveGroupsIntoPostBuffer } from "./post.ts";
+import { parsePostBufferLines, saveGroupsIntoPostBuffer } from "./post.ts";
 import type {
   Buffer,
   Router,
 } from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
 import type { StateMan } from "../state.ts";
+import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/mod.ts";
 
 const isNewPostParams = is.ObjectOf({
   domain: is.String,
@@ -91,7 +92,8 @@ function initialContent() {
 }
 
 async function bufferToPost(denops: Denops, bufnr: number) {
-  const post = await parsePostBuffer(denops, bufnr);
+  const lines = await getbufline(denops, bufnr, 1, "$");
+  const post = await parsePostBufferLines(denops, bufnr, lines);
   let params: CreatePostParams = {
     title: post.attr.title,
     body: post.body,
