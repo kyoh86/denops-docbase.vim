@@ -15,11 +15,27 @@ import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
 import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
 import type { StateMan } from "../state.ts";
+import { getCacheFile } from "../cache.ts";
 
 const isPostParams = is.ObjectOf({
   domain: is.String,
   postId: is.String,
 });
+
+async function fetchPost(client: Client, domain: string, postId: string) {
+  const response = await client.posts().get(postId);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load a post from the DocBase API: ${
+        response.error || response.statusText
+      }`,
+    );
+  }
+
+  const lines = postToLines(response.body);
+  await saveCache(domain, postId, lines);
+  return lines;
+}
 
 export async function loadPost(
   denops: Denops,
@@ -42,17 +58,7 @@ export async function loadPost(
   const client = new Client(state.token, params.domain);
   await saveGroupsIntoPostBuffer(denops, client, buf.bufnr);
 
-  const response = await client.posts().get(params.postId);
-  if (!response.ok) {
-    getLogger("denops-docbase").error(
-      `Failed to load a post from the DocBase API: ${
-        response.error || response.statusText
-      }`,
-    );
-    return;
-  }
-
-  const lines = postToBuffer(response.body);
+  const lines = await fetchPost(client, params.domain, params.postId);
   await buffer.replace(denops, buf.bufnr, lines);
 }
 
@@ -61,33 +67,129 @@ export async function savePost(
   stateMan: StateMan,
   buf: Buffer,
 ) {
-  const props = ensure(buf.bufname.params, isPostParams);
-  const state = await stateMan.load(props.domain);
+  try {
+    await savePostCore(denops, stateMan, buf);
+    await buffer.ensure(denops, buf.bufnr, async () => {
+      await option.modified.setLocal(denops, false);
+    });
+  } catch (e) {
+    if (e instanceof Error) {
+      getLogger("denops-docbase").error(`[${e.name}] ${e.message}`);
+      getLogger("denops-docbase-verbose").error(e);
+    } else {
+      throw e;
+    }
+  }
+}
+
+async function savePostCore(
+  denops: Denops,
+  stateMan: StateMan,
+  buf: Buffer,
+) {
+  const params = ensure(buf.bufname.params, isPostParams);
+  const state = await stateMan.load(params.domain);
   if (!state) {
-    getLogger("denops-docbase").error(
-      `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
+    throw new Error(
+      `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
     );
+  }
+  const client = new Client(state.token, params.domain);
+
+  const cacheFile = await getCacheFile(params.domain, params.postId);
+  const patch = await getPatch(
+    cacheFile,
+    await getbufline(denops, buf.bufnr, 1, "$"),
+  );
+  const lines = await fetchPost(client, params.domain, params.postId); // update cache
+  if (!patch) {
+    await buffer.replace(denops, buf.bufnr, lines);
     return;
   }
-
-  const post = await bufferToPost(denops, buf.bufnr);
-  const client = new Client(state.token, props.domain);
-  const response = await client.posts().update(props.postId, post);
+  const [conflicted, merged] = await applyPatch(cacheFile, patch);
+  await buffer.replace(denops, buf.bufnr, merged);
+  if (conflicted) {
+    throw new Error("Failed to save the post due to conflict");
+  }
+  const post = await bufferLinesToPost(denops, buf.bufnr, merged);
+  const response = await client.posts().update(params.postId, post);
   if (!response.ok) {
-    getLogger("denops-docbase").error(
+    throw new Error(
       `Failed to update the post with the DocBase API: ${
         response.error || response.statusText
       }`,
     );
-    return;
   }
-  await buffer.ensure(denops, buf.bufnr, async () => {
-    await option.modified.setLocal(denops, false);
-  });
+  await saveCache(params.domain, params.postId, merged);
 }
 
-async function bufferToPost(denops: Denops, bufnr: number) {
-  const post = await parsePostBuffer(denops, bufnr);
+async function applyPatch(
+  cacheFile: string,
+  patch: string,
+): Promise<[boolean, string[]]> {
+  const proc = new Deno.Command("patch", {
+    args: [cacheFile, "-", "--merge", "--output", "-"],
+    stdin: "piped",
+    stdout: "piped",
+    stderr: "piped",
+  }).spawn();
+  const writer = proc.stdin.getWriter();
+  await writer.write(
+    new TextEncoder().encode(patch),
+  );
+  writer.releaseLock();
+  await proc.stdin.close();
+  const merged = await proc.output();
+  switch (merged.code) {
+    case 0: { // merged without conflict
+      return [false, new TextDecoder().decode(merged.stdout).split(/\r?\n/)];
+    }
+    case 1: { // conflicted
+      return [true, new TextDecoder().decode(merged.stdout).split(/\r?\n/)];
+    }
+    default: { // troubled
+      throw new Error(
+        `Failed to run patch: ${new TextDecoder().decode(merged.stderr)}`,
+      );
+    }
+  }
+}
+
+/**
+ * Calling `diff` command to get diff of the current lines and the cache
+ */
+async function getPatch(cacheFile: string, lines: string[]) {
+  const proc = new Deno.Command("diff", {
+    args: ["-u", cacheFile, "-"],
+    stdin: "piped",
+    stdout: "piped",
+    stderr: "piped",
+  }).spawn();
+  const writer = proc.stdin.getWriter();
+  await writer.write(
+    new TextEncoder().encode(lines.join("\n")),
+  );
+  writer.releaseLock();
+  await proc.stdin.close();
+  const diff = await proc.output();
+  switch (diff.code) {
+    case 0: // no diff
+      return undefined;
+    case 1: // diff
+      return new TextDecoder().decode(diff.stdout);
+    default: // troubled
+      throw new Error(
+        `Failed to run diff: ${new TextDecoder().decode(diff.stderr)}`,
+      );
+  }
+}
+
+async function bufferLinesToPost(
+  denops: Denops,
+  bufnr: number,
+  lines: string[],
+): Promise<UpdatePostParams> {
+  const post = await parsePostBufferLines(denops, bufnr, lines);
   let params: UpdatePostParams = {
     title: post.attr.title,
     draft: post.attr.draft,
@@ -109,7 +211,7 @@ async function bufferToPost(denops: Denops, bufnr: number) {
   return params;
 }
 
-function postToBuffer(post: PostData) {
+function postToLines(post: PostData) {
   const lines = [
     "---",
     `title: "${post.title}"`,
@@ -134,8 +236,11 @@ function postToBuffer(post: PostData) {
   return lines.concat(post.body.split(/\r?\n/));
 }
 
-export async function parsePostBuffer(denops: Denops, bufnr: number) {
-  const lines = await getbufline(denops, bufnr, 1, "$");
+export async function parsePostBufferLines(
+  denops: Denops,
+  bufnr: number,
+  lines: string[],
+) {
   const attrFields = {
     title: is.String,
     draft: is.OptionalOf(is.Boolean),
@@ -212,4 +317,10 @@ export async function saveGroupsIntoPostBuffer(
       response.body,
     );
   });
+}
+
+async function saveCache(domain: string, postId: string, lines: string[]) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(lines.join("\n"));
+  await Deno.writeFile(await getCacheFile(domain, postId), data);
 }
