@@ -10,13 +10,13 @@ License: MIT License
                                                             *docbase-contents*
 Contents ~
 
-Install           |docbase-install|
-Setup             |docbase-setup|
-Special buffers   |docbase-special-buffers|
-Function          |docbase-function|
-Commands          |docbase-commands|
-Keymaps           |docbase-keymaps|
-Denops commands   |docbase-denops-commands|
+Install                   |docbase-install|
+Setup                     |docbase-setup|
+Special buffers           |docbase-special-buffers|
+Function                  |docbase-function|
+Commands                  |docbase-commands|
+Keymaps                   |docbase-keymaps|
+Denops commands           |docbase-denops-commands|
 
 
 ==============================================================================
@@ -47,27 +47,27 @@ denops-docbase.vim has some special buffers for each special name.
 
                                  *docbase-buffer-teams-list* *docbase://teams*
 Teams list view
-	Buffer name: `docbase://teams`
+	Buffer name: `docbase://teams-list`
 
 	Shows your teams (domain) list.
 	You can select a domain and open it with buffer action.
 
                   *docbase-buffer-posts-list* *docbase://teams/{domain}/posts*
 Posts list view
-	Buffer name: `docbase://teams/{domain}/posts`
+	Buffer name: `docbase://posts-list;domain={domain}`
 
 	Shows your posts in the team (domain).
 	You can select a post and open it with buffer action.
 
               *docbase-buffer-post* *docbase://teams/{domain}/posts/{post_id}*
 Post editor
-	Buffer name: `docbase://teams/{domain}/posts/{post_id}`
+	Buffer name: `docbase://post;domain={domain}&postId={post_id}`
 
 	Shows a post. You can edit it and save it in DocBase.
 
                 *docbase-buffer-new-post* *docbase://teams/{domain}/posts/new*
 New post editor
-	Buffer name: `docbase://teams/{domain}/posts/new`
+	Buffer name: `docbase://new-post;domain={domain}`
 
 	Creates a new post. You can edit it and save it in DocBase.
 
@@ -191,17 +191,17 @@ If you call denops#setup#commands(), it creates default commands below.
 	- Token for the DocBase. See https://help.docbase.io/posts/45703
 
 *:Docbase*
-*:DocbaseTeamsList*
+*:DocbaseOpenTeamsList*
 	Open DocBase teams list view.
 
-*:DocbasePostsList* {domain}
+*:DocbaseOpenPostsList* --domain={domain}
 	Open DocBase posts list view for the domain.
 
 	{domain} (string):
 		Your team domain in the DocBase.
 		e.g.: `kyoh86.docbase.io` => `"kyoh86"`
 
-*:DocbasePost* {domain} {post_id}
+*:DocbaseOpenPost* --domain={domain} --post-id={post_id}
 	Open post editor.
 
 	{domain} (string):
@@ -211,28 +211,6 @@ If you call denops#setup#commands(), it creates default commands below.
 	{post_id} (number):
 		An ID for the post.
 		e.g.: `kyoh86.docbase.io/posts/1234` => `1234`
-
-And in DocBase Teams list view, you can use commands below.
-
-*:DocbaseOpenTeam*
-*:DocbaseOpenTeamNew*
-*:DocbaseOpenTeamVnew*
-*:DocbaseOpenTeamTabedit*
-	Open DocBase posts list view for the domain under the cursor.
-
-And in DocBase posts list view, you can use commands below.
-
-*:DocbaseOpenPost*
-*:DocbaseOpenPostNew*
-*:DocbaseOpenPostVnew*
-*:DocbaseOpenPostTabedit*
-	Open DocBase post editor for the post under the cursor.
-
-*:DocbasePrevPage*
-	Open previous page.
-
-*:DocbaseNextPage*
-	Open next page.
 
 ==============================================================================
                                                              *docbase-keymaps*
@@ -261,69 +239,6 @@ If you call |docbase#setup#maps()|, you can use keys that described as
 	default: <C-j>
 	Open next page.
 
-==============================================================================
-                                                     *docbase-denops-commands*
-Denops commands ~
-
-You can call some functions from the denops commands.
-
-                                         *docbase-denops-command-openBuffer()*
-openBuffer(
-    handler: string,
-    props: Record<string, unknown>,
-    mods: string)
-
-	Open new |docbase-special-buffers|.
-	{hanlder} is the name of a special buffer.
-	"TeamList", "PostList", "Post" and "NewPost" is in the handler.
-	{mods} is the space-separated command modifiers to open new buffer.
-	See |<mods>|.
-                                       *docbase-denops-command-bufferAction()*
-bufferAction(
-    bufnr: number
-    actName: string
-    params: Record<string, unknown>)
-
-	Notify the action for |docbase-special-buffers|.
-	If the buffer has action for the {actName}, process it with {params}.
-	See autoload functions docbase#buffer_action#* for example.
-
-
-                                              *docbase-denops-command-login()*
-login()
-
-	Login to the DocBase. It will request you a domain of your team and a
-	token to access DocBase API.
-
-	- Domain : If you want to access `kyoh86.docbase.io` => `"kyoh86"`
-	- Token for the DocBase. See https://help.docbase.io/posts/45703
-
-
-                                        *docbase-denops-command-listDomains()*
-listDomains()
-	Get domain list. Returns string[].
-	You can make a finder source with this, for tools like telescope.nvim,
-	ctrlp.vim, fzf.vim, etc.
-
-                                        *docbase-denops-command-searchPosts()*
-searchPosts(
-    domain: string,
-    params?: {
-        q?: string,
-	page?: number,
-	per_page?: number})
-
-	Search posts. Returns a document like below.
-	  {
-	    meta: {
-	      previous_page: string | null;
-	      next_page: string | null;
-	      total: number;
-	    };
-	    post: Post[];
-	  }
-	You can make a finder source with this, for tools like telescope.nvim,
-	ctrlp.vim, fzf.vim, etc.
 
 ==============================================================================
 " vim:tw=78:ts=8:sw=8:ft=help:norl:noet:fen:

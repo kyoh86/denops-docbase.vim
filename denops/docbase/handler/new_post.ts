@@ -2,89 +2,81 @@
 
 import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
 import { execute } from "https://deno.land/x/denops_std@v6.5.0/helper/execute.ts";
+import * as option from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
 import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
-import { Handler, openBuffer } from "../router.ts";
-import type { Context, Params } from "../router.ts";
 import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
-import { Filetype, prepareProxy } from "./buffer.ts";
+import { Filetype } from "./filetype.ts";
 import { parsePostBuffer, saveGroupsIntoPostBuffer } from "./post.ts";
+import type {
+  Buffer,
+  Router,
+} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+import type { StateMan } from "../state.ts";
 
-function ensureProps(props: unknown) {
-  return ensure(
-    props,
-    is.ObjectOf({
-      domain: is.String,
-    }),
-  );
-}
-
-const pattern = new URLPattern({
-  hostname: "teams",
-  pathname: "/:domain(\\w+)/posts/new",
+const isNewPostParams = is.ObjectOf({
+  domain: is.String,
 });
 
-export const NewPost: Handler = {
-  accept(bufname: string) {
-    return pattern.exec(bufname);
-  },
+export async function loadNewPost(
+  denops: Denops,
+  stateMan: StateMan,
+  buf: Buffer,
+) {
+  const params = ensure(buf.bufname.params, isNewPostParams);
 
-  bufname(rProps: Record<string, undefined>) {
-    const props = ensureProps(rProps);
-    return `docbase://teams/${props.domain}/posts/new`;
-  },
+  buffer.ensure(denops, buf.bufnr, async () => {
+    await option.filetype.setLocal(denops, Filetype.NewPost);
+  });
 
-  async load(denops: Denops, context: Context) {
-    const props = ensureProps(context.match.pathname.groups);
+  const state = await stateMan.load(params.domain);
+  if (!state) {
+    getLogger("denops-docbase").error(
+      `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
+    );
+    return;
+  }
+  const client = new Client(state.token, params.domain);
+  await saveGroupsIntoPostBuffer(denops, client, buf.bufnr);
+  const lines = initialContent();
+  await buffer.replace(denops, buf.bufnr, lines);
+}
 
-    await prepareProxy(denops, context.bufnr, Filetype.NewPost);
+export async function saveNewPost(
+  denops: Denops,
+  stateMan: StateMan,
+  router: Router,
+  buf: Buffer,
+) {
+  const params = ensure(buf.bufname.params, isNewPostParams);
+  const state = await stateMan.load(params.domain);
+  if (!state) {
+    getLogger("denops-docbase").error(
+      `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
+    );
+    return;
+  }
 
-    const state = await context.state.load(props.domain);
-    if (!state) {
-      getLogger("denops-docbase").error(
-        `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
-      );
-      return;
-    }
-    const client = new Client(state.token, props.domain);
-    await saveGroupsIntoPostBuffer(denops, client, context.bufnr);
-    const lines = initialContent();
-    await buffer.replace(denops, context.bufnr, lines);
-  },
-
-  act: {
-    async save(denops: Denops, context: Context, _params: Params) {
-      const props = ensureProps(context.match.pathname.groups);
-      const state = await context.state.load(props.domain);
-      if (!state) {
-        getLogger("denops-docbase").error(
-          `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
-        );
-        return;
-      }
-
-      const post = await bufferToPost(denops, context.bufnr);
-      const client = new Client(state.token, props.domain);
-      const response = await client.posts().create(post);
-      if (!response.ok) {
-        getLogger("denops-docbase").error(
-          `Failed to create new post with the DocBase API: ${
-            response.error || response.statusText
-          }`,
-        );
-        return;
-      }
-      await openBuffer(denops, "Post", {
-        domain: props.domain,
-        postId: `${response.body.id}`,
-      });
-      await execute(denops, `${context.bufnr}bdelete!`);
-    },
-  },
-};
+  const post = await bufferToPost(denops, buf.bufnr);
+  const client = new Client(state.token, params.domain);
+  const response = await client.posts().create(post);
+  if (!response.ok) {
+    getLogger("denops-docbase").error(
+      `Failed to create new post with the DocBase API: ${
+        response.error || response.statusText
+      }`,
+    );
+    return;
+  }
+  await router.open(denops, "post", "", {
+    domain: params.domain,
+    postId: `${response.body.id}`,
+  });
+  await execute(denops, `${buf.bufnr}bdelete!`);
+}
 
 function initialContent() {
   return [

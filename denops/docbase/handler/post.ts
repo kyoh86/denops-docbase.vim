@@ -9,95 +9,82 @@ import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/buffe
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
-import { Filetype, prepareProxy } from "./buffer.ts";
-import { Handler } from "../router.ts";
-import type { Context, Params } from "../router.ts";
+import { Filetype } from "./filetype.ts";
 import type { Post as PostData, UpdatePostParams } from "../types.ts";
 import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
+import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+import type { StateMan } from "../state.ts";
 
-function ensureProps(props: unknown) {
-  return ensure(
-    props,
-    is.ObjectOf({
-      domain: is.String,
-      postId: is.String,
-    }),
-  );
-}
-
-const pattern = new URLPattern({
-  hostname: "teams",
-  pathname: "/:domain(\\w+)/posts/:postId(\\d+)",
+const isPostParams = is.ObjectOf({
+  domain: is.String,
+  postId: is.String,
 });
 
-export const Post: Handler = {
-  accept(bufname: string) {
-    return pattern.exec(bufname);
-  },
+export async function loadPost(
+  denops: Denops,
+  stateMan: StateMan,
+  buf: Buffer,
+) {
+  const params = ensure(buf.bufname.params, isPostParams);
 
-  bufname(rProps: Record<string, undefined>) {
-    const props = ensureProps(rProps);
-    return `docbase://teams/${props.domain}/posts/${props.postId}`;
-  },
+  buffer.ensure(denops, buf.bufnr, async () => {
+    await option.filetype.setLocal(denops, Filetype.Post);
+  });
 
-  async load(denops: Denops, context: Context) {
-    const props = ensureProps(context.match.pathname.groups);
+  const state = await stateMan.load(params.domain);
+  if (!state) {
+    getLogger("denops-docbase").error(
+      `There's no valid state for domain "${params.domain}". You can setup with :DocbaseLogin`,
+    );
+    return;
+  }
+  const client = new Client(state.token, params.domain);
+  await saveGroupsIntoPostBuffer(denops, client, buf.bufnr);
 
-    await prepareProxy(denops, context.bufnr, Filetype.Post);
+  const response = await client.posts().get(params.postId);
+  if (!response.ok) {
+    getLogger("denops-docbase").error(
+      `Failed to load a post from the DocBase API: ${
+        response.error || response.statusText
+      }`,
+    );
+    return;
+  }
 
-    const state = await context.state.load(props.domain);
-    if (!state) {
-      getLogger("denops-docbase").error(
-        `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
-      );
-      return;
-    }
-    const client = new Client(state.token, props.domain);
-    await saveGroupsIntoPostBuffer(denops, client, context.bufnr);
+  const lines = postToBuffer(response.body);
+  await buffer.replace(denops, buf.bufnr, lines);
+}
 
-    const response = await client.posts().get(props.postId);
-    if (!response.ok) {
-      getLogger("denops-docbase").error(
-        `Failed to load a post from the DocBase API: ${
-          response.error || response.statusText
-        }`,
-      );
-      return;
-    }
+export async function savePost(
+  denops: Denops,
+  stateMan: StateMan,
+  buf: Buffer,
+) {
+  const props = ensure(buf.bufname.params, isPostParams);
+  const state = await stateMan.load(props.domain);
+  if (!state) {
+    getLogger("denops-docbase").error(
+      `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
+    );
+    return;
+  }
 
-    const lines = postToBuffer(response.body);
-    await buffer.replace(denops, context.bufnr, lines);
-  },
-
-  act: {
-    async save(denops: Denops, context: Context, _params: Params) {
-      const props = ensureProps(context.match.pathname.groups);
-      const state = await context.state.load(props.domain);
-      if (!state) {
-        getLogger("denops-docbase").error(
-          `There's no valid state for domain "${props.domain}". You can setup with :DocbaseLogin`,
-        );
-        return;
-      }
-
-      const post = await bufferToPost(denops, context.bufnr);
-      const client = new Client(state.token, props.domain);
-      const response = await client.posts().update(props.postId, post);
-      if (!response.ok) {
-        getLogger("denops-docbase").error(
-          `Failed to update the post with the DocBase API: ${
-            response.error || response.statusText
-          }`,
-        );
-        return;
-      }
-      await buffer.ensure(denops, context.bufnr, async () => {
-        await option.modified.setLocal(denops, false);
-      });
-    },
-  },
-};
+  const post = await bufferToPost(denops, buf.bufnr);
+  const client = new Client(state.token, props.domain);
+  const response = await client.posts().update(props.postId, post);
+  if (!response.ok) {
+    getLogger("denops-docbase").error(
+      `Failed to update the post with the DocBase API: ${
+        response.error || response.statusText
+      }`,
+    );
+    return;
+  }
+  await buffer.ensure(denops, buf.bufnr, async () => {
+    await option.modified.setLocal(denops, false);
+  });
+}
 
 async function bufferToPost(denops: Denops, bufnr: number) {
   const post = await parsePostBuffer(denops, bufnr);
@@ -157,7 +144,7 @@ export async function parsePostBuffer(denops: Denops, bufnr: number) {
   const content = extract(lines.join("\n"));
   const attr = ensure(
     content.attrs,
-    is.OneOf([
+    is.UnionOf([
       is.ObjectOf({
         ...attrFields,
         scope: is.LiteralOf("group"),
@@ -165,7 +152,7 @@ export async function parsePostBuffer(denops: Denops, bufnr: number) {
       }),
       is.ObjectOf({
         ...attrFields,
-        scope: is.OneOf([
+        scope: is.UnionOf([
           is.LiteralOf("everyone"),
           is.LiteralOf("private"),
         ]),

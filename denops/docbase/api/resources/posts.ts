@@ -152,7 +152,7 @@ export const isSearchPostsMeta = is.ObjectOf({
 export class Posts {
   constructor(private fetcher: Fetcher) {}
 
-  search(params: SearchPostsParams) {
+  async search(params: SearchPostsParams) {
     const query = new Map<string, Stringer | string>();
     const parameters = params as Record<string, object>;
     for (const key in parameters) {
@@ -160,7 +160,7 @@ export class Posts {
         query.set(key, parameters[key]);
       }
     }
-    return this.fetcher.request(
+    return await this.fetcher.request(
       "GET",
       `/posts`,
       is.ObjectOf({
