@@ -3,7 +3,6 @@ function! docbase#setup#commands()
   command! DocbaseTeamsList <mods> new docbase://teams
   command! DocbaseLogin call docbase#login()
   command! -nargs=1 DocbasePostsList <mods> new docbase://teams/<args>/posts
-  command! -nargs=2 DocbasePost s:docbase_edit_post(<q-mods>, <f-args>)
 
   augroup docbase-setup-commands
     autocmd!
