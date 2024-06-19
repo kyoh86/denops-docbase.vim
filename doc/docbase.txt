@@ -54,24 +54,33 @@ Teams list view
 	Shows your teams (domain) list.
 	You can select a domain and open it with buffer action.
 
-                  *docbase-buffer-posts-list* *docbase://teams/{domain}/posts*
+            *docbase-buffer-posts-list* *docbase://posts-list;domain={domain}*
 Posts list view
 	Buffer name: `docbase://posts-list;domain={domain}`
 
 	Shows your posts in the team (domain).
 	You can select a post and open it with buffer action.
 
-              *docbase-buffer-post* *docbase://teams/{domain}/posts/{post_id}*
+       *docbase-buffer-post* *docbase://post;domain={domain}&postId={post_id}*
 Post editor
 	Buffer name: `docbase://post;domain={domain}&postId={post_id}`
 
 	Shows a post. You can edit it and save it in DocBase.
 
-                *docbase-buffer-new-post* *docbase://teams/{domain}/posts/new*
+                *docbase-buffer-new-post* *docbase://new-post;domain={domain}*
 New post editor
 	Buffer name: `docbase://new-post;domain={domain}`
 
 	Creates a new post. You can edit it and save it in DocBase.
+
+                                       *docbase-buffer-new-post-with-template*
+                       *docbase://new-post;domain={domain}&template={post_id}*
+New post with template
+	Buffer name: `docbase://new-post;domain={domain}&template={post_id}`
+
+	Creates a new post from template. You can make new post from a
+	template post, edit it and save it in DocBase.
+
 
 ==============================================================================
                                                             *docbase-function*

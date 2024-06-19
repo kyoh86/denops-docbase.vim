@@ -31,7 +31,6 @@ async function fetchPost(client: Client, domain: string, postId: string) {
       }`,
     );
   }
-
   const lines = postToLines(response.body);
   await saveCache(domain, postId, lines);
   return lines;

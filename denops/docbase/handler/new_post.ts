@@ -7,6 +7,7 @@ import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
+import type { Post } from "../types.ts";
 import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
 import { Filetype } from "./filetype.ts";
@@ -20,7 +21,49 @@ import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/mod.t
 
 const isNewPostParams = is.ObjectOf({
   domain: is.String,
+  template: is.OptionalOf(is.String),
 });
+
+async function fetchTemplate(client: Client, postId: string) {
+  const response = await client.posts().get(postId);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load a post from the DocBase API: ${
+        response.error || response.statusText
+      }`,
+    );
+  }
+  const lines = await templateToLines(client, response.body);
+  return lines;
+}
+
+async function templateToLines(client: Client, post: Post) {
+  const lines = [
+    "---",
+    `title: "${await client.templates().apply(post.title)}"`,
+    `scope: ${post.scope || "private"}`,
+  ];
+  if (post.draft) {
+    lines.push("draft: true");
+  }
+  const tags = post.tags.filter((t) => t.name != "template");
+  if (tags.length > 0) {
+    lines.push("tags:");
+    tags.forEach((g) => {
+      lines.push(`  - "${g.name}"`);
+    });
+  }
+  if (post.groups.length > 0) {
+    lines.push("groups:");
+    post.groups.forEach((t) => {
+      lines.push(`  - "${t.name}"`);
+    });
+  }
+  lines.push("---");
+  return lines.concat(
+    (await client.templates().apply(post.body)).split(/\r?\n/),
+  );
+}
 
 export async function loadNewPost(
   denops: Denops,
@@ -42,7 +85,9 @@ export async function loadNewPost(
   }
   const client = new Client(state.token, params.domain);
   await saveGroupsIntoPostBuffer(denops, client, buf.bufnr);
-  const lines = initialContent();
+  const lines = params.template
+    ? await fetchTemplate(client, params.template)
+    : initialContent();
   await buffer.replace(denops, buf.bufnr, lines);
 }
 
