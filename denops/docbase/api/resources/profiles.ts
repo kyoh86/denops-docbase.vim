@@ -32,10 +32,14 @@ export const isProfile = is.ObjectOf({
   nameid: is.String,
 }) satisfies P<Profile>;
 
+export async function get(fetcher: Fetcher) {
+  return await fetcher.request("GET", "/profile", isProfile);
+}
+
 export class Profiles {
   constructor(private fetcher: Fetcher) {}
 
   get() {
-    return this.fetcher.request("GET", "/profile", isProfile);
+    return get(this.fetcher);
   }
 }

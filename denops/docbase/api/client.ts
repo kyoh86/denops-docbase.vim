@@ -1,16 +1,21 @@
+import { Attachments } from "./resources/attachments.ts";
+import { Comments } from "./resources/comments.ts";
+import { Fetcher } from "./fetcher.ts";
+import { Groups } from "./resources/groups.ts";
 import { Posts } from "./resources/posts.ts";
 import { Profiles } from "./resources/profiles.ts";
-import { Users } from "./resources/users.ts";
-import { Groups } from "./resources/groups.ts";
-import { Comments } from "./resources/comments.ts";
 import { Tags } from "./resources/tags.ts";
-import { Fetcher } from "./fetcher.ts";
-import { Attachments } from "./resources/attachments.ts";
+import { Templates } from "./resources/templates.ts";
+import { Users } from "./resources/users.ts";
 
 export class Client {
   private fetcher: Fetcher;
   constructor(apiToken: string, domain: string) {
     this.fetcher = new Fetcher(apiToken, domain);
+  }
+
+  templates(): Templates {
+    return new Templates(this.fetcher);
   }
 
   profiles(): Profiles {
