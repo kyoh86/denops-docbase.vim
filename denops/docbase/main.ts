@@ -16,7 +16,7 @@ import {
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { Router } from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+import { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";

@@ -13,7 +13,7 @@ import { Filetype } from "./filetype.ts";
 import type { Post as PostData, UpdatePostParams } from "../types.ts";
 import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
-import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import type { StateMan } from "../state.ts";
 import { getCacheFile } from "../cache.ts";
 
