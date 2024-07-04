@@ -14,7 +14,7 @@ import { StateMan } from "../state.ts";
 import type {
   Buffer,
   Router,
-} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+} from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 
 export async function loadPostsList(
   denops: Denops,

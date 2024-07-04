@@ -10,7 +10,7 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import type {
   Buffer,
   Router,
-} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+} from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import { Filetype } from "./filetype.ts";
 import { StateMan } from "../state.ts";
 

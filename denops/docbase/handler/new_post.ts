@@ -15,7 +15,7 @@ import { parsePostBufferLines, saveGroupsIntoPostBuffer } from "./post.ts";
 import type {
   Buffer,
   Router,
-} from "https://denopkg.com/kyoh86/denops-router@v0.0.1-alpha.2/mod.ts";
+} from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import type { StateMan } from "../state.ts";
 import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/mod.ts";
 
