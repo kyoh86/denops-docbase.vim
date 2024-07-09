@@ -1,20 +1,17 @@
 // Post List Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variable.ts";
-import * as option from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
-import { batch } from "https://deno.land/x/denops_std@v6.5.0/batch/mod.ts";
-import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
+import type { Denops } from "jsr:@denops/std@7.0.0-pre2";
+import * as buffer from "jsr:@denops/std@7.0.0-pre2/buffer";
+import * as variable from "jsr:@denops/std@7.0.0-pre2/variable";
+import * as option from "jsr:@denops/std@7.0.0-pre2/option";
+import { batch } from "jsr:@denops/std@7.0.0-pre2/batch";
+import { getLogger } from "jsr:@std/log@0.224.4";
+import { ensure, is } from "jsr:@core/unknownutil@3.18.1";
 
 import { Filetype } from "./filetype.ts";
 import { Client } from "../api/client.ts";
 import { StateMan } from "../state.ts";
-import type {
-  Buffer,
-  Router,
-} from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import type { Buffer, Router } from "jsr:@kyoh86/denops-router@0.0.1-alpha.1";
 
 export async function loadPostsList(
   denops: Denops,

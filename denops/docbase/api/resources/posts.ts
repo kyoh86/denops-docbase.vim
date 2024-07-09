@@ -1,7 +1,4 @@
-import {
-  is,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
+import { is, Predicate as P } from "jsr:@core/unknownutil@3.18.1";
 import { Fetcher } from "../fetcher.ts";
 
 import { isTagSummary, TagSummary } from "./tags.ts";
