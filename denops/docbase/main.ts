@@ -1,4 +1,4 @@
-import { Denops } from "jsr:@denops/std@7.0.0-pre2";
+import { Entrypoint } from "jsr:@denops/std@7.0.0-pre2";
 import { echo, input } from "jsr:@denops/std@7.0.0-pre2/helper";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import { join } from "jsr:@std/path@0.225.2";
@@ -26,7 +26,7 @@ import {
   prevPostsList,
 } from "./handler/posts_list.ts";
 
-export async function main(denops: Denops) {
+export const main: Entrypoint = async (denops) => {
   const stateMan = new XDGStateMan();
   const cacheFile = join(xdg.cache(), "denops-docbase-vim", "log.txt");
   await ensureFile(cacheFile);
@@ -146,4 +146,4 @@ export async function main(denops: Denops) {
       }
     },
   });
-}
+};
