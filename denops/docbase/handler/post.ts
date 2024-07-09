@@ -1,19 +1,19 @@
 // Single Post Buffer
 
-import { extract } from "https://deno.land/std@0.224.0/front_matter/yaml.ts";
-import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v6.5.0/variable/variable.ts";
-import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/buffer.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
+import { extractYaml } from "jsr:@std/front-matter@0.224.3";
+import type { Denops } from "jsr:@denops/std@7.0.0-pre2";
+import * as buffer from "jsr:@denops/std@7.0.0-pre2/buffer";
+import * as option from "jsr:@denops/std@7.0.0-pre2/option";
+import * as variable from "jsr:@denops/std@7.0.0-pre2/variable";
+import { getbufline } from "jsr:@denops/std@7.0.0-pre2/function";
+import { ensure, is } from "jsr:@core/unknownutil@3.18.1";
+import { getLogger } from "jsr:@std/log@0.224.4";
 
 import { Filetype } from "./filetype.ts";
 import type { Post as PostData, UpdatePostParams } from "../types.ts";
 import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
-import type { Buffer } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import type { Buffer } from "jsr:@kyoh86/denops-router@0.0.1-alpha.1";
 import type { StateMan } from "../state.ts";
 import { getCacheFile } from "../cache.ts";
 
@@ -245,7 +245,7 @@ export async function parsePostBufferLines(
     draft: is.OptionalOf(is.Boolean),
     tags: is.OptionalOf(is.ArrayOf(is.String)),
   };
-  const content = extract(lines.join("\n"));
+  const content = extractYaml(lines.join("\n"));
   const attr = ensure(
     content.attrs,
     is.UnionOf([

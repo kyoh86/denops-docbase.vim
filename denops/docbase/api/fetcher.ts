@@ -1,8 +1,5 @@
-import {
-  ensure,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
+import { ensure, Predicate as P } from "jsr:@core/unknownutil@3.18.1";
+import { getLogger } from "jsr:@std/log@0.224.4";
 import { Response, ResponseWithBody } from "./types.ts";
 import { Stringer } from "./types.ts";
 

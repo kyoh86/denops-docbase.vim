@@ -1,5 +1,5 @@
-import { fromUint8Array } from "https://deno.land/x/base64@v0.2.1/mod.ts";
+import { encodeBase64 } from "jsr:@std/encoding@1.0.1";
 
 export async function encode_content(filename: string) {
-  return fromUint8Array(await Deno.readFile(filename));
+  return encodeBase64(await Deno.readFile(filename));
 }

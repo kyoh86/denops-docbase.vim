@@ -1,9 +1,8 @@
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureFile } from "https://deno.land/std@0.224.0/fs/mod.ts";
-import { exists, expandGlob } from "https://deno.land/std@0.224.0/fs/mod.ts";
-import { parse, stringify } from "https://deno.land/std@0.224.0/toml/mod.ts";
-import { is, maybe } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
+import { join } from "jsr:@std/path@0.225.2";
+import { ensureFile, exists, expandGlob } from "jsr:@std/fs@0.229.3";
+import { parse, stringify } from "jsr:@std/toml@0.224.1";
+import { is, maybe } from "jsr:@core/unknownutil@3.18.1";
 
 export type Domain = string;
 

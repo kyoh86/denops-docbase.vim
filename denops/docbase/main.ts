@@ -1,22 +1,19 @@
-import { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
-import {
-  echo,
-  input,
-} from "https://deno.land/x/denops_std@v6.5.0/helper/mod.ts";
+import { Entrypoint } from "jsr:@denops/std@7.0.0-pre2";
+import { echo, input } from "jsr:@denops/std@7.0.0-pre2/helper";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureFile } from "https://deno.land/std@0.224.0/fs/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
+import { join } from "jsr:@std/path@0.225.2";
+import { ensureFile } from "jsr:@std/fs@0.229.3";
+import { ensure, is } from "jsr:@core/unknownutil@3.18.1";
 import {
   ConsoleHandler,
   getLogger,
   RotatingFileHandler,
   setup,
-} from "https://deno.land/std@0.224.0/log/mod.ts";
+} from "jsr:@std/log@0.224.4";
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { Router } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import { Router } from "jsr:@kyoh86/denops-router@0.0.1-alpha.1";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";
@@ -29,7 +26,7 @@ import {
   prevPostsList,
 } from "./handler/posts_list.ts";
 
-export async function main(denops: Denops) {
+export const main: Entrypoint = async (denops) => {
   const stateMan = new XDGStateMan();
   const cacheFile = join(xdg.cache(), "denops-docbase-vim", "log.txt");
   await ensureFile(cacheFile);
@@ -149,4 +146,4 @@ export async function main(denops: Denops) {
       }
     },
   });
-}
+};
