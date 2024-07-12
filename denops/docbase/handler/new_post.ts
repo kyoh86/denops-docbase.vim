@@ -1,9 +1,9 @@
 // New Post Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v6.5.0/mod.ts";
-import { execute } from "https://deno.land/x/denops_std@v6.5.0/helper/execute.ts";
-import * as option from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.5.0/buffer/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v6.5.1/mod.ts";
+import { execute } from "https://deno.land/x/denops_std@v6.5.1/helper/execute.ts";
+import * as option from "https://deno.land/x/denops_std@v6.5.1/option/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v6.5.1/buffer/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 
@@ -17,7 +17,7 @@ import type {
   Router,
 } from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
 import type { StateMan } from "../state.ts";
-import { getbufline } from "https://deno.land/x/denops_std@v6.5.0/function/mod.ts";
+import { getbufline } from "https://deno.land/x/denops_std@v6.5.1/function/mod.ts";
 
 const isNewPostParams = is.ObjectOf({
   domain: is.String,
