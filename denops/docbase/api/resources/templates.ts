@@ -1,7 +1,7 @@
 // Apply template to the text
 // See: https://help.docbase.io/posts/15787
-import { Fetcher } from "../fetcher.ts";
-import { get, Profile } from "./profiles.ts";
+import type { Fetcher } from "../fetcher.ts";
+import { get, type Profile } from "./profiles.ts";
 
 let cached: Profile | undefined = undefined;
 

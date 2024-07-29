@@ -1,7 +1,4 @@
-import {
-  is,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
+import { is, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
 
 export interface UserSummary {
   id: number;

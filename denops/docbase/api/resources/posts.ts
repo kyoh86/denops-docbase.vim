@@ -1,15 +1,12 @@
-import {
-  is,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import { Fetcher } from "../fetcher.ts";
+import { is, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
+import type { Fetcher } from "../fetcher.ts";
 
-import { isTagSummary, TagSummary } from "./tags.ts";
-import { isUserSummary, UserSummary } from "./user_summary.ts";
-import { Comment, isComment } from "./comments.ts";
-import { GroupSummary, isGroupSummary } from "./group_summary.ts";
-import { Attachment, isAttachment } from "./attachments.ts";
-import { Stringer } from "../types.ts";
+import { isTagSummary, type TagSummary } from "./tags.ts";
+import { isUserSummary, type UserSummary } from "./user_summary.ts";
+import { type Comment, isComment } from "./comments.ts";
+import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
+import { type Attachment, isAttachment } from "./attachments.ts";
+import type { Stringer } from "../types.ts";
 
 export type Scope = "everyone" | "group" | "private";
 export const isScope = is.UnionOf([

@@ -1,10 +1,7 @@
-import {
-  ensure,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
-import { Response, ResponseWithBody } from "./types.ts";
-import { Stringer } from "./types.ts";
+import { ensure, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
+import { getLogger } from "jsr:@std/log@0.224.5";
+import type { Response, ResponseWithBody } from "./types.ts";
+import type { Stringer } from "./types.ts";
 
 const API_URL = "https://api.docbase.io";
 

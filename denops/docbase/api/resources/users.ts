@@ -1,10 +1,7 @@
-import {
-  is,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import { Fetcher } from "../fetcher.ts";
-import { GroupSummary, isGroupSummary } from "./group_summary.ts";
-import { Stringer } from "../types.ts";
+import { is, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
+import type { Fetcher } from "../fetcher.ts";
+import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
+import type { Stringer } from "../types.ts";
 
 export type SearchUsersParams = {
   q?: string | undefined;

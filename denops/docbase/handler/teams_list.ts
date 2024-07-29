@@ -1,18 +1,15 @@
 // Team List Buffer
 
-import type { Denops } from "https://deno.land/x/denops_std@v6.5.1/mod.ts";
-import { batch } from "https://deno.land/x/denops_std@v6.5.1/batch/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.5.1/buffer/mod.ts";
-import * as variable from "https://deno.land/x/denops_std@v6.5.1/variable/variable.ts";
-import * as option from "https://deno.land/x/denops_std@v6.5.1/option/mod.ts";
+import type { Denops } from "jsr:@denops/std@7.0.0";
+import { batch } from "jsr:@denops/std@7.0.0/batch";
+import * as buffer from "jsr:@denops/std@7.0.0/buffer";
+import * as variable from "jsr:@denops/std@7.0.0/variable";
+import * as option from "jsr:@denops/std@7.0.0/option";
 
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import type {
-  Buffer,
-  Router,
-} from "https://denopkg.com/kyoh86/denops-router@master/mod.ts";
+import { ensure, is } from "jsr:@core/unknownutil@3.18.1";
+import type { Buffer, Router } from "jsr:@kyoh86/denops-router@0.0.1";
 import { Filetype } from "./filetype.ts";
-import { StateMan } from "../state.ts";
+import type { StateMan } from "../state.ts";
 
 export async function loadTeamsList(
   denops: Denops,

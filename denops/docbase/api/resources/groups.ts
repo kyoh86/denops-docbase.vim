@@ -1,11 +1,8 @@
-import {
-  is,
-  Predicate as P,
-} from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
-import { isUserSummary, UserSummary } from "./user_summary.ts";
+import { is, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
+import { isUserSummary, type UserSummary } from "./user_summary.ts";
 import { isGroupSummary } from "./group_summary.ts";
-import { Fetcher } from "../fetcher.ts";
-import { Stringer } from "../types.ts";
+import type { Fetcher } from "../fetcher.ts";
+import type { Stringer } from "../types.ts";
 
 export interface CreateGroupParams {
   name: string;
