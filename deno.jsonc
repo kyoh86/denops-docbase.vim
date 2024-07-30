@@ -1,6 +1,6 @@
 {
   "name": "denops-docbase.vim",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A Vim plugin as a client for the DocBase",
   "exports": {
     "./types": "./denops/docbase/types.ts"
