@@ -8,31 +8,31 @@ export interface CreateGroupParams {
   name: string;
   description?: string | undefined;
 }
-export const isCreateGroupParams = is.ObjectOf({
+export const isCreateGroupParams: P<CreateGroupParams> = is.ObjectOf({
   name: is.String,
   description: is.OptionalOf(is.String),
-}) satisfies P<CreateGroupParams>;
+});
 
 export type SearchGroupsParams = {
   name?: string | undefined;
   page?: number | undefined;
   per_page?: number | undefined;
 };
-export const isSearchGroupsParams = is.ObjectOf({
+export const isSearchGroupsParams: P<SearchGroupsParams> = is.ObjectOf({
   name: is.OptionalOf(is.String),
   page: is.OptionalOf(is.Number),
   per_page: is.OptionalOf(is.Number),
-}) satisfies P<SearchGroupsParams>;
+});
 
 export interface JoinGroupParams {
   user_ids: number[];
 }
-export const isJoinGroupParams = is.ObjectOf({
+export const isJoinGroupParams: P<JoinGroupParams> = is.ObjectOf({
   user_ids: is.ArrayOf(is.Number),
-}) satisfies P<JoinGroupParams>;
+});
 
 export type KickGroupParams = JoinGroupParams;
-export const isKickGroupParams = isJoinGroupParams satisfies P<KickGroupParams>;
+export const isKickGroupParams: P<KickGroupParams> = isJoinGroupParams;
 
 export interface Group {
   id: number;
@@ -43,7 +43,7 @@ export interface Group {
   created_at: string;
   users: UserSummary[];
 }
-export const isGroup = is.ObjectOf({
+export const isGroup: P<Group> = is.ObjectOf({
   id: is.Number,
   name: is.String,
   description: is.String,
@@ -51,7 +51,7 @@ export const isGroup = is.ObjectOf({
   last_activity_at: is.String,
   created_at: is.String,
   users: is.ArrayOf(isUserSummary),
-}) satisfies P<Group>;
+});
 
 export class Groups {
   constructor(private fetcher: Fetcher) {}

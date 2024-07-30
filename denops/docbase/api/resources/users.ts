@@ -9,12 +9,12 @@ export type SearchUsersParams = {
   per_page?: number | undefined;
   include_user_groups?: boolean | undefined;
 };
-export const isSearchUsersParams = is.ObjectOf({
+export const isSearchUsersParams: P<SearchUsersParams> = is.ObjectOf({
   q: is.OptionalOf(is.String),
   page: is.OptionalOf(is.Number),
   per_page: is.OptionalOf(is.Number),
   include_user_groups: is.OptionalOf(is.Boolean),
-}) satisfies P<SearchUsersParams>;
+});
 
 export interface User {
   id: number;
@@ -27,7 +27,7 @@ export interface User {
   two_step_authentication: boolean;
   groups: GroupSummary[];
 }
-export const isUser = is.ObjectOf({
+export const isUser: P<User> = is.ObjectOf({
   id: is.Number,
   name: is.String,
   username: is.String,
@@ -37,7 +37,7 @@ export const isUser = is.ObjectOf({
   last_access_time: is.String,
   two_step_authentication: is.Boolean,
   groups: is.ArrayOf(isGroupSummary),
-}) satisfies P<User>;
+});
 
 export class Users {
   constructor(private fetcher: Fetcher) {}

@@ -4,7 +4,7 @@ export interface GroupSummary {
   id: number;
   name: string;
 }
-export const isGroupSummary = is.ObjectOf({
+export const isGroupSummary: P<GroupSummary> = is.ObjectOf({
   id: is.Number,
   name: is.String,
-}) satisfies P<GroupSummary>;
+});

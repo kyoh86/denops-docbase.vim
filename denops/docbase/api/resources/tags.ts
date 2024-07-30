@@ -5,17 +5,17 @@ export interface Tag {
   id: number;
   name: string;
 }
-export const isTag = is.ObjectOf({
+export const isTag: P<Tag> = is.ObjectOf({
   id: is.Number,
   name: is.String,
-}) satisfies P<Tag>;
+});
 
 export interface TagSummary {
   name: string;
 }
-export const isTagSummary = is.ObjectOf({
+export const isTagSummary: P<TagSummary> = is.ObjectOf({
   name: is.String,
-}) satisfies P<TagSummary>;
+});
 
 export class Tags {
   constructor(private fetcher: Fetcher) {}

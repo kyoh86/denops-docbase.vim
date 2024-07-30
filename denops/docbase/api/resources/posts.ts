@@ -9,22 +9,22 @@ import { type Attachment, isAttachment } from "./attachments.ts";
 import type { Stringer } from "../types.ts";
 
 export type Scope = "everyone" | "group" | "private";
-export const isScope = is.UnionOf([
+export const isScope: P<Scope> = is.UnionOf([
   is.LiteralOf("everyone"),
   is.LiteralOf("group"),
   is.LiteralOf("private"),
-]) satisfies P<Scope>;
+]);
 
 export type SearchPostsParams = {
   q?: string | undefined;
   page?: number | undefined;
   per_page?: number | undefined;
 };
-export const isSearchPostsParams = is.ObjectOf({
+export const isSearchPostsParams: P<SearchPostsParams> = is.ObjectOf({
   q: is.OptionalOf(is.String),
   page: is.OptionalOf(is.Number),
   per_page: is.OptionalOf(is.Number),
-}) satisfies P<SearchPostsParams>;
+});
 
 const createPostParamsFields = {
   title: is.String,
@@ -50,7 +50,7 @@ export type CreatePostParams =
     notice?: boolean | undefined;
     tags?: string[] | undefined;
   };
-export const isCreatePostParams = is.UnionOf([
+export const isCreatePostParams: P<CreatePostParams> = is.UnionOf([
   is.ObjectOf({
     ...createPostParamsFields,
     scope: is.LiteralOf("group"),
@@ -60,7 +60,7 @@ export const isCreatePostParams = is.UnionOf([
     ...createPostParamsFields,
     scope: is.UnionOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
   }),
-]) satisfies P<CreatePostParams>;
+]);
 
 const updatePostParamsFields = {
   title: is.OptionalOf(is.String),
@@ -81,7 +81,7 @@ export type UpdatePostParams =
   & (Record<never, never> | { scope?: "group"; groups: number[] } | {
     scope: "everyone" | "private";
   });
-export const isUpdatePostParams = is.UnionOf([
+export const isUpdatePostParams: P<UpdatePostParams> = is.UnionOf([
   is.ObjectOf(updatePostParamsFields),
   is.ObjectOf({
     ...updatePostParamsFields,
@@ -92,7 +92,7 @@ export const isUpdatePostParams = is.UnionOf([
     ...updatePostParamsFields,
     scope: is.UnionOf([is.LiteralOf("everyone"), is.LiteralOf("private")]),
   }),
-]) satisfies P<UpdatePostParams>;
+]);
 
 export interface Post {
   id: number;
@@ -114,7 +114,7 @@ export interface Post {
   groups: GroupSummary[];
   attachments: Attachment[];
 }
-export const isPost = is.ObjectOf({
+export const isPost: P<Post> = is.ObjectOf({
   id: is.Number,
   title: is.String,
   body: is.String,
@@ -133,18 +133,18 @@ export const isPost = is.ObjectOf({
   comments: is.ArrayOf(isComment),
   groups: is.ArrayOf(isGroupSummary),
   attachments: is.ArrayOf(isAttachment),
-}) satisfies P<Post>;
+});
 
 export interface SearchPostsMeta {
   previous_page: string | null;
   next_page: string | null;
   total: number;
 }
-export const isSearchPostsMeta = is.ObjectOf({
+export const isSearchPostsMeta: P<SearchPostsMeta> = is.ObjectOf({
   previous_page: is.UnionOf([is.String, is.Null]),
   next_page: is.UnionOf([is.String, is.Null]),
   total: is.Number,
-}) satisfies P<SearchPostsMeta>;
+});
 
 export class Posts {
   constructor(private fetcher: Fetcher) {}

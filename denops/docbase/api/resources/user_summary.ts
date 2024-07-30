@@ -5,8 +5,8 @@ export interface UserSummary {
   name: string;
   profile_image_url: string;
 }
-export const isUserSummary = is.ObjectOf({
+export const isUserSummary: P<UserSummary> = is.ObjectOf({
   id: is.Number,
   name: is.String,
   profile_image_url: is.String,
-}) satisfies P<UserSummary>;
+});

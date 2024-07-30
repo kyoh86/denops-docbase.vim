@@ -5,10 +5,10 @@ export interface UploadAttachmentParams {
   name: string;
   content: string;
 }
-export const isUploadAttachmentParams = is.ObjectOf({
+export const isUploadAttachmentParams: P<UploadAttachmentParams> = is.ObjectOf({
   name: is.String,
   content: is.String,
-}) satisfies P<UploadAttachmentParams>;
+});
 
 export interface Attachment {
   id: string;
@@ -19,14 +19,14 @@ export interface Attachment {
   created_at: string;
 }
 
-export const isAttachment = is.ObjectOf({
+export const isAttachment: P<Attachment> = is.ObjectOf({
   id: is.String,
   name: is.String,
   size: is.Number,
   url: is.String,
   markdown: is.String,
   created_at: is.String,
-}) satisfies P<Attachment>;
+});
 
 export class Attachments {
   constructor(private fetcher: Fetcher) {}

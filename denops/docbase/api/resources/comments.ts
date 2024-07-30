@@ -6,10 +6,10 @@ export interface CreateCommentParams {
   body: string;
   notice?: boolean | undefined;
 }
-export const isCreateCommentParams = is.ObjectOf({
+export const isCreateCommentParams: P<CreateCommentParams> = is.ObjectOf({
   body: is.String,
   notice: is.OptionalOf(is.Boolean),
-}) satisfies P<CreateCommentParams>;
+});
 
 export interface Comment {
   id: number;
@@ -17,12 +17,12 @@ export interface Comment {
   created_at: string;
   user: UserSummary;
 }
-export const isComment = is.ObjectOf({
+export const isComment: P<Comment> = is.ObjectOf({
   id: is.Number,
   body: is.String,
   created_at: is.String,
   user: isUserSummary,
-}) satisfies P<Comment>;
+});
 
 export class Comments {
   constructor(private fetcher: Fetcher, private memoId: number) {}

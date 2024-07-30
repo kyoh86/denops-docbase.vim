@@ -15,7 +15,7 @@ export interface Profile {
   email: string;
   nameid: string;
 }
-export const isProfile = is.ObjectOf({
+export const isProfile: P<Profile> = is.ObjectOf({
   id: is.Number,
   name: is.String,
   username: is.String,
@@ -27,7 +27,7 @@ export const isProfile = is.ObjectOf({
   groups: is.ArrayOf(isGroupSummary),
   email: is.String,
   nameid: is.String,
-}) satisfies P<Profile>;
+});
 
 export async function get(fetcher: Fetcher) {
   return await fetcher.request("GET", "/profile", isProfile);
