@@ -1,5 +1,5 @@
 {
-  "name": "denops-docbase.vim",
+  "name": "@kyoh86/denops-docbase-vim",
   "version": "0.1.0",
   "description": "A Vim plugin as a client for the DocBase",
   "exports": {
