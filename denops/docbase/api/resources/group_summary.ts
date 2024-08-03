@@ -1,4 +1,4 @@
-import { is, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
+import { is, type Predicate as P } from "jsr:@core/unknownutil@~3.18.1";
 
 export interface GroupSummary {
   id: number;

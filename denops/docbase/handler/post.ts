@@ -1,19 +1,19 @@
 // Single Post Buffer
 
-import { extractYaml } from "jsr:@std/front-matter@1.0.0";
-import type { Denops } from "jsr:@denops/std@7.0.1";
-import * as buffer from "jsr:@denops/std@7.0.1/buffer";
-import * as option from "jsr:@denops/std@7.0.1/option";
-import * as variable from "jsr:@denops/std@7.0.1/variable";
-import { getbufline } from "jsr:@denops/std@7.0.1/function";
-import { ensure, is } from "jsr:@core/unknownutil@3.18.1";
-import { getLogger } from "jsr:@std/log@0.224.5";
+import { extractYaml } from "jsr:@std/front-matter@~1.0.0";
+import type { Denops } from "jsr:@denops/std@~7.0.1";
+import * as buffer from "jsr:@denops/std@~7.0.1/buffer";
+import * as option from "jsr:@denops/std@~7.0.1/option";
+import * as variable from "jsr:@denops/std@~7.0.1/variable";
+import { getbufline } from "jsr:@denops/std@~7.0.1/function";
+import { ensure, is } from "jsr:@core/unknownutil@~3.18.1";
+import { getLogger } from "jsr:@std/log@~0.224.5";
 
 import { Filetype } from "./filetype.ts";
 import type { Post as PostData, UpdatePostParams } from "../types.ts";
 import { isGroupSummary } from "../types.ts";
 import { Client } from "../api/client.ts";
-import type { Buffer } from "jsr:@kyoh86/denops-router@0.0.1";
+import type { Buffer } from "jsr:@kyoh86/denops-router@~0.0.1";
 import type { StateMan } from "../state.ts";
 import { getCacheFile } from "../cache.ts";
 

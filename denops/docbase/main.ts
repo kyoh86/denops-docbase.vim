@@ -1,19 +1,19 @@
-import type { Denops } from "jsr:@denops/std@7.0.1";
-import { echo, input } from "jsr:@denops/std@7.0.1/helper";
+import type { Denops } from "jsr:@denops/std@~7.0.1";
+import { echo, input } from "jsr:@denops/std@~7.0.1/helper";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { join } from "jsr:@std/path@1.0.2";
-import { ensureFile } from "jsr:@std/fs@1.0.0";
-import { ensure, is } from "jsr:@core/unknownutil@3.18.1";
+import { join } from "jsr:@std/path@~1.0.2";
+import { ensureFile } from "jsr:@std/fs@~1.0.0";
+import { ensure, is } from "jsr:@core/unknownutil@~3.18.1";
 import {
   ConsoleHandler,
   getLogger,
   RotatingFileHandler,
   setup,
-} from "jsr:@std/log@0.224.5";
+} from "jsr:@std/log@~0.224.5";
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { Router } from "jsr:@kyoh86/denops-router@0.0.1";
+import { Router } from "jsr:@kyoh86/denops-router@~0.0.1";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";

@@ -1,5 +1,5 @@
-import { ensure, type Predicate as P } from "jsr:@core/unknownutil@3.18.1";
-import { getLogger } from "jsr:@std/log@0.224.5";
+import { ensure, type Predicate as P } from "jsr:@core/unknownutil@~3.18.1";
+import { getLogger } from "jsr:@std/log@~0.224.5";
 import type { Response, ResponseWithBody } from "./types.ts";
 import type { Stringer } from "./types.ts";
 
