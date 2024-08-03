@@ -6,7 +6,7 @@ import * as buffer from "jsr:@denops/std@~7.0.1/buffer";
 import * as option from "jsr:@denops/std@~7.0.1/option";
 import * as variable from "jsr:@denops/std@~7.0.1/variable";
 import { getbufline } from "jsr:@denops/std@~7.0.1/function";
-import { ensure, is } from "jsr:@core/unknownutil@~3.18.1";
+import { as, ensure, is } from "jsr:@core/unknownutil@~4.0.0";
 import { getLogger } from "jsr:@std/log@~0.224.5";
 
 import { Filetype } from "./filetype.ts";
@@ -242,8 +242,8 @@ export async function parsePostBufferLines(
 ) {
   const attrFields = {
     title: is.String,
-    draft: is.OptionalOf(is.Boolean),
-    tags: is.OptionalOf(is.ArrayOf(is.String)),
+    draft: as.Optional(is.Boolean),
+    tags: as.Optional(is.ArrayOf(is.String)),
   };
   const content = extractYaml(lines.join("\n"));
   const attr = ensure(

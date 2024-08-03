@@ -1,4 +1,4 @@
-import { is, type Predicate as P } from "jsr:@core/unknownutil@~3.18.1";
+import { as, is, type Predicate as P } from "jsr:@core/unknownutil@~4.0.0";
 import type { Fetcher } from "../fetcher.ts";
 import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
 import type { Stringer } from "../types.ts";
@@ -10,10 +10,10 @@ export type SearchUsersParams = {
   include_user_groups?: boolean | undefined;
 };
 export const isSearchUsersParams: P<SearchUsersParams> = is.ObjectOf({
-  q: is.OptionalOf(is.String),
-  page: is.OptionalOf(is.Number),
-  per_page: is.OptionalOf(is.Number),
-  include_user_groups: is.OptionalOf(is.Boolean),
+  q: as.Optional(is.String),
+  page: as.Optional(is.Number),
+  per_page: as.Optional(is.Number),
+  include_user_groups: as.Optional(is.Boolean),
 });
 
 export interface User {

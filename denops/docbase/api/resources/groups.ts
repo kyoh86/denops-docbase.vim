@@ -1,4 +1,4 @@
-import { is, type Predicate as P } from "jsr:@core/unknownutil@~3.18.1";
+import { as, is, type Predicate as P } from "jsr:@core/unknownutil@~4.0.0";
 import { isUserSummary, type UserSummary } from "./user_summary.ts";
 import { isGroupSummary } from "./group_summary.ts";
 import type { Fetcher } from "../fetcher.ts";
@@ -10,7 +10,7 @@ export interface CreateGroupParams {
 }
 export const isCreateGroupParams: P<CreateGroupParams> = is.ObjectOf({
   name: is.String,
-  description: is.OptionalOf(is.String),
+  description: as.Optional(is.String),
 });
 
 export type SearchGroupsParams = {
@@ -19,9 +19,9 @@ export type SearchGroupsParams = {
   per_page?: number | undefined;
 };
 export const isSearchGroupsParams: P<SearchGroupsParams> = is.ObjectOf({
-  name: is.OptionalOf(is.String),
-  page: is.OptionalOf(is.Number),
-  per_page: is.OptionalOf(is.Number),
+  name: as.Optional(is.String),
+  page: as.Optional(is.Number),
+  per_page: as.Optional(is.Number),
 });
 
 export interface JoinGroupParams {

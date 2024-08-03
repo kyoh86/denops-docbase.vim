@@ -1,4 +1,4 @@
-import { is, type Predicate as P } from "jsr:@core/unknownutil@~3.18.1";
+import { as, is, type Predicate as P } from "jsr:@core/unknownutil@~4.0.0";
 import type { Fetcher } from "../fetcher.ts";
 
 import { isTagSummary, type TagSummary } from "./tags.ts";
@@ -21,17 +21,17 @@ export type SearchPostsParams = {
   per_page?: number | undefined;
 };
 export const isSearchPostsParams: P<SearchPostsParams> = is.ObjectOf({
-  q: is.OptionalOf(is.String),
-  page: is.OptionalOf(is.Number),
-  per_page: is.OptionalOf(is.Number),
+  q: as.Optional(is.String),
+  page: as.Optional(is.Number),
+  per_page: as.Optional(is.Number),
 });
 
 const createPostParamsFields = {
   title: is.String,
   body: is.String,
-  draft: is.OptionalOf(is.Boolean),
-  notice: is.OptionalOf(is.Boolean),
-  tags: is.OptionalOf(is.ArrayOf(is.String)),
+  draft: as.Optional(is.Boolean),
+  notice: as.Optional(is.Boolean),
+  tags: as.Optional(is.ArrayOf(is.String)),
 };
 export type CreatePostParams =
   & (
@@ -63,11 +63,11 @@ export const isCreatePostParams: P<CreatePostParams> = is.UnionOf([
 ]);
 
 const updatePostParamsFields = {
-  title: is.OptionalOf(is.String),
-  body: is.OptionalOf(is.String),
-  draft: is.OptionalOf(is.Boolean),
-  notice: is.OptionalOf(is.Boolean),
-  tags: is.OptionalOf(is.ArrayOf(is.String)),
+  title: as.Optional(is.String),
+  body: as.Optional(is.String),
+  draft: as.Optional(is.Boolean),
+  notice: as.Optional(is.Boolean),
+  tags: as.Optional(is.ArrayOf(is.String)),
 };
 interface UpdatePostParamsCommon {
   title?: string;
@@ -85,7 +85,7 @@ export const isUpdatePostParams: P<UpdatePostParams> = is.UnionOf([
   is.ObjectOf(updatePostParamsFields),
   is.ObjectOf({
     ...updatePostParamsFields,
-    scope: is.OptionalOf(is.LiteralOf("group")),
+    scope: as.Optional(is.LiteralOf("group")),
     groups: is.ArrayOf(is.Number),
   }),
   is.ObjectOf({

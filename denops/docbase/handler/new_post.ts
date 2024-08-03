@@ -4,7 +4,7 @@ import type { Denops } from "jsr:@denops/std@~7.0.1";
 import { execute } from "jsr:@denops/std@~7.0.1/helper";
 import * as option from "jsr:@denops/std@~7.0.1/option";
 import * as buffer from "jsr:@denops/std@~7.0.1/buffer";
-import { ensure, is } from "jsr:@core/unknownutil@~3.18.1";
+import { as, ensure, is } from "jsr:@core/unknownutil@~4.0.0";
 import { getLogger } from "jsr:@std/log@~0.224.5";
 
 import type { Post } from "../types.ts";
@@ -18,7 +18,7 @@ import { getbufline } from "jsr:@denops/std@~7.0.1/function";
 
 const isNewPostParams = is.ObjectOf({
   domain: is.String,
-  template: is.OptionalOf(is.String),
+  template: as.Optional(is.String),
 });
 
 async function fetchTemplate(client: Client, postId: string) {

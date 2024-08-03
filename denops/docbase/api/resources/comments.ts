@@ -1,4 +1,4 @@
-import { is, type Predicate as P } from "jsr:@core/unknownutil@~3.18.1";
+import { as, is, type Predicate as P } from "jsr:@core/unknownutil@~4.0.0";
 import type { Fetcher } from "../fetcher.ts";
 import { isUserSummary, type UserSummary } from "./user_summary.ts";
 
@@ -8,7 +8,7 @@ export interface CreateCommentParams {
 }
 export const isCreateCommentParams: P<CreateCommentParams> = is.ObjectOf({
   body: is.String,
-  notice: is.OptionalOf(is.Boolean),
+  notice: as.Optional(is.Boolean),
 });
 
 export interface Comment {

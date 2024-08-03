@@ -6,7 +6,7 @@ import * as variable from "jsr:@denops/std@~7.0.1/variable";
 import * as option from "jsr:@denops/std@~7.0.1/option";
 import { batch } from "jsr:@denops/std@~7.0.1/batch";
 import { getLogger } from "jsr:@std/log@~0.224.5";
-import { ensure, is } from "jsr:@core/unknownutil@~3.18.1";
+import { as, ensure, is } from "jsr:@core/unknownutil@~4.0.0";
 
 import { Filetype } from "./filetype.ts";
 import { Client } from "../api/client.ts";
@@ -22,7 +22,7 @@ export async function loadPostsList(
     buf.bufname.params,
     is.ObjectOf({
       domain: is.String,
-      page: is.OptionalOf(is.Number),
+      page: as.Optional(is.Number),
     }),
   );
   const page = params.page || 1;
@@ -72,7 +72,7 @@ export async function openPost(
 ) {
   const params = ensure(
     uParams,
-    is.ObjectOf({ lnum: is.Number, mods: is.OptionalOf(is.String) }),
+    is.ObjectOf({ lnum: is.Number, mods: as.Optional(is.String) }),
   );
   const domain = ensure(
     await variable.b.get(denops, "docbase_posts_list_domain"),
