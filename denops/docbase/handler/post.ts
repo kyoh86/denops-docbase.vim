@@ -6,7 +6,7 @@ import * as buffer from "jsr:@denops/std@~7.0.1/buffer";
 import * as option from "jsr:@denops/std@~7.0.1/option";
 import * as variable from "jsr:@denops/std@~7.0.1/variable";
 import { getbufline } from "jsr:@denops/std@~7.0.1/function";
-import { as, ensure, is } from "jsr:@core/unknownutil@~4.0.0";
+import { as, ensure, is } from "jsr:@core/unknownutil@~4.1.0";
 import { getLogger } from "jsr:@std/log@~0.224.5";
 
 import { Filetype } from "./filetype.ts";

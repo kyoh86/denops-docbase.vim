@@ -3,7 +3,7 @@ import { echo, input } from "jsr:@denops/std@~7.0.1/helper";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import { join } from "jsr:@std/path@~1.0.2";
 import { ensureFile } from "jsr:@std/fs@~1.0.0";
-import { ensure, is } from "jsr:@core/unknownutil@~4.0.0";
+import { ensure, is } from "jsr:@core/unknownutil@~4.1.0";
 import {
   ConsoleHandler,
   getLogger,

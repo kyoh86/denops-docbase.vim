@@ -6,7 +6,7 @@ import * as buffer from "jsr:@denops/std@~7.0.1/buffer";
 import * as variable from "jsr:@denops/std@~7.0.1/variable";
 import * as option from "jsr:@denops/std@~7.0.1/option";
 
-import { as, ensure, is } from "jsr:@core/unknownutil@~4.0.0";
+import { as, ensure, is } from "jsr:@core/unknownutil@~4.1.0";
 import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.0.1";
 import { Filetype } from "./filetype.ts";
 import type { StateMan } from "../state.ts";

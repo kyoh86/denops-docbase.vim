@@ -3,7 +3,7 @@ import { join } from "jsr:@std/path@~1.0.2";
 import { ensureFile } from "jsr:@std/fs@~1.0.0";
 import { exists, expandGlob } from "jsr:@std/fs@~1.0.0";
 import { parse, stringify } from "jsr:@std/toml@~1.0.0";
-import { is, maybe } from "jsr:@core/unknownutil@~4.0.0";
+import { is, maybe } from "jsr:@core/unknownutil@~4.1.0";
 
 export type Domain = string;
 
