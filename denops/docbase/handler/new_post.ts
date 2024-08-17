@@ -12,7 +12,7 @@ import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
 import { Filetype } from "./filetype.ts";
 import { parsePostBufferLines, saveGroupsIntoPostBuffer } from "./post.ts";
-import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.0.1";
+import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
 import type { StateMan } from "../state.ts";
 import { getbufline } from "jsr:@denops/std@~7.0.1/function";
 
@@ -114,7 +114,7 @@ export async function saveNewPost(
     );
     return;
   }
-  await router.open(denops, "post", "", {
+  await router.open(denops, "post", {
     domain: params.domain,
     postId: `${response.body.id}`,
   });

@@ -23,7 +23,7 @@ Denops commands           |docbase-denops-commands|
                                                              *docbase-install*
 Install ~
 
-You need to install following dependencies.
+You need to install the following dependencies.
 
 * vim-denops/denops.vim https://github.com/vim-denops/denops.vim
 * GNU `diff` command (it is in GNU diffutils)
@@ -33,19 +33,19 @@ You need to install following dependencies.
                                                                *docbase-setup*
 Setup ~
 
-You can setup default commands and keymaps by functions below.
+You can set up the default commands and keymaps using the functions below.
 
 - |docbase#setup#maps()|
 - |docbase#setup#commands()|
 
-If you want to create command or map in your custom, don't call them and
-customize as you see fit.
+If you want to create commands or keymaps, do not call these functions, and
+instead, customize them as you see fit.
 
 ==============================================================================
                                                      *docbase-special-buffers*
 Special buffers ~
 
-denops-docbase.vim has some special buffers for each special name.
+denops-docbase.vim has some special buffers for specific purposes.
 
                                  *docbase-buffer-teams-list* *docbase://teams*
 Teams list view
@@ -78,8 +78,8 @@ New post editor
 New post with template
 	Buffer name: `docbase://new-post;domain={domain}&template={post_id}`
 
-	Creates a new post from template. You can make new post from a
-	template post, edit it and save it in DocBase.
+	Creates a new post from a template. You can create a new post from a
+	template, edit it, and save it in DocBase.
 
 
 ==============================================================================
@@ -89,8 +89,8 @@ Function ~
                                                              *docbase#login()*
 docbase#login()
 
-	Login to the DocBase. It will request you a domain of your team and a
-	token to access DocBase API.
+	Login to the DocBase. It will request your team's domain and a token
+	to access DocBase API.
 
 	- Domain : If you want to access `kyoh86.docbase.io` => `"kyoh86"`
 	- Token for the DocBase. See https://help.docbase.io/posts/45703
@@ -107,23 +107,25 @@ docbase#setup#maps()
 
 
                                                     *docbase#open#teams_list()*
-docbase#open#teams_list([{mods}])
+docbase#open#teams_list([{open_option}])
 	Open the DocBase teams list view.
 
-	{mods}  The command modifiers to open new buffer. See |<mods>|.
+	{open_option}  The options to open new buffer.
+	See |docbase-open_option|.
 
                                                    *docbase#open#posts_list()*
-docbase#open#posts_list({domain} [, {mods}])
+docbase#open#posts_list({domain} [, {open_option}])
 	Open DocBase posts list view for the domain.
 
 	{domain} (string):
 		Your team domain in the DocBase.
 		e.g.: `kyoh86.docbase.io` => `"kyoh86"`
 
-	{mods}  The command modifiers to open new buffer. See |<mods>|.
+	{open_option}  The options to open new buffer.
+	See |docbase-open_option|.
 
                                                          *docbase#open#post()*
-docbase#open#post({domain}, {post_id} [, {mods}])
+docbase#open#post({domain}, {post_id} [, {open_option}])
 	Open DocBase post editor.
 
 	{domain} (string):
@@ -134,16 +136,18 @@ docbase#open#post({domain}, {post_id} [, {mods}])
 		An ID for the post.
 		e.g.: `kyoh86.docbase.io/posts/1234` => `1234`
 
-	{mods}  The command modifiers to open new buffer. See |<mods>|.
+	{open_option}  The options to open new buffer.
+	See |docbase-open_option|.
 
                                                      *docbase#open#new_post()*
-docbase#open#new_post({domain} [, {mods}])
+docbase#open#new_post({domain} [, {open_option}])
 
 	{domain} (string):
 		Your team domain in the DocBase.
 		e.g.: `kyoh86.docbase.io` => `"kyoh86"`
 
-	{mods}  The command modifiers to open new buffer. See |<mods>|.
+	{open_option}  The options to open new buffer.
+	See |docbase-open_option|.
 
                                                       *docbase#list#domains()*
 docbase#list#domains()
@@ -158,7 +162,7 @@ docbase#list#posts({domain})
 	ctrlp.vim, fzf.vim, etc.
 
                                       *docbase#buffer_action#teams_list#open()*
-docbase#buffer_action#teams_list#open({lnum} [, {mods}])
+docbase#buffer_action#teams_list#open({lnum} [, {open_option}])
 	In the DocBase teams list view, it will open the DocBase posts list 
 	view for the domain at the line.
 
@@ -166,10 +170,11 @@ docbase#buffer_action#teams_list#open({lnum} [, {mods}])
 		A line number to open.
 		You can use `line(".")` to specify the cursor line.
 	
-	{mods}  The command modifiers to open new buffer. See |<mods>|.
+	{open_option}  The options to open new buffer.
+	See |docbase-open_option|.
 
                                       *docbase#buffer_action#posts_list#open()*
-docbase#buffer_action#posts_list#open({lnum} [, {mods}])
+docbase#buffer_action#posts_list#open({lnum} [, {open_option}])
 	In the DocBase posts list view, it will open the DocBase post editor
 	for the post at the line.
 
@@ -177,7 +182,8 @@ docbase#buffer_action#posts_list#open({lnum} [, {mods}])
 		A line number to open.
 		You can use `line(".")` to specify the cursor line.
 	
-	{mods}  The command modifiers to open new buffer. See |<mods>|.
+	{open_option}  The options to open new buffer.
+	See |docbase-open_option|.
 
                                       *docbase#buffer_action#posts_list#prev()*
 docbase#buffer_action#posts_list#prev()
@@ -186,6 +192,29 @@ docbase#buffer_action#posts_list#prev()
                                       *docbase#buffer_action#posts_list#next()*
 docbase#buffer_action#posts_list#next()
 	In the DocBase posts list viewer, it will open next page.
+
+
+==============================================================================
+                                                         *docbase-open_option*
+Open option ~
+
+There are some functions that accept the {open_option}, which changes the
+behavior when opening a new buffer, similar to |<mods>|.
+{open_option} is a dictionary having a two entries: {split} and {reuse}.
+
+                                                   *docbase-open_option:split*
+	split (string)
+		It changes which window shows a new buffer.
+		Supported values are "none", "split-top", "split-above",
+		"split-below", "split-bottom", "split-leftmost", "split-left",
+		"split-right", "split-rightmost", and "split-tab".
+		If it is "none" or default (""), the buffer will be shown in
+		current window (without split).
+	reuse (boolean)
+		If it is true, and the buffer is already open in a window,
+		focus on that window.
+
+                                                   *docbase-open_option:reuse*
 
 
 ==============================================================================
@@ -244,11 +273,11 @@ If you call |docbase#setup#maps()|, you can use keys that described as
 
 *<Plug>(docbase-buffer-action-posts-list-prev)*
 	default: <C-k>
-	Open previous page.
+	Open the previous page.
 
 *<Plug>(docbase-buffer-action-posts-list-next)*
 	default: <C-j>
-	Open next page.
+	Open the next page.
 
 
 ==============================================================================

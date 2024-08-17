@@ -7,7 +7,11 @@ import * as variable from "jsr:@denops/std@~7.0.1/variable";
 import * as option from "jsr:@denops/std@~7.0.1/option";
 
 import { as, ensure, is } from "jsr:@core/unknownutil@~4.1.0";
-import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.0.1";
+import {
+  type Buffer,
+  isOpenOption,
+  type Router,
+} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
 import { Filetype } from "./filetype.ts";
 import type { StateMan } from "../state.ts";
 
@@ -35,7 +39,7 @@ export async function openPostsList(
 ) {
   const params = ensure(
     uParams,
-    is.ObjectOf({ lnum: is.Number, mods: as.Optional(is.String) }),
+    is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isOpenOption) }),
   );
   const domains = ensure(
     await variable.b.get(
@@ -44,7 +48,13 @@ export async function openPostsList(
     ),
     is.ArrayOf(is.String),
   );
-  await router.open(denops, "posts-list", params.mods, {
-    domain: domains[params.lnum - 1],
-  });
+  await router.open(
+    denops,
+    "posts-list",
+    {
+      domain: domains[params.lnum - 1],
+    },
+    undefined,
+    params.open_option,
+  );
 }

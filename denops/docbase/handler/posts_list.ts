@@ -11,7 +11,11 @@ import { as, ensure, is } from "jsr:@core/unknownutil@~4.1.0";
 import { Filetype } from "./filetype.ts";
 import { Client } from "../api/client.ts";
 import type { StateMan } from "../state.ts";
-import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.0.1";
+import {
+  type Buffer,
+  isOpenOption,
+  type Router,
+} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
 
 export async function loadPostsList(
   denops: Denops,
@@ -72,7 +76,7 @@ export async function openPost(
 ) {
   const params = ensure(
     uParams,
-    is.ObjectOf({ lnum: is.Number, mods: as.Optional(is.String) }),
+    is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isOpenOption) }),
   );
   const domain = ensure(
     await variable.b.get(denops, "docbase_posts_list_domain"),
@@ -82,10 +86,16 @@ export async function openPost(
     await variable.b.get(denops, "docbase_posts_list_ids"),
     is.ArrayOf(is.Number),
   );
-  await router.open(denops, "post", params.mods, {
-    domain,
-    postId: String(postIds[params.lnum - 1]),
-  });
+  await router.open(
+    denops,
+    "post",
+    {
+      domain,
+      postId: String(postIds[params.lnum - 1]),
+    },
+    undefined,
+    params.open_option,
+  );
 }
 
 async function paging(
@@ -111,7 +121,7 @@ async function paging(
     },
   );
   if (page + shift >= 1) {
-    await router.open(denops, "posts-list", "", {
+    await router.open(denops, "posts-list", {
       domain,
       page: (page + shift).toString(),
     });
