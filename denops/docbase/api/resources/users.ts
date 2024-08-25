@@ -1,4 +1,4 @@
-import { as, is, type Predicate as P } from "jsr:@core/unknownutil@~4.1.0";
+import { as, is, type Predicate as P } from "jsr:@core/unknownutil@~4.3.0";
 import type { Fetcher } from "../fetcher.ts";
 import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
 import type { Stringer } from "../types.ts";
