@@ -1,10 +1,10 @@
 // Post List Buffer
 
-import type { Denops } from "jsr:@denops/std@~7.0.1";
-import * as buffer from "jsr:@denops/std@~7.0.1/buffer";
-import * as variable from "jsr:@denops/std@~7.0.1/variable";
-import * as option from "jsr:@denops/std@~7.0.1/option";
-import { batch } from "jsr:@denops/std@~7.0.1/batch";
+import type { Denops } from "jsr:@denops/std@~7.1.0";
+import * as buffer from "jsr:@denops/std@~7.1.0/buffer";
+import * as variable from "jsr:@denops/std@~7.1.0/variable";
+import * as option from "jsr:@denops/std@~7.1.0/option";
+import { batch } from "jsr:@denops/std@~7.1.0/batch";
 import { getLogger } from "jsr:@std/log@~0.224.5";
 import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
 
