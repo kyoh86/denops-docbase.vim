@@ -1,7 +1,8 @@
-// Post List Buffer
+// Group List Buffer
 
 import type { Denops } from "jsr:@denops/std@~7.1.0";
 import * as buffer from "jsr:@denops/std@~7.1.0/buffer";
+import * as fn from "jsr:@denops/std@~7.1.0/function";
 import * as variable from "jsr:@denops/std@~7.1.0/variable";
 import * as option from "jsr:@denops/std@~7.1.0/option";
 import { batch } from "jsr:@denops/std@~7.1.0/batch";
@@ -17,7 +18,7 @@ import {
   type Router,
 } from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
 
-export async function loadPostsList(
+export async function loadGroupsList(
   denops: Denops,
   stateMan: StateMan,
   buf: Buffer,
@@ -27,11 +28,9 @@ export async function loadPostsList(
     is.ObjectOf({
       domain: is.String,
       page: as.Optional(is.String),
-      q: as.Optional(is.String),
     }),
   );
   const page = +(params.page || 1);
-  const q = params.q;
 
   const state = await stateMan.load(params.domain);
   if (!state) {
@@ -44,41 +43,35 @@ export async function loadPostsList(
     state.token,
     params.domain,
   );
-  const response = await client.posts().search({
+  const response = await client.groups().search({
     page,
     per_page: 100,
-    q,
   });
   if (!response.ok) {
     getLogger("denops-docbase").error(
-      `Failed to load posts from the DocBase API: ${
+      `Failed to load groups from the DocBase API: ${
         response.error || response.statusText
       }`,
     );
     return;
   }
-  const postIds = response.body.posts.map((p) => p.id);
-  const postTitles = response.body.posts.map((p) => p.title);
+  const groupNames = response.body.map((p) => p.name);
 
   await buffer.ensure(denops, buf.bufnr, async () => {
     await batch(denops, async (denops) => {
-      await variable.b.set(denops, "docbase_posts_list_page", page);
-      await variable.b.set(denops, "docbase_posts_list_domain", params.domain);
-      await variable.b.set(denops, "docbase_posts_list_ids", postIds);
-      if (q) {
-        await variable.b.set(denops, "docbase_posts_list_q", q);
-      }
+      await variable.b.set(denops, "docbase_groups_list_page", page);
+      await variable.b.set(denops, "docbase_groups_list_domain", params.domain);
 
-      await buffer.replace(denops, buf.bufnr, postTitles);
+      await buffer.replace(denops, buf.bufnr, groupNames);
 
-      await option.filetype.setLocal(denops, Filetype.PostsList);
+      await option.filetype.setLocal(denops, Filetype.GroupsList);
       await option.modified.setLocal(denops, false);
       await option.readonly.setLocal(denops, true);
     });
   });
 }
 
-export async function openPost(
+export async function openGroup(
   denops: Denops,
   router: Router,
   uParams: Record<string, unknown>,
@@ -88,19 +81,15 @@ export async function openPost(
     is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isOpenOption) }),
   );
   const domain = ensure(
-    await variable.b.get(denops, "docbase_posts_list_domain"),
+    await variable.b.get(denops, "docbase_groups_list_domain"),
     is.String,
-  );
-  const postIds = ensure(
-    await variable.b.get(denops, "docbase_posts_list_ids"),
-    is.ArrayOf(is.Number),
   );
   await router.open(
     denops,
-    "post",
+    "posts-list",
     {
       domain,
-      postId: String(postIds[params.lnum - 1]),
+      q: await fn.getline(denops, params.lnum),
     },
     undefined,
     params.open_option,
@@ -113,42 +102,31 @@ async function paging(
   buf: Buffer,
   shift: 1 | -1,
 ) {
-  const { page, domain, q } = await buffer.ensure(
+  const { page, domain } = await buffer.ensure(
     denops,
     buf.bufnr,
     async () => {
       return {
         domain: ensure(
-          await variable.b.get(denops, "docbase_posts_list_domain"),
+          await variable.b.get(denops, "docbase_groups_list_domain"),
           is.String,
         ),
         page: ensure(
-          await variable.b.get(denops, "docbase_posts_list_page", 1),
+          await variable.b.get(denops, "docbase_groups_list_page", 1),
           is.Number,
-        ),
-        q: ensure(
-          await variable.b.get(denops, "docbase_posts_list_q"),
-          as.Optional(is.String),
         ),
       };
     },
   );
-  const nextPage = page + shift;
-  if (nextPage == 1) {
-    await router.open(denops, "posts-list", {
+  if (page + shift >= 1) {
+    await router.open(denops, "groups-list", {
       domain,
-      q,
-    });
-  } else if (nextPage > 1) {
-    await router.open(denops, "posts-list", {
-      domain,
-      q,
-      page: nextPage.toString(),
+      page: (page + shift).toString(),
     });
   }
 }
 
-export function prevPostsList(
+export function prevGroupsList(
   denops: Denops,
   router: Router,
   buf: Buffer,
@@ -156,7 +134,7 @@ export function prevPostsList(
   return paging(denops, router, buf, -1);
 }
 
-export function nextPostsList(
+export function nextGroupsList(
   denops: Denops,
   router: Router,
   buf: Buffer,

@@ -20,6 +20,11 @@ function! docbase#setup#maps()
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-v> <plug>(docbase-buffer-action-posts-list-open-vnew) 
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-t> <plug>(docbase-buffer-action-posts-list-open-tabedit) 
 
+    autocmd Filetype docbase_groups_list nnoremap <buffer> <cr>  <plug>(docbase-buffer-action-groups-list-open) 
+    autocmd Filetype docbase_groups_list nnoremap <buffer> <c-h> <plug>(docbase-buffer-action-groups-list-open-new) 
+    autocmd Filetype docbase_groups_list nnoremap <buffer> <c-v> <plug>(docbase-buffer-action-groups-list-open-vnew) 
+    autocmd Filetype docbase_groups_list nnoremap <buffer> <c-t> <plug>(docbase-buffer-action-groups-list-open-tab) 
+
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-k> <plug>(docbase-buffer-action-posts-list-prev) 
     autocmd Filetype docbase_posts_list nnoremap <buffer> <c-j> <plug>(docbase-buffer-action-posts-list-next) 
   augroup END

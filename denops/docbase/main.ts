@@ -1,5 +1,5 @@
-import type { Denops } from "jsr:@denops/std@~7.0.1";
-import { echo, input } from "jsr:@denops/std@~7.0.1/helper";
+import type { Denops } from "jsr:@denops/std@~7.1.0";
+import { echo, input } from "jsr:@denops/std@~7.1.0/helper";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import { join } from "jsr:@std/path@~1.0.2";
 import { ensureFile } from "jsr:@std/fs@~1.0.0";
@@ -25,6 +25,12 @@ import {
   openPost,
   prevPostsList,
 } from "./handler/posts_list.ts";
+import {
+  loadGroupsList,
+  nextGroupsList,
+  openGroup,
+  prevGroupsList,
+} from "./handler/groups_list.ts";
 
 export async function main(denops: Denops) {
   const stateMan = new XDGStateMan();
@@ -66,6 +72,15 @@ export async function main(denops: Denops) {
       open: (_, params) => openPost(denops, router, params),
       next: (buf, _) => nextPostsList(denops, router, buf),
       prev: (buf, _) => prevPostsList(denops, router, buf),
+    },
+  });
+
+  router.handle("groups-list", {
+    load: (buf) => loadGroupsList(denops, stateMan, buf),
+    actions: {
+      open: (_, params) => openGroup(denops, router, params),
+      next: (buf, _) => nextGroupsList(denops, router, buf),
+      prev: (buf, _) => prevGroupsList(denops, router, buf),
     },
   });
 
