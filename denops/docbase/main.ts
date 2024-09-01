@@ -13,7 +13,7 @@ import {
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { Router } from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
+import { Router } from "jsr:@kyoh86/denops-router@~0.3.0-alpha.5";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";

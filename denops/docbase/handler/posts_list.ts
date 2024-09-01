@@ -13,9 +13,9 @@ import { Client } from "../api/client.ts";
 import type { StateMan } from "../state.ts";
 import {
   type Buffer,
-  isOpenOption,
+  isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
+} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.5";
 
 export async function loadPostsList(
   denops: Denops,
@@ -85,7 +85,7 @@ export async function openPost(
 ) {
   const params = ensure(
     uParams,
-    is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isOpenOption) }),
+    is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isBufferOpener) }),
   );
   const domain = ensure(
     await variable.b.get(denops, "docbase_posts_list_domain"),

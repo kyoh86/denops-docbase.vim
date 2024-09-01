@@ -9,9 +9,9 @@ import * as option from "jsr:@denops/std@~7.1.0/option";
 import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
 import {
   type Buffer,
-  isOpenOption,
+  isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.2";
+} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.5";
 import { Filetype } from "./filetype.ts";
 import type { StateMan } from "../state.ts";
 
@@ -39,7 +39,7 @@ export async function openPostsList(
 ) {
   const params = ensure(
     uParams,
-    is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isOpenOption) }),
+    is.ObjectOf({ lnum: is.Number, open_option: as.Optional(isBufferOpener) }),
   );
   const domains = ensure(
     await variable.b.get(
