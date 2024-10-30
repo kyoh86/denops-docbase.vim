@@ -1,10 +1,10 @@
 // Team List Buffer
 
-import type { Denops } from "jsr:@denops/std@~7.1.0";
-import { batch } from "jsr:@denops/std@~7.1.0/batch";
-import * as buffer from "jsr:@denops/std@~7.1.0/buffer";
-import * as variable from "jsr:@denops/std@~7.1.0/variable";
-import * as option from "jsr:@denops/std@~7.1.0/option";
+import type { Denops } from "jsr:@denops/std@~7.3.0";
+import { batch } from "jsr:@denops/std@~7.3.0/batch";
+import * as buffer from "jsr:@denops/std@~7.3.0/buffer";
+import * as variable from "jsr:@denops/std@~7.3.0/variable";
+import * as option from "jsr:@denops/std@~7.3.0/option";
 
 import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
 import {
