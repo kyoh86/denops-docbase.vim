@@ -15,7 +15,7 @@ import {
   type Buffer,
   isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.3.0-alpha.5";
+} from "jsr:@kyoh86/denops-router@~0.3.0";
 
 export async function loadPostsList(
   denops: Denops,
