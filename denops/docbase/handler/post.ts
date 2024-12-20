@@ -44,6 +44,7 @@ export async function loadPost(
   const params = ensure(buf.bufname.params, isPostParams);
 
   buffer.ensure(denops, buf.bufnr, async () => {
+    await option.bufhidden.setLocal(denops, "wipe");
     await option.filetype.setLocal(denops, Filetype.Post);
   });
 

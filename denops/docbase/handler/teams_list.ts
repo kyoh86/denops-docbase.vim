@@ -25,6 +25,7 @@ export async function loadTeamsList(
     await batch(denops, async (denops) => {
       await variable.b.set(denops, "docbase_teams_list_items", domains);
       await buffer.replace(denops, buf.bufnr, domains);
+      await option.bufhidden.setLocal(denops, "wipe");
       await option.filetype.setLocal(denops, Filetype.TeamsList);
       await option.modified.setLocal(denops, false);
       await option.readonly.setLocal(denops, true);

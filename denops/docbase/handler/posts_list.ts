@@ -33,6 +33,8 @@ export async function loadPostsList(
   const page = +(params.page || 1);
   const q = params.q;
 
+  await option.bufhidden.setBuffer(denops, buf.bufnr, "wipe");
+
   const state = await stateMan.load(params.domain);
   if (!state) {
     getLogger("denops-docbase").error(

@@ -70,6 +70,7 @@ export async function loadNewPost(
   const params = ensure(buf.bufname.params, isNewPostParams);
 
   buffer.ensure(denops, buf.bufnr, async () => {
+    await option.bufhidden.setLocal(denops, "wipe");
     await option.filetype.setLocal(denops, Filetype.NewPost);
   });
 

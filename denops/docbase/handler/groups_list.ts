@@ -32,6 +32,8 @@ export async function loadGroupsList(
   );
   const page = +(params.page || 1);
 
+  await option.bufhidden.setBuffer(denops, buf.bufnr, "wipe");
+
   const state = await stateMan.load(params.domain);
   if (!state) {
     getLogger("denops-docbase").error(
