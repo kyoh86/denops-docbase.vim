@@ -13,7 +13,7 @@ import {
 
 import { isSearchPostsParams } from "./types.ts";
 import { Client } from "./api/client.ts";
-import { Router } from "jsr:@kyoh86/denops-router@~0.3.0";
+import { Router } from "jsr:@kyoh86/denops-router@~0.4.0";
 import { XDGStateMan } from "./state.ts";
 
 import { loadTeamsList, openPostsList } from "./handler/teams_list.ts";
@@ -59,15 +59,15 @@ export async function main(denops: Denops) {
   });
 
   const router = new Router("docbase");
-  router.handle("teams-list", {
-    load: (buf) => loadTeamsList(denops, stateMan, buf),
+  router.addHandler("teams-list", {
+    load: (_ctx, buf) => loadTeamsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPostsList(denops, router, params),
     },
   });
 
-  router.handle("posts-list", {
-    load: (buf) => loadPostsList(denops, stateMan, buf),
+  router.addHandler("posts-list", {
+    load: (_ctx, buf) => loadPostsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openPost(denops, router, params),
       next: (buf, _) => nextPostsList(denops, router, buf),
@@ -75,8 +75,8 @@ export async function main(denops: Denops) {
     },
   });
 
-  router.handle("groups-list", {
-    load: (buf) => loadGroupsList(denops, stateMan, buf),
+  router.addHandler("groups-list", {
+    load: (_ctx, buf) => loadGroupsList(denops, stateMan, buf),
     actions: {
       open: (_, params) => openGroup(denops, router, params),
       next: (buf, _) => nextGroupsList(denops, router, buf),
@@ -84,14 +84,14 @@ export async function main(denops: Denops) {
     },
   });
 
-  router.handle("post", {
-    load: (buf) => loadPost(denops, stateMan, buf),
-    save: (buf) => savePost(denops, stateMan, buf),
+  router.addHandler("post", {
+    load: (_ctx, buf) => loadPost(denops, stateMan, buf),
+    save: (_ctx, buf) => savePost(denops, stateMan, buf),
   });
 
-  router.handle("new-post", {
-    load: (buf) => loadNewPost(denops, stateMan, buf),
-    save: (buf) => saveNewPost(denops, stateMan, router, buf),
+  router.addHandler("new-post", {
+    load: (_ctx, buf) => loadNewPost(denops, stateMan, buf),
+    save: (_ctx, buf) => saveNewPost(denops, stateMan, router, buf),
   });
 
   denops.dispatcher = await router.dispatch(denops, {

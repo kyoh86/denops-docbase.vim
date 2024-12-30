@@ -11,7 +11,7 @@ import {
   type Buffer,
   isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.3.0";
+} from "jsr:@kyoh86/denops-router@~0.4.0";
 import { Filetype } from "./filetype.ts";
 import type { StateMan } from "../state.ts";
 

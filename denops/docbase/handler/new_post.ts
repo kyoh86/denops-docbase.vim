@@ -12,7 +12,7 @@ import type { CreatePostParams } from "../types.ts";
 import { Client } from "../api/client.ts";
 import { Filetype } from "./filetype.ts";
 import { parsePostBufferLines, saveGroupsIntoPostBuffer } from "./post.ts";
-import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.3.0";
+import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.4.0";
 import type { StateMan } from "../state.ts";
 import { getbufline } from "jsr:@denops/std@~7.4.0/function";
 
