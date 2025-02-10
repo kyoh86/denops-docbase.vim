@@ -5,9 +5,6 @@
   "exports": {
     "./types": "./denops/docbase/types.ts"
   },
-  "fmt": { "include": ["*"] },
-  "lint": { "include": ["*"] },
-  "test": { "include": ["*"] },
   "tasks": {
     "update": "deno run --allow-env --allow-read --allow-write --allow-net --allow-run=git,deno jsr:@molt/cli --write ./**/*.ts",
     "fmt": "deno fmt",
