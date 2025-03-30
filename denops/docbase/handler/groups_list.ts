@@ -16,7 +16,7 @@ import {
   type Buffer,
   isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.4.0";
+} from "jsr:@kyoh86/denops-router@~0.5.0";
 
 export async function loadGroupsList(
   denops: Denops,
