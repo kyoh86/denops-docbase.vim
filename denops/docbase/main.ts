@@ -1,7 +1,7 @@
 import type { Denops } from "jsr:@denops/std@~7.5.0";
 import { echo, input } from "jsr:@denops/std@~7.5.0/helper";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { join } from "jsr:@std/path@~1.0.2";
+import { join } from "jsr:@std/path@~1.1.0";
 import { ensureFile } from "jsr:@std/fs@~1.0.0";
 import { ensure, is } from "jsr:@core/unknownutil@~4.3.0";
 import {
