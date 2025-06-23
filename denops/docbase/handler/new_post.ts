@@ -1,9 +1,9 @@
 // New Post Buffer
 
-import type { Denops } from "jsr:@denops/std@~7.5.0";
-import { execute } from "jsr:@denops/std@~7.5.0/helper";
-import * as option from "jsr:@denops/std@~7.5.0/option";
-import * as buffer from "jsr:@denops/std@~7.5.0/buffer";
+import type { Denops } from "jsr:@denops/std@~7.6.0";
+import { execute } from "jsr:@denops/std@~7.6.0/helper";
+import * as option from "jsr:@denops/std@~7.6.0/option";
+import * as buffer from "jsr:@denops/std@~7.6.0/buffer";
 import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
 import { getLogger } from "jsr:@std/log@~0.224.5";
 
@@ -14,7 +14,7 @@ import { Filetype } from "./filetype.ts";
 import { parsePostBufferLines, saveGroupsIntoPostBuffer } from "./post.ts";
 import type { Buffer, Router } from "jsr:@kyoh86/denops-router@~0.5.0";
 import type { StateMan } from "../state.ts";
-import { getbufline } from "jsr:@denops/std@~7.5.0/function";
+import { getbufline } from "jsr:@denops/std@~7.6.0/function";
 
 const isNewPostParams = is.ObjectOf({
   domain: is.String,
