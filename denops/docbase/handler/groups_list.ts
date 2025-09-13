@@ -1,11 +1,11 @@
 // Group List Buffer
 
-import type { Denops } from "jsr:@denops/std@~7.6.0";
-import * as buffer from "jsr:@denops/std@~7.6.0/buffer";
-import * as fn from "jsr:@denops/std@~7.6.0/function";
-import * as variable from "jsr:@denops/std@~7.6.0/variable";
-import * as option from "jsr:@denops/std@~7.6.0/option";
-import { batch } from "jsr:@denops/std@~7.6.0/batch";
+import type { Denops } from "jsr:@denops/std@~8.0.0";
+import * as buffer from "jsr:@denops/std@~8.0.0/buffer";
+import * as fn from "jsr:@denops/std@~8.0.0/function";
+import * as variable from "jsr:@denops/std@~8.0.0/variable";
+import * as option from "jsr:@denops/std@~8.0.0/option";
+import { batch } from "jsr:@denops/std@~8.0.0/batch";
 import { getLogger } from "jsr:@std/log@~0.224.5";
 import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
 
