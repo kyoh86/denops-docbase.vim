@@ -1,17 +1,17 @@
 // Team List Buffer
 
-import type { Denops } from "jsr:@denops/std@~8.0.0";
-import { batch } from "jsr:@denops/std@~8.0.0/batch";
-import * as buffer from "jsr:@denops/std@~8.0.0/buffer";
-import * as variable from "jsr:@denops/std@~8.0.0/variable";
-import * as option from "jsr:@denops/std@~8.0.0/option";
+import type { Denops } from "@denops/std";
+import { batch } from "@denops/std/batch";
+import * as buffer from "@denops/std/buffer";
+import * as variable from "@denops/std/variable";
+import * as option from "@denops/std/option";
 
-import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
+import { as, ensure, is } from "@core/unknownutil";
 import {
   type Buffer,
   isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.5.0";
+} from "@kyoh86/denops-router";
 import { Filetype } from "./filetype.ts";
 import type { StateMan } from "../state.ts";
 

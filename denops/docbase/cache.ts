@@ -1,5 +1,5 @@
-import { ensureDir } from "jsr:@std/fs@~1.0.0";
-import { join } from "jsr:@std/path@~1.1.0";
+import { ensureDir } from "@std/fs";
+import { join } from "@std/path";
 
 async function getCacheDirectoryName() {
   const localAppData = Deno.env.get("LOCALAPPDATA");

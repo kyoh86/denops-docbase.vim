@@ -1,4 +1,4 @@
-import { is, type Predicate as P } from "jsr:@core/unknownutil@~4.3.0";
+import { is, type Predicate as P } from "@core/unknownutil";
 import type { Fetcher } from "../fetcher.ts";
 import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
 

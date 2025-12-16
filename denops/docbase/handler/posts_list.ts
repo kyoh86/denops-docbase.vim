@@ -1,12 +1,12 @@
 // Post List Buffer
 
-import type { Denops } from "jsr:@denops/std@~8.0.0";
-import * as buffer from "jsr:@denops/std@~8.0.0/buffer";
-import * as variable from "jsr:@denops/std@~8.0.0/variable";
-import * as option from "jsr:@denops/std@~8.0.0/option";
-import { batch } from "jsr:@denops/std@~8.0.0/batch";
-import { getLogger } from "jsr:@std/log@~0.224.5";
-import { as, ensure, is } from "jsr:@core/unknownutil@~4.3.0";
+import type { Denops } from "@denops/std";
+import * as buffer from "@denops/std/buffer";
+import * as variable from "@denops/std/variable";
+import * as option from "@denops/std/option";
+import { batch } from "@denops/std/batch";
+import { getLogger } from "@std/log";
+import { as, ensure, is } from "@core/unknownutil";
 
 import { Filetype } from "./filetype.ts";
 import { Client } from "../api/client.ts";
@@ -15,7 +15,7 @@ import {
   type Buffer,
   isBufferOpener,
   type Router,
-} from "jsr:@kyoh86/denops-router@~0.5.0";
+} from "@kyoh86/denops-router";
 
 export async function loadPostsList(
   denops: Denops,

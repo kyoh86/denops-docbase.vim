@@ -11,5 +11,25 @@
     "check": "deno check ./**/*.ts",
     "lint": "deno lint",
     "test": "deno test --check --permit-no-files --allow-env=DENOPS_TEST_CONNECT_TIMEOUT,DENOPS_TEST_DENOPS_PATH,DENOPS_TEST_VERBOSE,DENOPS_TEST_VIM_EXECUTABLE,DENOPS_TEST_NVIM_EXECUTABLE,MSGPACKR_NATIVE_ACCELERATION_DISABLED --allow-run --allow-net=127.0.0.1:0 --allow-read"
+  },
+  "workspace": [
+    "./denops/docbase",
+    "./denops/docbase/handler",
+    "./denops/docbase/api",
+    "./denops/docbase/api/resources"
+  ],
+  "imports": {
+    "@core/unknownutil": "jsr:@core/unknownutil@^4.3.0",
+    "@denops/std": "jsr:@denops/std@^8.2.0",
+    "@denops/test": "jsr:@denops/test@^4.0.0",
+    "@kyoh86/denops-router": "jsr:@kyoh86/denops-router@^0.5.0",
+    "@std/assert": "jsr:@std/assert@^1.0.16",
+    "@std/encoding": "jsr:@std/encoding@^1.0.10",
+    "@std/front-matter": "jsr:@std/front-matter@^1.0.9",
+    "@std/fs": "jsr:@std/fs@^1.0.20",
+    "@std/log": "jsr:@std/log@^0.224.14",
+    "@std/path": "jsr:@std/path@^1.1.3",
+    "@std/toml": "jsr:@std/toml@^1.0.11",
+    "xdg": "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts"
   }
 }
