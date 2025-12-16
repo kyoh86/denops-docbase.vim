@@ -23,24 +23,30 @@ export const isListCommentsParams: P<ListCommentsParams> = is.ObjectOf({
 
 export interface Comment {
   id: number;
+  post_id: number;
+  url: string;
   body: string;
   created_at: string;
+  updated_at: string;
   user: UserSummary;
 }
 export const isComment: P<Comment> = is.ObjectOf({
   id: is.Number,
+  post_id: is.Number,
+  url: is.String,
   body: is.String,
   created_at: is.String,
+  updated_at: is.String,
   user: isUserSummary,
 });
 
 export class Comments {
-  constructor(private fetcher: Fetcher, private memoId: number) {}
+  constructor(private fetcher: Fetcher, private postId: number) {}
 
   create(body: CreateCommentParams) {
     return this.fetcher.request(
       "POST",
-      `/posts/${this.memoId}/comments`,
+      `/posts/${this.postId}/comments`,
       isComment,
       { body },
     );
@@ -56,7 +62,7 @@ export class Comments {
     }
     return this.fetcher.request(
       "GET",
-      `/posts/${this.memoId}/comments`,
+      `/posts/${this.postId}/comments`,
       is.ArrayOf(isComment),
       { query },
     );

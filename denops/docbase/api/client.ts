@@ -42,7 +42,7 @@ export class Client {
     return new Attachments(this.fetcher);
   }
 
-  comments(memoId: number): Comments {
-    return new Comments(this.fetcher, memoId);
+  comments(postId: number): Comments {
+    return new Comments(this.fetcher, postId);
   }
 }
