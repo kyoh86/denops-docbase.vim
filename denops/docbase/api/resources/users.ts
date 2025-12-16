@@ -1,6 +1,5 @@
 import { as, is, type Predicate as P } from "@core/unknownutil";
 import type { Fetcher } from "../fetcher.ts";
-import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
 import type { Stringer } from "../types.ts";
 
 export type SearchUsersParams = {
@@ -25,7 +24,6 @@ export interface User {
   posts_count: number;
   last_access_time: string;
   two_step_authentication: boolean;
-  groups: GroupSummary[];
 }
 export const isUser: P<User> = is.ObjectOf({
   id: is.Number,
@@ -36,7 +34,6 @@ export const isUser: P<User> = is.ObjectOf({
   posts_count: is.Number,
   last_access_time: is.String,
   two_step_authentication: is.Boolean,
-  groups: is.ArrayOf(isGroupSummary),
 });
 
 export class Users {
