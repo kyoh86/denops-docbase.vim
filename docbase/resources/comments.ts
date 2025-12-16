@@ -1,7 +1,7 @@
 import { as, is, type Predicate as P } from "@core/unknownutil";
 import type { Fetcher } from "../fetcher.ts";
 import { isUserSummary, type UserSummary } from "./user_summary.ts";
-import { Stringer } from "../types.ts";
+import type { Stringer } from "../types.ts";
 
 export interface CreateCommentParams {
   body: string;

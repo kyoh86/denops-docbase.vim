@@ -45,4 +45,5 @@ export type { Profile } from "./resources/profiles.ts";
 export type { Tag } from "./resources/tags.ts";
 
 export type { User } from "./resources/users.ts";
+export type { ListUserGroupsParams } from "./resources/user_groups.ts";
 export type { UserSummary } from "./resources/user_summary.ts";

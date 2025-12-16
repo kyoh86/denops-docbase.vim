@@ -7,9 +7,8 @@ import * as buffer from "@denops/std/buffer";
 import { as, ensure, is } from "@core/unknownutil";
 import { getLogger } from "@std/log";
 
-import type { Post } from "../types.ts";
-import type { CreatePostParams } from "../types.ts";
-import { Client } from "../api/client.ts";
+import type { CreatePostParams, Post } from "../../../docbase/types.ts";
+import { Client } from "../../../docbase/client.ts";
 import { Filetype } from "./filetype.ts";
 import { parsePostBufferLines, saveGroupsIntoPostBuffer } from "./post.ts";
 import type { Buffer, Router } from "@kyoh86/denops-router";

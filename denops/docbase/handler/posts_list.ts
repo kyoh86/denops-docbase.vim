@@ -9,7 +9,7 @@ import { getLogger } from "@std/log";
 import { as, ensure, is } from "@core/unknownutil";
 
 import { Filetype } from "./filetype.ts";
-import { Client } from "../api/client.ts";
+import { Client } from "../../../docbase/client.ts";
 import type { StateMan } from "../state.ts";
 import {
   type Buffer,

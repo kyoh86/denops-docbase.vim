@@ -11,8 +11,8 @@ import {
   setup,
 } from "@std/log";
 
-import { isSearchPostsParams } from "./types.ts";
-import { Client } from "./api/client.ts";
+import { isSearchPostsParams } from "../../docbase/validation.ts";
+import { Client } from "../../docbase/client.ts";
 import { Router } from "@kyoh86/denops-router";
 import { XDGStateMan } from "./state.ts";
 

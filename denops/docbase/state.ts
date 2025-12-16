@@ -1,4 +1,4 @@
-import xdg from "xdg";
+import xdg from "@404wolf/xdg-portable";
 import { join } from "@std/path";
 import { ensureFile } from "@std/fs";
 import { exists, expandGlob } from "@std/fs";

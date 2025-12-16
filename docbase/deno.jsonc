@@ -1,8 +1,11 @@
 {
-  "name": "@kyoh86/denops-docbase-vim",
-  "version": "0.2.0",
-  "description": "A Vim plugin as a client for the DocBase",
+  "name": "@kyoh86/docbase",
+  "version": "3.0.0",
+  "description": "A library to handle DocBase API",
   "license": "MIT",
+  "exports": {
+    ".": "./mod.ts"
+  },
   "tasks": {
     "update": "deno outdated --update",
     "fmt": "deno fmt",
@@ -10,11 +13,7 @@
     "lint": "deno lint",
     "test": "deno test --check --permit-no-files --allow-env=DENOPS_TEST_CONNECT_TIMEOUT,DENOPS_TEST_DENOPS_PATH,DENOPS_TEST_VERBOSE,DENOPS_TEST_VIM_EXECUTABLE,DENOPS_TEST_NVIM_EXECUTABLE,MSGPACKR_NATIVE_ACCELERATION_DISABLED --allow-run --allow-net=127.0.0.1:0 --allow-read"
   },
-  "exports": {
-    ".": "./mod.ts"
-  },
   "imports": {
-    "@404wolf/xdg-portable": "jsr:@404wolf/xdg-portable@^0.1.0",
     "@core/unknownutil": "jsr:@core/unknownutil@^4.3.0",
     "@denops/std": "jsr:@denops/std@^8.2.0",
     "@denops/test": "jsr:@denops/test@^4.0.0",
@@ -25,6 +24,8 @@
     "@std/fs": "jsr:@std/fs@^1.0.20",
     "@std/log": "jsr:@std/log@^0.224.14",
     "@std/path": "jsr:@std/path@^1.1.3",
-    "@std/toml": "jsr:@std/toml@^1.0.11"
+    "@std/toml": "jsr:@std/toml@^1.0.11",
+    "xdg": "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts"
   }
 }
+

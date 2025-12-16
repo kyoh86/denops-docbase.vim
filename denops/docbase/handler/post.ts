@@ -10,9 +10,12 @@ import { as, ensure, is } from "@core/unknownutil";
 import { getLogger } from "@std/log";
 
 import { Filetype } from "./filetype.ts";
-import type { Post as PostData, UpdatePostParams } from "../types.ts";
-import { isGroupSummary } from "../types.ts";
-import { Client } from "../api/client.ts";
+import type {
+  Post as PostData,
+  UpdatePostParams,
+} from "../../../docbase/types.ts";
+import { isGroupSummary } from "../../../docbase/validation.ts";
+import { Client } from "../../../docbase/client.ts";
 import type { Buffer } from "@kyoh86/denops-router";
 import type { StateMan } from "../state.ts";
 import { getCacheFile } from "../cache.ts";
