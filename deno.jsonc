@@ -6,7 +6,7 @@
     "./types": "./denops/docbase/types.ts"
   },
   "tasks": {
-    "update": "deno run --allow-env --allow-read --allow-write --allow-net --allow-run=git,deno jsr:@molt/cli --write ./**/*.ts",
+    "update": "deno outdated --update",
     "fmt": "deno fmt",
     "check": "deno check ./**/*.ts",
     "lint": "deno lint",
