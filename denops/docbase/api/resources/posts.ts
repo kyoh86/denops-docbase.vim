@@ -3,7 +3,6 @@ import type { Fetcher } from "../fetcher.ts";
 
 import { isTagSummary, type TagSummary } from "./tags.ts";
 import { isUserSummary, type UserSummary } from "./user_summary.ts";
-import { type Comment, isComment } from "./comments.ts";
 import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
 import { type Attachment, isAttachment } from "./attachments.ts";
 import type { Stringer } from "../types.ts";
@@ -103,6 +102,7 @@ export interface Post {
   url: string;
   created_at: string;
   updated_at: string;
+  published_at: string;
   scope: Scope | null;
   tags: TagSummary[];
   sharing_url: string | null;
@@ -110,7 +110,7 @@ export interface Post {
   user: UserSummary;
   stars_count: number;
   good_jobs_count: number;
-  comments: Comment[];
+  comments_count: number;
   groups: GroupSummary[];
   attachments: Attachment[];
 }
@@ -123,6 +123,7 @@ export const isPost: P<Post> = is.ObjectOf({
   url: is.String,
   created_at: is.String,
   updated_at: is.String,
+  published_at: is.String,
   scope: is.UnionOf([isScope, is.Null]),
   tags: is.ArrayOf(isTagSummary),
   sharing_url: is.UnionOf([is.String, is.Null]),
@@ -130,7 +131,7 @@ export const isPost: P<Post> = is.ObjectOf({
   user: isUserSummary,
   stars_count: is.Number,
   good_jobs_count: is.Number,
-  comments: is.ArrayOf(isComment),
+  comments_count: is.Number,
   groups: is.ArrayOf(isGroupSummary),
   attachments: is.ArrayOf(isAttachment),
 });
