@@ -6,6 +6,7 @@ import { isUserSummary, type UserSummary } from "./user_summary.ts";
 import { type GroupSummary, isGroupSummary } from "./group_summary.ts";
 import { type Attachment, isAttachment } from "./attachments.ts";
 import type { Stringer } from "../types.ts";
+import { Comments } from "./comments.ts";
 
 export type Scope = "everyone" | "group" | "private";
 export const isScope: P<Scope> = is.UnionOf([
@@ -187,5 +188,9 @@ export class Posts {
 
   delete(id: string) {
     return this.fetcher.call("DELETE", `/posts/${id}`);
+  }
+
+  comments(postId: number) {
+    return new Comments(this.fetcher, postId);
   }
 }

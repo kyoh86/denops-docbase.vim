@@ -1,5 +1,4 @@
 import { Attachments } from "./resources/attachments.ts";
-import { Comments } from "./resources/comments.ts";
 import { Fetcher } from "./fetcher.ts";
 import { Groups } from "./resources/groups.ts";
 import { Posts } from "./resources/posts.ts";
@@ -40,9 +39,5 @@ export class Client {
 
   attachments(): Attachments {
     return new Attachments(this.fetcher);
-  }
-
-  comments(postId: number): Comments {
-    return new Comments(this.fetcher, postId);
   }
 }

@@ -1,6 +1,7 @@
 import { as, is, type Predicate as P } from "@core/unknownutil";
 import type { Fetcher } from "../fetcher.ts";
 import type { Stringer } from "../types.ts";
+import { UserGroups } from "./user_groups.ts";
 
 export type SearchUsersParams = {
   q?: string | undefined;
@@ -46,5 +47,9 @@ export class Users {
       query.set(key, parameters[key]);
     }
     return this.fetcher.request("GET", `/users`, is.ArrayOf(isUser), { query });
+  }
+
+  groups(userId: number) {
+    return new UserGroups(this.fetcher, userId);
   }
 }
