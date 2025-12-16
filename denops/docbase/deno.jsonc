@@ -1,6 +1,4 @@
 {
-  "name": "@kyoh86/denops-docbase-vim",
-  "version": "0.2.0",
   "description": "A Vim plugin as a client for the DocBase",
   "license": "MIT",
   "tasks": {
@@ -9,9 +7,6 @@
     "check": "deno check ./**/*.ts",
     "lint": "deno lint",
     "test": "deno test --check --permit-no-files --allow-env=DENOPS_TEST_CONNECT_TIMEOUT,DENOPS_TEST_DENOPS_PATH,DENOPS_TEST_VERBOSE,DENOPS_TEST_VIM_EXECUTABLE,DENOPS_TEST_NVIM_EXECUTABLE,MSGPACKR_NATIVE_ACCELERATION_DISABLED --allow-run --allow-net=127.0.0.1:0 --allow-read"
-  },
-  "exports": {
-    ".": "./mod.ts"
   },
   "imports": {
     "@404wolf/xdg-portable": "jsr:@404wolf/xdg-portable@^0.1.0",
