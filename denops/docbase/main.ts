@@ -1,6 +1,6 @@
 import type { Denops } from "@denops/std";
 import { echo, input } from "@denops/std/helper";
-import xdg from "xdg";
+import xdg from "@404wolf/xdg-portable";
 import { join } from "@std/path";
 import { ensureFile } from "@std/fs";
 import { ensure, is } from "@core/unknownutil";

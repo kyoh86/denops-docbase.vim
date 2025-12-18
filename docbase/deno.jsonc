@@ -25,7 +25,7 @@
     "@std/log": "jsr:@std/log@^0.224.14",
     "@std/path": "jsr:@std/path@^1.1.3",
     "@std/toml": "jsr:@std/toml@^1.0.11",
-    "xdg": "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts"
+    "@404wolf/xdg-portable": "jsr:@404wolf/xdg-portable@^0.1.0"
   }
 }
 
